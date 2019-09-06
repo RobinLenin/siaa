@@ -5,7 +5,7 @@ from django.db import models
 from decimal import Decimal
 
 # Create your models here.
-from rest_framework.fields import CharField
+#from rest_framework.fields import CharField
 
 
 class CuentaCobrar(models.Model):
@@ -14,7 +14,7 @@ class CuentaCobrar(models.Model):
     fecha_vencimiento = models.DateField()
     monto = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     saldo = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-    cliente = models.ForeignKey('core.Persona', on_delete=models.PROTECT)
+    cliente = models.ForeignKey('core.Persona', on_delete=models.PROTECT, related_name='clientes')
     numero_titulo = models.CharField(max_length=10)
     titulo = models.FileField(upload_to='tesoreria/')
    # cliente = models.CharField(max_length=100)
@@ -28,10 +28,10 @@ class CuentaCobrar(models.Model):
         return "%s" % self.concepto
 
 class Abono(models.Model):
-    FORMA_PAGO_EFECTIVO = 'E'
-    FORMA_PAGO_CHEQUE = 'C'
-    FORMA_PAGO_DEPOSITO = 'D'
-    FORMAPAGO = ((FORMA_PAGO_EFECTIVO, 'Efectivo'), (FORMA_PAGO_CHEQUE, 'Cheque'), (FORMA_PAGO_DEPOSITO, 'Deposito'))
+    FORMA_PAGO_EFECTIVO = "E"
+    FORMA_PAGO_CHEQUE = "C"
+    FORMA_PAGO_DEPOSITO = "D"
+    FORMAPAGO = ((FORMA_PAGO_EFECTIVO, "Efectivo"), (FORMA_PAGO_CHEQUE, "Cheque"), (FORMA_PAGO_DEPOSITO, "Deposito"),)
 
     forma_pago=models.CharField(max_length=1, choices=FORMAPAGO, default=FORMA_PAGO_EFECTIVO)
     concepto = models.CharField(max_length=100)
@@ -39,13 +39,13 @@ class Abono(models.Model):
     interes = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     fecha_pago= models.DateField()
     observacion= models.TextField()
-    cuenta_cobrar = models.ForeignKey(CuentaCobrar, null=False, blank=False, on_delete=models.PROTECT)
+    cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.CASCADE, related_name='abonos')
 
     def __str__(self):
         return "{0} {1} {2}".format(self.fecha_pago, self.monto, self.interes)
 
 class Comentario(models.Model):
-    cuenta_cobrar = models.ForeignKey(CuentaCobrar, null=False, blank=False, on_delete=models.PROTECT)
+    cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.PROTECT, related_name='comentarios')
     fecha_creacion= models.DateTimeField( verbose_name="Fecha de creacion")
     concepto = models.CharField(max_length=100)
     detalle= models.TextField()
@@ -72,12 +72,12 @@ class Comentario(models.Model):
     #interes= models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
 
 
-    class Meta:
-        verbose_name = "Titulo de Credito"
-        verbose_name_plural = "Titulos de Credito"
-
-    def __str__(self):
-        return "{0}".format(self.numero)
+    # class Meta:
+    #     verbose_name = "Titulo de Credito"
+    #     verbose_name_plural = "Titulos de Credito"
+    #
+    # def __str__(self):
+    #     return "{0}".format(self.numero)
 
 class TasaInteres(models.Model):
     tasa=models.DecimalField(max_digits=4, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
@@ -91,8 +91,8 @@ class TasaInteres(models.Model):
         return "{0} {1}".format(self.tasa, self.fecha)
 
 class InteresMensual(models.Model):
-    cuenta_cobrar = models.ForeignKey(CuentaCobrar, null=False, blank=False, on_delete=models.PROTECT)
-    tasa = models.ForeignKey(TasaInteres, null=False, blank=False, on_delete=models.PROTECT)
+    cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')
+    tasa = models.ForeignKey('TasaInteres', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')
     fecha = models.DateField()
     valor=models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
 

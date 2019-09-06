@@ -33,7 +33,7 @@
             <div class="form-group form-inline text-left">
                 <span class="col-sm-2">Cliente:</span>
                 <div class="col-sm-10">
-                    <h5>{{ cuenta_cobrar.cliente }}</h5>
+                    <h5>{{ cuenta_cobrar.cliente.primer_nombre }}</h5>
                 </div>
             </div>
 
@@ -55,7 +55,7 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    {% include 'tesoreria/abono/fragmento_lista.html' with abono=cuenta_cobrar.abono.all %}
+                    {% include 'tesoreria/abono/fragmento_lista.html' with abonos=cuenta_cobrar.abonos.all %}
                 </div>
             </div>
         </div>

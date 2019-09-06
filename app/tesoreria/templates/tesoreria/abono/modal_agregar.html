@@ -1,7 +1,8 @@
 <div class="modal fade" id="modal-abono-guardar">
-    <form action="{% url 'tesoreria:abono_guardar' %}" method="POST" role="form" id="formAbono">
+    <form action="{% url 'tesoreria:abono.guardar' %}" method="POST" role="form" id="formAbono">
         {% csrf_token %}
-        <input type="hidden" id="id" name="id" value="{{ Abono.id }}"/>
+        <input type="hidden" id="id" name="id" value="{{ abono.id }}"/>
+        <input type="hidden" id="id_cuenta" name="cuenta_cobrar"  value="{{ cuenta_cobrar.id }}"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>
         <div class="modal-dialog">
             <div class="modal-content">
@@ -12,13 +13,13 @@
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label for="pago">Forma de Pago:</label>
-                                <select id="pago" name="pago" class="form-control" required>
+                                <label for="forma_pago">Forma de pago:</label>
+                                <select id="forma_pago" name="forma_pago" class="form-control" required>
                                     <option value="" selected="selected">-- Seleccione --</option>
-                                    {% for item in FORMAPAGO %}
-                                        <option value="{{ item.0 }}"
-                                                {% if abono.forma_pago == item.0 %}selected{% endif %}>
-                                            {{ item.1 }}
+                                    {% for key, value in CHOICE_FORMAPAGO %}
+                                        <option value="{{ key }}"
+                                                {% if abono.forma_pago == key %}selected{% endif %}>
+                                            {{ value }}
                                         </option>
                                     {% endfor %}
                                 </select>
@@ -47,6 +48,18 @@
                                    value="{{ abono.monto }}"
                                    minlength="0"
                                    maxlength="10"
+                                   required>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="interes">Interes:</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="interes"
+                                   name="interes"
+                                   value="{{ abono.interes }}"
+                                   minlength="0"
+                                   maxlength="10"
+                                   default="0.0"
                                    required>
                         </div>
 

@@ -40,6 +40,7 @@ def cuenta_cobrar_listar(request):
     navegacion = ('Modulo financiero',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
                    ('Cuentas por Cobrar', None)])
+    # ver planificacion /pedi/resultado detalle
     return render(request, 'tesoreria/cuenta_cobrar/lista.html', locals())
 
 
@@ -136,10 +137,10 @@ def cuenta_cobrar_detalle(request, id):
     cuenta_cobrar = get_object_or_404(CuentaCobrar, id=id)
 
     navegacion = ('Modulo financiero',
-                  [('Tesoreria', reverse('tesoreria:tesoreria_index')),
+                  [('Tesoreria', reverse('tesoreria:index_tesoreria')),
                    ('Cuentas por Cobrar', 'tesoreria:cuenta_cobrar.listar'),
-                   (cuenta_cobrar.cliente.nombre, None)])
-
+                   (cuenta_cobrar.cliente.primer_nombre, None)])
+    CHOICE_FORMAPAGO = Abono.FORMAPAGO
     return render(request, 'tesoreria/cuenta_cobrar/detalle.html', locals())
 
 
@@ -266,15 +267,10 @@ def abono_guardar(request):
     id = request.POST.get('id')
     if id:
         abono = get_object_or_404(Abono, id=id)
-        if not (request.user.has_perm("tesoreria") or request.user.has_perm(
-                "tesoreria", abono)):
-            raise PermissionDenied
     else:
-        if not request.user.has_perm("tesoreria"):
-            raise PermissionDenied
-        abono = CuentaCobrar()
+        abono = Abono()
 
-    abono_form = CuentaCobrarForm(request.POST, instance=abono)
+    abono_form = AbonoForm(request.POST, instance=abono)
     if abono_form.is_valid():
         abono_form.save()
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
@@ -286,14 +282,15 @@ def abono_guardar(request):
 
 
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
-def abono_eliminar(request, id):
+#@permission_required('tesoreria.delete_abono', raise_exception=True, )
+def abono_eliminar(request, id,id_cuenta):
 
-    comentario = get_object_or_404(CuentaCobrar, id=id)
+    comentario = get_object_or_404(Abono, id=id)
+
     try:
         if comentario.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar.detalle')
+            return redirect('tesoreria:cuenta_cobrar.detalle',id_cuenta)
         else:
             messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
             return redirect('tesoreria:cuenta_cobrar.detalle', id)
@@ -378,6 +375,7 @@ def tasa_interes_buscar(request):
 
 
 @login_required
+#@permission_required('tesoreria', raise_exception=True, )
 @require_http_methods(['POST'])
 def tasa_interes_guardar(request):
     next = request.POST.get('next')

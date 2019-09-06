@@ -20,12 +20,12 @@ urlpatterns = [
     path('comentario/detalle/<int:id>', views.comentario_detalle, name='comentario.detalle'),
     # path('comentario/listar', views.comentario_listar, name='comentario.listar'),
 
-    path('cuenta_cobrar/abonos/guardar', views.abono_guardar, name='abonos.guardar'),
-    path('cuenta_cobrar/abonos/eliminar/<int:id>', views.abono_eliminar, name='abonos_eliminar'),
+    path('cuenta_cobrar/abonos/guardar', views.abono_guardar, name='abono.guardar'),
+    path('cuenta_cobrar/abonos/eliminar/<int:id>', views.abono_eliminar, name='abono_eliminar'),
     # path('cuenta_cobrar/abonos/listar', views.abono_listar, name='abonos_listar'),
 
     path('tasa_interes/guardar', views.tasa_interes_guardar, name='tasa_interes.guardar'),
-    path('tasa_interes/eliminar/<int:id>', views.tasa_interes_eliminar, name='tasa_interes.eliminar'),
+    path('tasa_interes/eliminar/<int:id, int:id_cuenta>', views.tasa_interes_eliminar, name='tasa_interes.eliminar'),
     path('tasa_interes/listar', views.tasa_interes_listar, name='tasa_interes.listar'),
     path('tasa_interes/lista-paginador', views.tasa_interes_lista_paginador, name='tasa_interes.lista_paginador'),
     path('tasa_interes/buscar', views.tasa_interes_buscar, name='tasa_interes.buscar'),

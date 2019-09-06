@@ -2,39 +2,28 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>Concepto</th>
+            <th>Tasa</th>
             <th>Fecha</th>
-            <th>Monto</th>
-            <th>Saldo</th>
-            <th>Deuda</th>
+            <th>Acción</th>
             </tr>
         </thead>
         <tbody>
-        {% for abono in abonos %}
+        {% for tasa_interes in tasas_intereses %}
             <tr>
-                <td>
-                    <a {% if perms.tesoreria.view_abono %}
-
-                    {% endif %}>
-                        {{ abono.concepto }}
-                    </a>
-                </td>
-                <td>{{ abono.fecha_pago|default:"" }}</td>
-                <td>{{ abono.monto }}</td>
-                <td>{{ abono.saldo }}</td>
+                <td>{{ tasa_interes.tasa }}</td>
+                <td>{{ tasa_interes.fecha|default:"" }}</td>
                 <td>
                     <a title="Eliminar"
-                            {% if perms.tesoreria.delete_abono %}
+                            {% if perms.tesoreria.delete_tasainteres %}
                        class="btn btn-outline-danger"
                        onclick="return confirm('¿Está seguro de eliminar el registro?')"
-                       href="{% url 'tesoreria:abono_eliminar' abono.id %}"
+                       href="{% url 'tesoreria:tasa_interes.eliminar' tasa_interes.id %}"
                             {% else %}
                        class="btn btn-outline-danger disabled"
                             {% endif %}>
                         <i class="fa fa-trash-o"></i>
                     </a>
                 </td>
-                <td>{{ abono.saldo }}</td>
             </tr>
         {% endfor %}
         </tbody>
