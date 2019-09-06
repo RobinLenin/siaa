@@ -1,0 +1,114 @@
+<div class="modal fade" id="modal-actividad">
+    <div class="modal-dialog modal-lg">
+        <form action="{% url 'planificacion:actividad_guardar' %}" method="POST" role="form" class="auto-validate">
+            {% csrf_token %}
+            <input type="hidden" name="meta_anual" value="{{ meta_anual.id }}"/>
+            <input type="hidden" name="id" value="{{ actividad.id }}"/>
+            <input type="hidden" name="next" value="{{ request.path }}"/>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Actividad</h4>
+                </div>
+                <div class="modal-body">
+                   <div class="form-group">
+                        <label for="codigo">(*) Codigo</label>
+                        <input id="codigo" name="codigo" type="text" class="form-control"
+                                  required
+                                  placeholder="A1, A2..." value="{{ actividad.codigo }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">(*) Descripcion</label>
+                        <textarea id="nombre" name="nombre" type="text" class="form-control"
+                                  required
+                                  placeholder="Ingrese una descripcion de la actividad...">{{ actividad.nombre }}</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="indicador">(*) Indicador</label>
+                            <textarea id="indicador" name="indicador" type="text" class="form-control"
+                                      required
+                                      placeholder="Ingrese el indicador de esta actividad...">{{ actividad.indicador }}</textarea>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="meta-especifica">(*) Meta Especifica</label>
+                            <textarea id="meta-especifica" name="meta_especifica" type="text" class="form-control"
+                                      required
+                                      placeholder="Ingrese la meta especifica de esta actividad...">{{ actividad.meta_especifica }}</textarea>
+                        </div>
+                        {% now "Y-m-d" as ahora %}
+                        <div class="form-group col-md-6">
+                            <label for="inicio">(*) Fecha de inicio</label>
+                            <input id="inicio" name="inicio" type="date" class="form-control"
+                                   value="{{ actividad.inicio|date:"Y-m-d"|default:ahora }}" required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="fin">(*) Fecha de fin</label>
+                            <input id="fin" name="fin" type="date" class="form-control" min="#inicio"
+                                   value="{{ actividad.fin|date:"Y-m-d"|default:ahora }}" required
+                                   mayora="#inicio"
+                                       data-msg-mayora="Debe ser mayor a la fecha de inicio">
+                        </div>
+
+                    </div>
+                    <div class="form-row">
+                    {% comment %}
+                        <div class="form-group col-md-4">
+                            <label for="orden ">(*) Orden</label>
+                            <input id="orden" name="orden" type="number" class="form-control"
+                                   placeholder="1, 2, 3..."
+                                   value="{{ actividad.orden|default:meta_anual.actividades.count|add:1 }}"
+                                   required>
+                        </div>
+                        {% endcomment %}
+                        <div class="form-group col-md-3">
+                            <div class="form-check">
+                                <input id="peso-fijo" type="checkbox" class="form-check-input" name="peso_fijo"
+                                        {% if actividad.peso_fijo %} checked {% endif %}>
+                                <label for="peso-fijo">Representa un porcentaje de peso específico, en el avance a la meta
+                                    anual?:</label>
+                            </div>
+                        </div>
+                        {% load l10n %}
+                        {% localize off %}
+                            <div class="peso form-group col-md-3">
+                                <label for="peso ">Porcentaje de peso
+                                    (0-{% if actividad %}
+                                        {{ actividad.get_porcentaje_disponible }}
+                                    {% else %}
+                                        {{ meta_anual.get_porcentaje_para_nueva_actividad }}
+                                    {% endif %}
+                                    )%</label>
+                                <div class="input-group">
+                                    {% widthratio 100 meta_anual.actividades.count|add:'1' 1 as porcentaje %}
+                                    <input id="peso" name="peso" type="number" class="form-control"
+                                           placeholder="Ingrese un porcentaje"
+                                           min="0" max="{% if actividad %}
+                                                            {{ actividad.get_porcentaje_disponible }}
+                                                        {% else %}
+                                                            {{ meta_anual.get_porcentaje_para_nueva_actividad }}
+                                                        {% endif %}"
+                                           value="{{ actividad.peso|default:meta_anual.get_porcentaje_para_nueva_actividad }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% endlocalize %}
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>

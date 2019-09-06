@@ -1,0 +1,24 @@
+<div class="centrar">
+    <form [formGroup]="loginForm" (ngSubmit)="loginForm.valid && login()">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>SISTEMA DE INFORMACION ACADEMICO ADMINISTRATIVO FINANCIERO</mat-card-title>
+            </mat-card-header>
+            <img mat-card-image src="assets/img/logo-inicio.png">
+            <mat-card-content>
+                <mat-form-field class="full-ancho">
+                    <input matInput placeholder="Ingresa tu usuario" formControlName="username">
+                </mat-form-field>
+                <control-errores [control]="loginForm.controls.username"></control-errores>
+
+                <mat-form-field class="full-ancho">
+                    <input matInput placeholder="Ingresa tu contraseña" formControlName="password" type="password">
+                </mat-form-field>
+                <control-errores [control]="loginForm.controls.password"></control-errores>
+            </mat-card-content>
+            <mat-card-actions align="end">
+                <button mat-raised-button color="primary" type="submit">Ingresar</button>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+</div>

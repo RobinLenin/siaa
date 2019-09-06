@@ -1,0 +1,8 @@
+<a href="{% url 'organico:uaa_detalle' uaa.id %}">{{ uaa }}</a>
+<ul>
+    {% for ua in uaa.serie.all %}
+        <li>
+            {% include 'organico/uaa_fragmento_estructura.html' with uaa=ua %}
+        </li>
+    {% endfor %}
+</ul>

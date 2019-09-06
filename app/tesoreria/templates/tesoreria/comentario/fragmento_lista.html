@@ -1,0 +1,43 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Funcionario</th>
+            <th>Tipo</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for autoridad_facultad in autoridades_facultad %}
+            <tr>
+                <td>
+                    <a {% if perms.academico.view_autoridadfacultad %}
+                        href="{% url 'academico:autoridad_facultad_detalle' autoridad_facultad.id %}?next={{ request.path }}"
+                    {% endif %}>
+                        {{ autoridad_facultad.funcionario.usuario.persona.get_nombres_completos }}
+                    </a>
+                    {% if autoridad_facultad.activo %}
+                        <span class="text-success"><i class="fa fa-check"></i></span>
+                    {% endif %}
+                <td>{{ autoridad_facultad.get_tipo_display }}</td>
+                <td>{{ autoridad_facultad.fecha_inicio }}</td>
+                <td>{{ autoridad_facultad.fecha_fin|default:"" }}</td>
+                <td>
+                    <a title="Eliminar"
+                            {% if perms.academico.delete_autoridadfacultad %}
+                       class="btn btn-outline-danger"
+                       onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                       href="{% url 'academico:autoridad_facultad_eliminar' autoridad_facultad.id %}"
+                            {% else %}
+                       class="btn btn-outline-danger disabled"
+                            {% endif %}>
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

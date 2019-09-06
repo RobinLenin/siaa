@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
+	<meta name="description" content="Responsive Admin Template" />
+	<meta name="author" content="SmartUniversity" />
+	<title>SIAAF - {% block titulo %}{% endblock %}</title>
+
+	<!-- google font e icons -->
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet" type="text/css" />
+	{% load staticfiles %}
+	<link href="{% static 'fonts/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'fonts/material-design-icons/material-icon.css' %}" rel="stylesheet" type="text/css" />
+	<!--bootstrap -->
+	<link href="{% static 'plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'plugins/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'plugins/summernote/summernote.css' %}" rel="stylesheet">
+	<link href="{% static 'plugins/select2/css/select2.min.css' %}" rel="stylesheet">
+	<link href="{% static 'plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/alertifyjs/css/alertify.min.css' %}" rel="stylesheet" />
+	<!-- Theme Styles -->
+	<link href="{% static 'css/theme/light/theme_style.css' %}" rel="stylesheet" id="rt_style_components" type="text/css" />
+	<link href="{% static 'css/plugins.min.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'css/theme/light/style.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'css/responsive.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'css/theme/light/theme-color.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'css/style.css' %}?v=1.6" rel="stylesheet" type="text/css" />
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+
+    {% block estilos %}
+    {% endblock estilos %}
+</head>
+
+<body class="page-header-fixed sidemenu-closed-hidelogo page-content-white page-md white-sidebar-color header-white logo-red"  {% block onload %}{% endblock %}>
+	<div class="page-wrapper">
+		{% include 'header.html' %}
+
+		<!-- start page container -->
+		<div class="page-container">
+		    {% include 'sidebar.html' %}
+			<!-- start page content -->
+			<div class="page-content-wrapper">
+				<div class="page-content">
+					{% block migas %}
+					{% endblock migas %}
+
+					{% for msg in messages %}
+						<div class="alert alert-{{ msg.level_tag }}" role="alert">
+							{{ msg.message }}
+						</div>
+					{% endfor %}
+
+					<div class="row">
+						<div class="col-md-12">
+							{% block contenido %}
+							{% endblock contenido %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end chat sidebar -->
+		</div>
+		<!-- end page container -->
+
+		{% include 'footer.html' %}
+
+		<!-- start js include path -->
+		<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+		<script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+		<script src="{% static 'plugins/popper/popper.js' %}"></script>
+		<script src="{% static 'plugins/jquery-blockui/jquery.blockui.min.js' %}"></script>
+		<script src="{% static 'plugins/jquery-slimscroll/jquery.slimscroll.js' %}"></script>
+		<!-- bootstrap -->
+		<script src="{% static 'plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+		<!-- Common js-->
+		<script src="{% static 'js/app.js' %}"></script>
+		<script src="{% static 'js/layout.js' %}"></script>
+		<script src="{% static 'js/theme_color.js' %}"></script>
+		<!-- select2 -->
+		<script src="{% static 'plugins/select2/js/select2.min.js' %}"></script>
+		<script src="{% static 'plugins/select2/js/es.js' %}"></script>
+		<!-- validate -->
+		<script src="{% static 'plugins/jquery-validation/js/jquery.validate.min.js' %}"></script>
+		<script src="{% static 'plugins/jquery-validation/js/es.min.js' %}"></script>
+        <!-- notifications -->
+		<script src="{% static 'plugins/alertifyjs/alertify.min.js' %}"></script>
+		<!--Init-->
+		<script src="{% static 'js/siaaf.js' %}?v=1.6"></script>
+		<script src="{% static 'js/validador.js' %}?v=1.3"></script>
+
+		{% block javascript %}
+		{% endblock javascript %}
+</body>
+
+</html>

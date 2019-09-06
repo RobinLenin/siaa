@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Trayectoria Laboral Externa
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Datos de la Trayectoria Laboral Externa</header>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    {% include 'info_mensaje.html' with title="Estimado Usuario" text="Por favor ingrese su experiencia laboral externa a la institución." %}
+                    <form action="{% url 'talento_humano:trayectoria_laboral_externa_guardar' funcionario.id %}" class="form-horizontal auto-validate" method="POST" name="form">
+                        {% csrf_token %}
+                        <table class="table table-hover">
+                            {{ trayectoria_laboral_externa_form }}
+                            <input type="hidden" name="next" value="{{ next }}">
+                            <input type="hidden" name="id" value="{{ trayectoria_laboral_externa.id }}"/>
+                        </table>
+                        <div class="text-center">
+                            <button type='submit' class='btn btn-primary m-r-20'>
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                            <a class='btn btn-default' href="{{ next }}#tab_trayectoria_laboral">
+                                <i class="fa fa-ban"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}

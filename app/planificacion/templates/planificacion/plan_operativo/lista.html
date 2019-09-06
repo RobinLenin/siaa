@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Planificacion
+{% endblock %}
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Módulo Planificacion</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <i class="fa fa-home"></i>
+                <li class="active">Planes Operativos</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Planes Operativos</header>
+            <div class="tools">
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center"><h4>
+                    Detalle de Planes Operativos Institucionales</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="btn-group">
+                    </div>
+                    {% include 'planificacion/plan_operativo/fragmento_lista.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %}
+        Modal para Agregar plan  necesita atributo con el nombre: plan_estrategico caso contrario se presenta vacio
+    {% endcomment %}
+    {% include 'planificacion/plan_operativo/modal_detalle.html' %}
+
+{% endblock %}
+

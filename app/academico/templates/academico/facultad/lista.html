@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Facultades
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.Facultad'|verbose_name_plural|capfirst  }}</header>
+            <div class="tools">
+                <div class="pull-right">
+                    <a class="btn btn-info btn-xs"
+                       data-toggle="modal" data-target="#modal-facultad-editar"
+                            {% if not perms.academico.add_facultad %} disabled {% endif %}>
+                        <i class="fa fa-plus-circle"></i>Nuevo
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Siglas</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if facultades %}
+                        {% for facultad in facultades %}
+                            <tr>
+                                <td>
+                                    <a {% if perms.academico.view_facultad %}
+                                        href="{% url 'academico:facultad_detalle' facultad.id %}"
+                                    {% endif %}
+                                    >{{ facultad.nombre }}
+                                    </a>
+                                </td>
+                                <td>{{ facultad.siglas }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="2">Ningún dato disponible en esta tabla</td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include 'academico/facultad/modal_editar.html' %}
+{% endblock %}

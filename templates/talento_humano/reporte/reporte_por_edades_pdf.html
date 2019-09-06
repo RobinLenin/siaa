@@ -1,0 +1,77 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Asignación de puestos</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<h2>Reporte de Asignación de puestos por edades</h2>
+<p class="derecha">
+
+    Fecha de Impresión: {% now "Y-m-d H:i" %} <br>
+    Total de {{ total }} registros
+</p>
+
+
+
+<table>
+    {% regroup asignaciones by  uaa_puesto__uaa__nombre as nuevasAsignaciones%}
+    {% for principal in nuevasAsignaciones %}
+        <tr>
+            <th colspan="9">UAA: {{ principal.grouper }} </th>
+        </tr>
+
+        <tr>
+            <th>Identificación</th>
+            <th>Nombres</th>
+            <th>Regimén laboral</th>
+            <th>Grupo ocupacional</th>
+            <th>Puesto</th>
+            <th>Tipo de relación laboral</th>
+            <th>Inicio</th>
+            <th>Nacimiento</th>
+            <th>Edad</th>
+        </tr>
+        {% for asignacion in principal.list %}
+        <tr>
+            <td>
+                {{ asignacion.funcionario__usuario__persona__numero_documento }}
+            </td>
+            <td>
+                {{ asignacion.funcionario__usuario__persona__primer_apellido }}  {{ asignacion.funcionario__usuario__persona__segundo_apellido}} <br>
+                {{ asignacion.funcionario__usuario__persona__primer_nombre }}  {{ asignacion.funcionario__usuario__persona__segundo_nombre }}
+            </td>
+            <td>
+                {{ asignacion.uaa_puesto__puesto__grupo_ocupacional__regimen_laboral__nombre}}
+            </td>
+            <td>
+                {{ asignacion.uaa_puesto__puesto__grupo_ocupacional__nombre }}
+            </td>
+            <td>
+                {{ asignacion.uaa_puesto__puesto__denominacion }}
+            </td>
+            <td>
+                {{ asignacion.tipo_relacion_laboral__nombre}}
+            </td>
+            <td>
+                {{ asignacion.fecha_inicio }}
+            </td>
+            <td>
+                {{ asignacion.funcionario__usuario__persona__fecha_nacimiento }}
+            </td>
+            <td>
+                {{ asignacion.edad }}
+            </td>
+        </tr>
+
+            {% endfor %}
+    {% endfor %}
+
+</table>
+
+Generado por {{ generado }}
+
+</body>

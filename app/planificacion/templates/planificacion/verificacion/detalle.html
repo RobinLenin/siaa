@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    PEDI
+{% endblock %}
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Modulo de Planificacion</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{% url 'planificacion:plan_operativo_lista' %}" class="parent-item">Planes
+                        Operativos</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:meta_anual_detalle' verificacion.actividad.meta_anual.id %}"
+                       class="parent-item">Meta Anual</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:actividad_detalle' verificacion.actividad.id %}"
+                       class="parent-item">Actividad</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Verificacion {{ verificacion.nombre }}</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Verificacion</header>
+            <div class="tools">
+                <a title="Eliminar Verificacion" class="btn btn-danger"
+                   href="{% url 'planificacion:verificacion_eliminar' verificacion.id %}"
+                        {% if not perms.planificacion.delete_verificacion %} disabled {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+
+        </div>
+        <div class="card-body ">
+            {% include 'planificacion/verificacion/fragmento_detalle.html' %}
+        </div>
+    </div>
+    {% include 'planificacion/verificacion/modal_editar.html' with actividad=verificacion.actividad %}
+
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/planificacion/actividad_detalle.js' %}"></script>
+
+{% endblock javascript %}

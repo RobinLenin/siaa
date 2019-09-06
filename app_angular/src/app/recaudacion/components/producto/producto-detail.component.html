@@ -1,0 +1,177 @@
+<div class="container">
+  <mat-card>
+    <mat-card-title>Crear/Editar un Producto</mat-card-title>
+    <mat-card-content>
+      <form *ngIf="producto"
+            [formGroup]="formProducto"
+            (ngSubmit)="formProducto.valid && guardar()">
+
+        <mat-form-field class="full-ancho">
+          <input matInput
+                 placeholder="Código *"
+                 [(ngModel)]="producto.codigo"
+                 formControlName="codigo"
+                 type="text">
+        </mat-form-field>
+        <control-errores [control]="formProducto.controls.codigo"></control-errores>
+
+        <mat-form-field class="full-ancho">
+          <input matInput
+                 class="full-ancho"
+                 placeholder="Descripción *"
+                 [(ngModel)]="producto.descripcion"
+                 formControlName="descripcion"
+                 type="text">
+        </mat-form-field>
+        <control-errores [control]="formProducto.controls.descripcion"></control-errores>
+
+        <mat-form-field class="full-ancho">
+          <input matInput
+                 class="full-ancho"
+                 placeholder="Valor *"
+                 [(ngModel)]="producto.valor"
+                 type="text"
+                 formControlName="valor">
+        </mat-form-field>
+        <control-errores [control]="formProducto.controls.valor"></control-errores>
+
+        <mat-grid-list cols="3"
+                       rowHeight="80px">
+          <mat-grid-tile [colspan]="1">
+            <mat-checkbox [(ngModel)]="producto.facturable"
+                          (ngModelChange)="changeFacturable($event)"
+                          formControlName="facturable"
+                          aria-label="Facturable">Facturable
+            </mat-checkbox>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="1">
+            <mat-checkbox [(ngModel)]="producto.activo"
+                          formControlName="activo"
+                          aria-label="Estado">Activo
+            </mat-checkbox>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="1">
+            <mat-checkbox [(ngModel)]="producto.editable"
+                          formControlName="editable"
+                          aria-label="Estado">Editable
+            </mat-checkbox>
+          </mat-grid-tile>
+
+          <mat-grid-tile class="izquierda" [colspan]="3">
+            <div class="grid-row">
+              <select-item
+                           [placeholder]="'Tipo de factura'"
+                           [codCatalogo]="'TIPO_FACTURA'"
+                           [isDisabled]="!producto.facturable"
+                           [isRequired]="producto.facturable?true:false"
+                           (notificador)="producto.tipo_factura=$event"
+                           [selectedValue]="producto.tipo_factura">
+              </select-item>
+              <div class="mensajeError"
+                   [hidden]="(producto.facturable && producto.tipo_factura) || !producto.facturable ">
+                Este campo es requerido!
+              </div>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile class="izquierda" [colspan]="3">
+            <div class="grid-row">
+              <mat-form-field>
+                <mat-select placeholder="Tipo de impuesto*"
+                            class="full-ancho padding-top"
+                            [(ngModel)]="producto.tipo_impuesto"
+                            formControlName="tipo_impuesto">
+                  <mat-option [value]="">[Seleccione]</mat-option>
+                  <mat-option *ngFor="let item of listaTipoImpuesto"
+                              [value]="item.id">{{ item.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <control-errores [control]="formProducto.controls.tipo_impuesto"></control-errores>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile class="izquierda" [colspan]="3">
+            <div class="grid-row">
+              <select-item class="full-ancho"
+                           [placeholder]="'Tipo de unidad'"
+                           [codCatalogo]="'TIPO_UNIDAD'"
+                           [isRequired]="true"
+                           (notificador)="changeTipoUnidad($event)"
+                           [selectedValue]="producto.tipo_unidad">
+              </select-item>
+              <control-errores [control]="formProducto.controls.tipo_unidad"></control-errores>
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
+
+        <button mat-raised-button
+                color="primary"
+                type="submit">Guardar
+        </button>&nbsp;
+        <button mat-raised-button
+                (click)="navigate()"
+                color="warn"
+                type="button">Cancelar
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  &nbsp;
+  <mat-card *ngIf="producto && producto.id">
+    <toolbar-acciones [titulo]="'Unidades Academicas Administrativas (UAA)'"
+                      [botones]="botones"
+                      [activarEliminar]="activarEliminar"
+                      (notificadorCrear)="changeAgregar($event)"
+                      (notificadorEliminar)="confirmarEliminarUaa($event)">
+    </toolbar-acciones>
+
+    <mat-card-content *ngIf="activarAgregar">
+      <mat-card>
+        <mat-card-subtitle>Seleccione la Unidad Académica Administrativa (UAAs seleccionadas {{listaUaaAgregar.length}})</mat-card-subtitle>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+            <button mat-icon-button disabled></button>
+            <mat-checkbox id="{{node.item.id}}"
+                          [checked]="esItemSeleccionado(node.item)"
+                         (change)="selectedItem(node.item)"
+                          [labelPosition]="'before'">
+               {{node.item.nombre}}
+           </mat-checkbox>
+          </mat-tree-node>
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+            <button mat-icon-button
+                    [attr.aria-label]="'toggle ' + node.filename" matTreeNodeToggle>
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+           <mat-checkbox id="{{node.item.id}}"
+                         [checked]="esItemSeleccionado(node.item)"
+                         (change)="selectedItem(node.item)"
+                         [labelPosition]="'before'">
+               {{node.item.nombre}}
+           </mat-checkbox>
+            <mat-progress-bar *ngIf="node.isLoading" mode="indeterminate"></mat-progress-bar>
+          </mat-tree-node>
+        </mat-tree>
+        <button mat-raised-button color="primary" type="button" [disabled]="listaUaaAgregar.length==0" (click)="agregarUaa()">Agregar</button>
+      </mat-card>
+    </mat-card-content>
+
+    <mat-card-content>
+      <div class="form-group">
+        <select multiple
+                class="form-control"
+                id="listUaaSeleccionados"
+                name="listUaaSeleccionados"
+                [(ngModel)]="listUaaSeleccionados"
+                (ngModelChange)="changeEliminar($event)"
+                required>
+          <option *ngFor="let item of producto.uaas"
+                  [value]="item">{{ item.nombre }}
+          </option>
+        </select>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  &nbsp;
+</div>

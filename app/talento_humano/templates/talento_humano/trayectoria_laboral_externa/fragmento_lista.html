@@ -1,0 +1,46 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Institución</th>
+            <th>Unidad administrativa</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Motivo de Ingreso</th>
+            <th>Motivo de Salida</th>
+            <th>Puesto</th>
+            <th>Tipo de Institución</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for trayectoria_laboral in trayectorias_laborales_externas %}
+            <tr>
+                <td>{{ trayectoria_laboral.institucion }}</td>
+                <td>{{ trayectoria_laboral.unidad_administrativa }}</td>
+                <td>{{ trayectoria_laboral.fecha_inicio }}</td>
+                <td>{{ trayectoria_laboral.fecha_fin }}</td>
+                <td>{{ trayectoria_laboral.motivo_ingreso }}</td>
+                <td>{{ trayectoria_laboral.motivo_salida }}</td>
+                <td>{{ trayectoria_laboral.puesto }}</td>
+                <td>{{ trayectoria_laboral.tipo_institucion }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="{% url 'talento_humano:trayectoria_laboral_externa_editar' trayectoria_laboral.id %}?next={{ request.path }}"
+                           class="btn btn-outline-info"
+                           title="Editar">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="{% url 'talento_humano:trayectoria_laboral_externa_eliminar' trayectoria_laboral.id %}?next={{ request.path }}"
+                           class="btn btn-outline-danger"
+                           title="Eliminar"
+                           onclick="return confirm('¿Está seguro de eliminar el registro?');">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

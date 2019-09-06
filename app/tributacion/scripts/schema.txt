@@ -1,0 +1,23 @@
+1. Seleccionamos la BD
+\c siaaf
+
+2. Creamos el schema
+create schema sri_servicios;
+
+3. Creamos la tabla, vistas y trigger, para ello ejecutamos los scripts
+comprobante_electronico.sql
+vista_comprobante.sql
+vista_comprobante_detalle.sql
+insert_comprobante_trigger.sql
+
+4. Crear los usuarios y permisos
+---Creo el usuario
+CREATE USER siaaf_sri_servicios PASSWORD 'siaaf_sri_servicios';
+
+---Le otorgo permisos para el esquema factura_electronica
+GRANT USAGE ON SCHEMA sri_servicios TO siaaf_sri_servicios;
+
+---Le otorgamos permisos a la tabla y vista
+GRANT SELECT, UPDATE ON TABLE sri_servicios.comprobante_electronico TO siaaf_sri_servicios;
+GRANT SELECT ON TABLE sri_servicios.vista_comprobante TO siaaf_sri_servicios;
+GRANT SELECT ON TABLE sri_servicios.vista_comprobante_detalle TO siaaf_sri_servicios;

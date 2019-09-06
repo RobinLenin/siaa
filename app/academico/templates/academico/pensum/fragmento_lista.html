@@ -1,0 +1,41 @@
+{% load guardian_tags %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Descripción</th>
+            <th>Carrera</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for pensum in pensums %}
+            {% get_obj_perms request.user for pensum as "pensum_perms" %}
+            <tr>
+                <td>
+                    <a {% if perms.academico.view_pensum or 'view_pensum' in pensum_perms %}
+                        href="{% url 'academico:pensum_detalle' pensum.id %}"
+                    {% endif %}>
+                        {{ pensum.nombre }}
+                    </a>
+
+                <td>{{ pensum.programa_estudio.nombre }}
+                <td>
+                    <a title="Eliminar"
+                            {% if perms.academico.delete_pensum or 'delete_pensum' in pensum_perms %}
+                       class="btn btn-outline-danger"
+                       onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                       href="{% url 'academico:pensum_eliminar' pensum.id %}"
+                            {% else %}
+                       class="btn btn-outline-danger disabled"
+                            {% endif %}>
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+

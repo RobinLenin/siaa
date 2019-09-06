@@ -1,0 +1,43 @@
+<div class="modal fade" id="modal-presupuesto">
+    <div class="modal-dialog">
+        <form action="{% url 'planificacion:presupuesto_guardar' %}" method="POST" role="form" class="auto-validate">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Presupuesto</h4>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="hidden" name="actividad" value="{{ presupuesto.actividad.id }}">
+                    <input type="hidden" name="id" value="{{ presupuesto.id|default:'' }}">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    {% if form.subject.errors %}
+                        <ol role="alertdialog">
+                            {% for error in form.subject.errors %}
+                                <li role="alert"><strong>{{ error|escape }}</strong></li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+
+                    {% for field in form %}
+                        {% if not field.is_hidden %}
+                            <div class="fieldWrapper form-group" aria-required={% if field.field.required %}"true"
+                            {% else %}"false"{% endif %}>
+                            {{ field.label_tag }}{% if field.field.required %}<span class="required">*</span>{% endif %}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <p class="help">{{ field.help_text|safe }}</p>
+                            {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+            </div>
+        </form>
+
+    </div>
+</div>

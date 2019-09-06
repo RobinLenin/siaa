@@ -1,0 +1,191 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Paciente
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+  <div class="page-title-breadcrumb">
+    <div class=" pull-left">
+      <div class="page-title">Módulo Hospital Veterinario</div>
+    </div>
+    <ol class="breadcrumb page-breadcrumb pull-right">
+      <li>
+        <i class="fa fa-home"></i>
+        <span class="parent-item">Hospital Veterinario</span> <i class="fa fa-angle-right"></i>
+      </li>
+      <li>
+      
+        <a class="parent-item" href="{% url 'hveterinario:paciente.lista_pacientes_por_propietario' id_propietario_seleccionado %}">Pacientes</a>
+        <i class="fa fa-angle-right"></i>
+      </li>
+      <li class="active">Agregar</li>
+    </ol>
+  </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+  <div class="card-head">
+    <header>Nueva mascota de <strong>{{propietario_seleccionado}}</strong></header>
+    <div class="tools">
+      <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+      <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+      <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+    </div>
+  </div>
+  <div class="card-body ">
+    <div class="container-fluid">
+      <form class="needs-validation" novalidate action="" method="post">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="col-md-4 mb-2">
+            <label class="mb-0" for="numero_historia_clinica">N° historia clínica</label>
+            <input type="text" class="form-control" id="numero_historia_clinica" placeholder="Número HC" 
+              name="numero_historia_clinica" value="{{paciente.numero_historia_clinica}}" required>
+            <div class="invalid-feedback">
+              Campo requerido
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="mb-0" for="fecha_registro_hc">Fecha de Registro HC</label>
+            <input type="text" class="form-control" id="fecha_registro_hc" placeholder="aaaa/mm/dd" 
+              name="fecha_registro_hc" value="{{paciente.fecha_registro_historia_clinica |date:'Y-m-d'}}" required>
+            <div class="invalid-feedback">
+              Ingrese una fecha valida
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="mb-0" for="nombre_paciente">Nombre</label>
+            <input type="text" class="form-control" id="nombre_paciente" placeholder="Nombre" 
+              name="nombre_paciente" value="{{paciente.nombre}}" required>
+            <div class="invalid-feedback">
+              Nombre del paciente es requerido
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-4 mb-2">
+            <label class="mb-0" for="sexo">Sexo</label>
+            <select class="custom-select mr-sm-2 mb-sm-0" id="sexo" name="sexo">
+              <option value="H" {% if paciente.sexo == "H" %}selected="selected"{% endif %}>Hembra</option>
+              <option value="M" {% if paciente.sexo == "M" %}selected="selected"{% endif %}>Macho</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="mb-0" for="especie">Especie</label>
+            <input type="text" class="form-control" id="especie" placeholder="Especie" name="especie"
+              value="{{paciente.especie}}" required>
+            <div class="invalid-feedback">
+              Campo requerido
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="mb-0" for="raza">Raza</label>
+            <input type="text" class="form-control" id="raza" placeholder="Raza" name="raza" 
+              value="{{paciente.raza}}" required>
+            <div class="invalid-feedback">
+              Campo requerido
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-4 mb-2">
+            <label class="mb-0" for="edad">Edad</label>
+            <input type="number" class="form-control" id="edad" placeholder="Edad" name="edad" 
+              value="{{paciente.edad}}" required>
+            <div class="invalid-feedback">
+              Campo requerido.
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+          {% load l10n %} <!--Para los decimales-->
+            <label class="mb-0" for="peso">Peso</label>
+            <input type="number" step="0.01" min="0" class="form-control" id="peso" placeholder="Peso" name="peso" 
+              value="{{paciente.peso|unlocalize}}" required>
+            <div class="invalid-feedback">
+              Campo requerido.
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="mb-0" for="tamanio">Tamaño</label>
+            <input type="number" step="0.01" min="0" class="form-control" id="tamanio" placeholder="Tamaño" name="tamanio"
+              value="{{paciente.tamanio|unlocalize}}" required>
+            <div class="invalid-feedback">
+              Campo requerido
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-4 mb-2">
+            <label class="mb-0" for="color">Color</label>
+            <input type="text" class="form-control" id="color" placeholder="Color" name="color" 
+              value="{{paciente.color}}" required>
+            <div class="invalid-feedback">
+              Campo requerido
+            </div>
+          </div>
+          <div class="col-md-8 mb-2">
+            <div class="form-group">
+              <label class="mb-0" for="procedencia">Procedencia:</label>
+              <textarea class="form-control" rows="2" id="procedencia" name="procedencia">{{paciente.procedencia}}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-6 mb-1">
+            <button class="btn btn-primary btn-md float-right mr-2 " type="submit">Aceptar</button>
+          </div>
+          <div class="col-md-6 mb-1">
+            <a href="{% url 'hveterinario:paciente.lista_pacientes_por_propietario' id_propietario_seleccionado %}" class="btn btn-danger" role="button" aria-disabled="true">
+                <i class="fa fa-file-text"></i>Cancelar
+            </a>
+          </div>
+          
+        </div>
+        
+        
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<!--Validar forms-->
+<script>
+  (function () {
+    'use strict';
+    window.addEventListener('load', function () {
+      var forms = document.getElementsByClassName('needs-validation');
+      var validation = Array.prototype.filter.call(forms, function (form) {
+        form.addEventListener('submit', function (event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+
+<!--USO de datapicker para la fecha de registro de historial clínico de paciente -->
+<script>
+ $(function(){
+    $.datepicker.regional['es'] = {
+        dateFormat: 'yy-mm-dd',
+        minDate: -31390,
+        maxDate: -1
+    };
+    $.datepicker.setDefaults($.datepicker.regional['es']);
+    $("#fecha_registro_hc").datepicker();
+
+});
+</script>
+{% endblock %}

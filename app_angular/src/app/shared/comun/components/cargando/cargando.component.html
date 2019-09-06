@@ -1,0 +1,16 @@
+<mat-card>
+    <mat-card-content>
+        <h5>{{ titulo }}</h5>
+        <mat-progress-bar *ngIf="mostrar=='progress-bar'"
+                         [color]="color"
+                         [mode]="modo"
+                         [value]="progreso">
+        </mat-progress-bar>
+
+        <mat-progress-spinner *ngIf="mostrar=='progress-spinner'"
+                             [color]="color"
+                             [mode]="modo"
+                             [value]="progreso">
+        </mat-progress-spinner>
+    </mat-card-content>
+</mat-card>

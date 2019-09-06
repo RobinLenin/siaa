@@ -1,0 +1,28 @@
+/*
+* Estilo para establecer la justificación
+* de los componentes dentro del md-grid-list
+*/
+md-grid-list .izquierda figure
+  justify-content flex-start !important
+
+md-grid-list .derecha figure
+  justify-content flex-end !important
+
+/*
+* Estilo para establecer la justificación de los componentes
+* de forma vertical - horizontal
+*/
+.grid-row
+  overflow hidden
+  flex-direction column
+  display flex
+  -moz-box-flex 1
+  flex 1 1 0
+
+.grid-column
+  overflow hidden
+  flex-direction: row;
+  display flex
+
+
+

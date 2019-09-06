@@ -1,0 +1,114 @@
+<toolbar-acciones [titulo]="'Productos'"
+                  [botones]="botones"
+                  [resultado]="productos.length"
+                  [activarEditar]="activarEditar"
+                  [activarEliminar]="activarEliminar"
+                  [activarBuscador]="activarBuscador"
+                  (notificadorInit)="initProductos()"
+                  (notificadorCrear)="crear()"
+                  (notificadorEditar)="editar()"
+                  (notificadorEliminar)="confirmarEliminarProducto()"
+                  (notificadorBuscador)="changeBuscador()">
+</toolbar-acciones>
+
+<paginador-buscar *ngIf="activarBuscador"
+                  [servicioUrl]="servicio"
+                  [itemsPorPagina]="itemsPorPagina"
+                  [filtro]="filtro"
+                  (notificadorFiltro)="filtro=$event"
+                  (notificadorDatos)="productos=$event">
+</paginador-buscar>
+
+<mat-card>
+    <mat-card-content>
+        <div class="example-container mat-elevation-z8">
+            <mat-table [dataSource]="productos">
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <mat-checkbox id="chkProducto{{element.codigo}}"
+                                      [checked]="esItemSeleccionado(element)"
+                                      (change)="selectedItem(element)"></mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Code Column -->
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.codigo }} </mat-cell>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="descripcion">
+                    <mat-header-cell *matHeaderCellDef> Descripcion </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.descripcion }} </mat-cell>
+                </ng-container>
+
+                <!-- Value Column -->
+                <ng-container matColumnDef="valor">
+                    <mat-header-cell *matHeaderCellDef> Valor </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.valor }} </mat-cell>
+                </ng-container>
+
+                <!-- Facturable Column -->
+                <ng-container matColumnDef="facturable">
+                    <mat-header-cell *matHeaderCellDef> Facturable </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <div *ngIf="element.facturable">
+                            <mat-icon mat-list-avatar class="material-icons verde">check_circle</mat-icon>
+                        </div>
+                        <div *ngIf="!element.facturable">
+                            <mat-icon mat-list-avatar class="material-icons rojo">cancel</mat-icon>
+                        </div>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Type Fact. Column -->
+                <ng-container matColumnDef="tipo_factura">
+                    <mat-header-cell *matHeaderCellDef> Tipo factura </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.tipo_factura ? element.tipo_factura.nombre : '' }} </mat-cell>
+                </ng-container>
+
+                <!-- Status Column -->
+                <ng-container matColumnDef="activo">
+                    <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <div *ngIf="element.activo">
+                            <mat-icon mat-list-avatar class="material-icons verde">check_circle</mat-icon>
+                        </div>
+                        <div *ngIf="!element.activo">
+                            <mat-icon mat-list-avatar class="material-icons rojo">cancel</mat-icon>
+                        </div>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Editable Column -->
+                <ng-container matColumnDef="editable">
+                    <mat-header-cell *matHeaderCellDef> Editable </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <div *ngIf="element.editable">
+                            <mat-icon mat-list-avatar class="material-icons verde">check_circle</mat-icon>
+                        </div>
+                        <div *ngIf="!element.editable">
+                            <mat-icon mat-list-avatar class="material-icons rojo">cancel</mat-icon>
+                        </div>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<paginador-scroll [servicioUrl]="servicio"
+                  [itemsPorPagina]="itemsPorPagina"
+                  [filtro]="filtro"
+                  [pagina]="pagina"
+                  [datos]="productos"
+                  (notificadorPagina)="pagina=$event"
+                  (notificadorDatos)="productos=$event">
+</paginador-scroll>
+

@@ -1,0 +1,111 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Paciente
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+  <div class="page-title-breadcrumb">
+    <div class=" pull-left">
+      <div class="page-title">Módulo Hospital Veterinario</div>
+    </div>
+    <ol class="breadcrumb page-breadcrumb pull-right">
+      <li>
+        <i class="fa fa-home"></i>
+        <span class="parent-item">Hospital Veterinario</span> <i class="fa fa-angle-right"></i>
+      </li>
+      <li>
+      
+        <a class="parent-item" href="{% url 'hveterinario:consulta.lista_consulta_por_pacientes' id_paciente_seleccionado %}">Consultas</a>
+        <i class="fa fa-angle-right"></i>
+      </li>
+      <li class="active">Agregar</li>
+    </ol>
+  </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+  <div class="card-head">
+    <header>Nueva consulta de <strong>{{paciente_seleccionado}}</strong></header>
+    <div class="tools">
+      <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+      <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+      <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+    </div>
+  </div>
+  <div class="card-body ">
+    <div class="container-fluid">
+      <form class="needs-validation" novalidate action="" method="post">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="col-md-6 mb-2">
+            <label class="mb-0" for="medico_responsable">Médico Responsable</label>
+            <input type="text" class="form-control" id="medico_responsable" placeholder="Médico Responsable" 
+              name="medico_responsable" value="{{consulta.medico_responsable}}" required>
+            <div class="invalid-feedback">
+              Campo requerido
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="mb-0" for="estudiante_interno">Estudiante Interno</label>
+            <input type="text" class="form-control" id="estudiante_interno" placeholder="Estudiante Interno" 
+              name="estudiante_interno" value="{{consulta.estudiante_interno}}" required>
+            <div class="invalid-feedback">
+              Campo requerido
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label class="mb-0" for="motivo_consulta">Procedencia:</label>
+              <textarea class="form-control" maxlength="390" rows="3" id="motivo_consulta" name="motivo_consulta" required>{{consulta.motivo_consulta}}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-6 mb-1">
+            <button class="btn btn-primary btn-md float-right mr-2 " type="submit">Aceptar</button>
+            <!--<input type="submit" name="postVenue" value="Post Venue">-->
+          </div>
+          <div class="col-md-6 mb-1">
+            <a href="{% url 'hveterinario:consulta.lista_consulta_por_pacientes' id_paciente_seleccionado %}" class="btn btn-danger" role="button" aria-disabled="true">
+                <i class="fa fa-file-text"></i>Cancelar
+            </a>
+          </div>
+          
+        </div>
+        
+        
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<!--Validar forms-->
+<script>
+  (function () {
+    'use strict';
+    window.addEventListener('load', function () {
+      var forms = document.getElementsByClassName('needs-validation');
+      var validation = Array.prototype.filter.call(forms, function (form) {
+        form.addEventListener('submit', function (event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+
+{% endblock %}

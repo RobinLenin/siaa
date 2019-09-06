@@ -1,0 +1,40 @@
+{% include 'talento_humano/reporte/fragmento_grupo_ocupacional.html' with grupo=puesto.grupo_ocupacional %}
+<tr>
+    <th colspan="2" class="titulo">Datos del Puesto</th>
+</tr>
+{% if puesto.ambito_ejecucion %}
+    <tr>
+        <th>Ambito de ejecución</th>
+        <td>{{ puesto.ambito_ejecucion }}</td>
+    </tr>
+{% endif %}
+{% if puesto.anio_clasificacion_puesto %}
+    <tr>
+        <th>Año de clasificación</th>
+        <td>{{ puesto.anio_clasificacion_puesto }}</td>
+    </tr>
+{% endif %}
+{% if puesto.denominacion %}
+    <tr>
+        <th>Denominación</th>
+        <td>{{ puesto.denominacion }}</td>
+    </tr>
+{% endif %}
+{% if puesto.denominacion_ministerio_finanzas %}
+    <tr>
+        <th>Denominación Ministerio Finanzas</th>
+        <td>{{ puesto.denominacion_ministerio_finanzas }}</td>
+    </tr>
+{% endif %}
+{% if puesto.horas_dedicacion %}
+    <tr>
+        <th>Horas de dedicación</th>
+        <td>{{ puesto.horas_dedicacion }}</td>
+    </tr>
+{% endif %}
+{% if puesto.responsable_uaa %}
+    <tr>
+        <th>Rewsponsable de la UAA</th>
+        <td>{{ puesto.responsable_uaa|yesno:'Si, No' }}</td>
+    </tr>
+{% endif %}

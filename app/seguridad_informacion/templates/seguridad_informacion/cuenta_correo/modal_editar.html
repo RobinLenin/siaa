@@ -1,0 +1,78 @@
+<div class="modal fade" id="modal-cuenta-correo-editar">
+    <form action="{% url 'seguridad_informacion:cuenta_correo_guardar' %}" method="POST" role="form"
+          class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ cuenta_correo.id }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Cuenta de correo</h4>
+                </div>
+                <div class="modal-body">
+                    <label for="numero_documento">Numero de identificacion:</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" minlength="5" id="numero_documento" name="numero_documento" required
+                               placeholder="Numero de identificacion">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-primary " id="verificar" disabled><i></i>Verificar</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="email_institucional">Email institucional:</label>
+                            <input id="email_institucional" type="email" class="form-control" name="email_institucional"
+                                   value="{{ cuenta_correo.email_institucional }}" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="email_alternativo">Email alternativo:</label>
+                            <input id="email_alternativo" type="email" class="form-control" name="email_alternativo"
+                                   value="{{ cuenta_correo.email_alternativo }}">
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label for="tipo">Tipo de usuario:</label>
+                        <select id="tipo" name="tipo" class="form-control required">
+                            <option value="">--Seleccione--</option>
+                            {% for key, value in TIPO_CHOICES %}
+                                <option value="{{ key }}" {% if key == cuenta_correo.tipo %}selected{% endif %}>
+                                    {{ value }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="nombres">Nombres:</label>
+                            <input id="nombres" type="text" class="form-control" name="nombres"
+                                   value="{{ cuenta_correo.nombres }}" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="apellidos">Apellidos:</label>
+                            <input id="apellidos" type="text" class="form-control" name="apellidos"
+                                   value="{{ cuenta_correo.apellidos }}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="telefono">Telefono:</label>
+                            <input id="telefono" type="tel" class="form-control" name="telefono"
+                                   minlength="9" value="{{ cuenta_correo.telefono }}" >
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="celular">Celular:</label>
+                            <input id="celular" type="tel" class="form-control" name="celular"
+                                   minlength="10" value="{{ cuenta_correo.celular }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button id="guardar-cuenta" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

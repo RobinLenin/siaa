@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Vincular Funcionario
+{% endblock %}
+
+
+{% block migas %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'index' %}">Inicio</a>
+        </li>
+        <li>
+            <a href="{% url 'talento_humano:funcionarios.funcionario.usuario' %}">Funcionario</a>
+        </li>
+        <li>
+            <a href="{% url 'talento_humano:index' %}">Talento humano</a>
+        </li>
+        <li>
+            <a href="{% url 'talento_humano:funcionarios.index' %}">Funcionarios</a>
+        </li>
+        <li class="active">Vincular funcionario</li>
+    </ol>
+{% endblock %}
+
+{% block contenido %}
+    <form action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+        <table class="table table-hover">
+            {{ form.as_table }}
+            <tr>
+                <th></th>
+                <td>
+                    <input type='submit' class='btn btn-primary btn-sm' value='Agregar' />
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

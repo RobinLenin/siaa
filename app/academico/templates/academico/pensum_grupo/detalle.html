@@ -1,0 +1,86 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Grupos de Pensum
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.PensumGrupo'|verbose_name }}</header>
+            <div class="tools">
+                <button class="btn btn-info"
+                        data-toggle="modal" data-target="#modal-pensum-grupo-editar"
+                        {% if not perms.academico.change_pensumgrupo %} disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </button>
+                <a
+                        {% if perms.academico.delete_pensumgrupo %}
+                            class="btn btn-danger"
+                            onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                            href="{% url 'academico:pensum_grupo_eliminar' pensum_grupo.id %}"
+                        {% else %}
+                            class="btn btn-outline-danger disabled"
+                        {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="panel panel-default">
+                <div class="panel-heading row">
+                    <div class="text-center col-sm-8">
+                        <h4>{{ pensum_grupo.nombre }}</h4>
+                    </div>
+                    <div class="btn-group-vertical col-sm-4">
+
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-sm-4">Nivel de inicio:</span>
+                        <div class="col-sm-8">
+                            <h5>{{ pensum_grupo.nivel_inicio|default:0 }}</h5>
+                        </div>
+                        <span class="col-sm-4">Nivel de fin:</span>
+                        <div class="col-sm-8">
+                            <h5>{{ pensum_grupo.nivel_fin|default:0 }}</h5>
+                        </div>
+                        <span class="col-sm-4">Pensums optativos minimos a aprobar:</span>
+                        <div class="col-sm-8">
+                            <h5>{{ pensum_grupo.nro_optativo_obligatorios }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Pensums Asociados
+                        <button class="btn btn-circle btn-info btn-sm pull-right"
+                                data-toggle="modal" data-target="#modal-pensum-complementario-editar"
+                                {% if not perms.academico.add_pensumcomplementario %} disabled {% endif %}>
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-group">
+                        {% for pensum_complementario in pensum_grupo.pensums_complementarios.all %}
+                            <div class="col-xl-3 col-md-4 col-sm-6">
+                                {% include 'academico/pensum_complementario/fragmento_detalle_card.html' %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'academico/pensum_grupo/modal_editar.html' %}
+    {% include 'academico/pensum_complementario/modal_editar.html' %}
+
+{% endblock contenido %}

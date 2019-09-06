@@ -1,0 +1,336 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Vacaciones Funcionarios
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'talento_humano:vacaciones.index' %}" class="parent-item">Vacaciones</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">{{ vacaciones.funcionario }}
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            Administración de Vacaciones
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>Funcionario</th>
+                            <td>{{ funcionario }}</td>
+                        </tr>
+                        <tr>
+                            <th>Puesto</th>
+                            <td>{{ vacaciones.asignacion_puesto.uaa_puesto }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tipo de relación laboral</th>
+                            <td>{{ vacaciones.asignacion_puesto.tipo_relacion_laboral }}</td>
+                        </tr>
+                        <tr>
+                            <th>Desde</th>
+                            <td>{{ vacaciones.asignacion_puesto.fecha_inicio }}</td>
+                        </tr>
+                        {% if vacaciones.asignacion_puesto.fecha_fin %}
+                        <tr>
+                            <th>Hasta</th>
+                            <td>{{ vacaciones.asignacion_puesto.fecha_fin }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if vacaciones.asignacion_puesto.fecha_termino %}
+                        <tr>
+                            <th>Termino</th>
+                            <td>{{ vacaciones.asignacion_puesto.fecha_termino }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Periodo de cálculo</th>
+                            {% if periodo_vacaciones %}
+                            <td>{{ periodo_vacaciones }}</td>
+                            {% else %}
+                            <td>No tiene un periodo configurado</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th>Dias totales</th>
+                            <td>{{ vacaciones.dias_totales }}</td>
+                        </tr>
+                        <tr>
+                            <th>Horas Totales</th>
+                            <td>{{ vacaciones.horas_totales }}</td>
+                        </tr>
+                        <tr>
+                            <th>Minutos Totales</th>
+                            <td>{{ vacaciones.minutos_totales }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dias pendientes</th>
+                            <td>{{ vacaciones.dias_pendientes }}</td>
+                        </tr>
+                        <tr>
+                            <th>Horas pendientes</th>
+                            <td>{{ vacaciones.horas_pendientes }}</td>
+                        </tr>
+                        <tr>
+                            <th>Minutos pendientes</th>
+                            <td>{{ vacaciones.minutos_pendientes }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% if vacaciones and vacaciones.activo %}
+            <div class="col-md-12">
+                <a class="btn btn-primary" data-toggle="modal" href="#generar-vaccion">Generar Vacación</a>
+                <a class="btn btn-primary" data-toggle="modal" href="#vacacion-manual">Vacaciones manual</a>
+                <a class="btn btn-primary"
+                   href="{% url 'talento_humano:vacaciones.detalle.recalcular' vacaciones.id %}">
+                    Recalcular Vacaciones
+                </a>
+                <a class="btn btn-primary" data-toggle="modal" href="#modal-compensación">Compensación de dias</a>
+                <a href="{% url 'talento_humano:reporte.vacacion' vacaciones.id %}" target="_blank"
+                   class="btn btn-danger">
+                    <i class="fa fa-file-pdf-o"></i> Pdf
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="col-md-12">
+                <h3>Vacaciones</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Desde</th>
+                            <th>Hasta</th>
+                            <th>Dias</th>
+                            <th>Observación</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for vacacion in vacaciones.registrovacaciones_set.all %}
+                        <tr>
+                            <td>{{ vacacion.fecha_inicio }}</td>
+                            <td>{{ vacacion.fecha_fin }}</td>
+                            <td>{{ vacacion.get_numero_dias }}</td>
+                            <td>{{ vacacion.observacion }}</td>
+                            <td>
+                                {%if vacaciones.activo %}
+                                <a href="{% url 'talento_humano:vacaciones.registro.eliminar' vacacion.id  funcionario.id %}"
+                                   onClick="javascript: return confirm('¿Estas seguro?');">
+                                    Quitar
+                                </a>
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <h3>Ausentismos</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Descripcion</th>
+                            <th>Permiso</th>
+                            <th>Desde</th>
+                            <th>Hasta</th>
+                            <th>Dias</th>
+                            <th>Horas</th>
+                            <th>Minutos</th>
+                            <th>Registro</th>
+                            <th>Observación</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ausentismo in vacaciones.ausentismofuncionario_set.all %}
+                        <tr>
+                            <td>{{ ausentismo.ausentismo.tipo_ausentismo }}</td>
+                            <td>{{ ausentismo.ausentismo.nombre }}</td>
+                            <td>{{ ausentismo.tipo_permiso }}</td>
+                            <td>{{ ausentismo.fecha_inicio }}</td>
+                            <td>{{ ausentismo.fecha_fin }}</td>
+                            <td>{{ ausentismo.dias }}</td>
+                            <td>{{ ausentismo.horas }}</td>
+                            <td>{{ ausentismo.minutos }}</td>
+                            <td>{{ ausentismo.fecha_registro }}</td>
+                            <td>{{ ausentismo.observacion }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <h3>Compensación de días</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Nro Dias</th>
+                            <th>Nro Horas</th>
+                            <th>Nro Minutos</th>
+                            <th>Fecha de registro</th>
+                            <th>Observaciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for compensacion in vacaciones.compensaciondias_set.all %}
+                        <tr>
+                            <td>{{ compensacion.dias }}</td>
+                            <td>{{ compensacion.horas }}</td>
+                            <td>{{ compensacion.minutos }}</td>
+                            <td>{{ compensacion.fecha_registro }}</td>
+                            <td>{{ compensacion.observacion }}</td>
+                            <td>
+                                {% if vacaciones.activo %}
+                                <a href="{% url 'talento_humano:vacaciones.compensacion.eliminar' compensacion.id  funcionario.id %}"
+                                   onClick="javascript: return confirm('¿Estas seguro?');">
+                                    Quitar
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="generar-vaccion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title">Generar Vacación</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <th>Descripcion</th>
+                        <th>Fecha desde</th>
+                        <th>Fecha hasta</th>
+                        <th>dias</th>
+                        <th>Opciones</th>
+                        </thead>
+                        {% for detalle in planificacion.detalles.all %}
+                        <tr>
+                            <td>{{ detalle.descripcion }}</td>
+                            <td>{{ detalle.fecha_desde }}</td>
+                            <td>{{ detalle.fecha_hasta }}</td>
+                            <td>{{ detalle.get_numero_dias }}</td>
+                            <td>
+                                <a href="{% url 'talento_humano:vacaciones.detalle.generar.vacaciones' detalle.id vacaciones.id %}">generar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="vacacion-manual">
+    <div class="modal-dialog">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                    </button>
+                    <h4 class="modal-title">Vacaciones manuales</h4>
+                </div>
+                <div class="modal-body">
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <input type='submit' class='btn btn-primary' value='Agregar'/>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="modal-compensación">
+    <div class="modal-dialog">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                    </button>
+                    <h4 class="modal-title">Compensación de dias</h4>
+                </div>
+                <div class="modal-body">
+                    {{ form_compensacion }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <input type='submit' class='btn btn-primary' value='Agregar'/>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock %}
+
+{% block javascript %}
+<script>
+        $(function () {
+            $.datepicker.regional['es'] = {
+                minDate: "{{ planificacion.fecha_desde|date:'Y-m-d' }}",
+                maxDate: "{{ fecha_hasta_mes|date:'Y-m-d'  }}"
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+</script>
+{% endblock %}

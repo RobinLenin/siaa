@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Plan Estrategicos
+{% endblock %}
+
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Modulo de Planificacion</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{% url 'planificacion:plan_operativo_lista' %}" class="parent-item">Planes Operativos</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:plan_operativo_detalle' meta_anual.get_plan_operativo.id %}"
+                       class="parent-item">Plan Operativo {{ meta_anual.get_plan_operativo.periodo }}</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Meta</li>
+            </ol>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Meta Anual</header>
+            <div class="tools">
+                <a title="Editar Meta Anual" class="btn btn-info"
+                   data-toggle="modal" data-target="#modal-meta"
+                    {% if not perms.planificacion.change_meta_anual%} disabled {% endif %}>
+                <i class="fa fa-edit"></i> Editar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            {% include 'planificacion/meta_anual/fragmento_detalle.html' %}
+        </div>
+    </div>
+
+    {% include 'planificacion/actividad/modal_editar.html' %}
+    {% include 'planificacion/meta_anual/modal_editar.html' with indicador=meta_anual.indicador %}
+
+
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/planificacion/actividad_lista.js' %}"></script>
+    <script src="{% static 'js/planificacion/actividad_editar.js' %}"></script>
+
+{% endblock javascript %}

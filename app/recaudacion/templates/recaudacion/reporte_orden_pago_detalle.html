@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title> Detalles de la orden de pago </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+</head>
+<body>
+    {% load  tags %}
+
+    {% for detalle in orden_pago_detalles %}
+
+        {% for i in range %}
+            <div class="derecho-height {% if not forloop.last %} derecho-border {% endif%}">
+                <h4 class="text-center" style="margin-bottom:5px">UNIVERSIDAD NACIONAL DE LOJA</h4>
+                <p class="text-center" style="margin:0px">{{ fecha }}</p>
+
+                <table class="ancho-100">
+                    <tr>
+                        <td><u>Fecha:</u></td>
+                        <td>{% if detalle.orden_pago.pago %}
+                                {{ detalle.orden_pago.pago.fecha_pago|date:"Y-m-d" }}
+                            {% else %}
+                                {{ detalle.orden_pago.fecha_emision|date:"Y-m-d" }}
+                            {% endif %}
+                        </td>
+                        <td><u>Área</u></td>
+                        <td><u>Secuencial</u></td>
+                    </tr>
+                    <tr>
+                        <td><u>Id. Cliente:</u></td>
+                        <td>{{ detalle.orden_pago.persona.numero_documento }}</td>
+                        <td>{{ detalle.orden_pago.punto_emision_uaa.codigo }}</td>
+                        <td>{% get_formato_secuencial_orden_pago_detalle detalle.secuencial %}</td>
+                    </tr>
+                    <tr>
+                        <td><u>Nombre Cliente:</u></td>
+                        <td colspan="3">{{ detalle.orden_pago.persona.get_nombres_completos.upper }}</td>
+                    </tr>
+                </table>
+                <table class="ancho-100">
+                    <tr>
+                        <th>Rubro</th>
+                        <th>Cant.</th>
+                        <th style="min-width: 60px;">Valor U.</th>
+                        <th>IVA</th>
+                        <th style="min-width: 75px;">Valor Iva</th>
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        <td>{{ detalle.producto_codigo }} - {{ detalle.producto_descripcion }}</td>
+                        <td>{{ detalle.cantidad }}</td>
+                        <td>{{ detalle.precio }}</td>
+                        <td>{{ detalle.tipo_impuesto.nombre }}</td>
+                        <td>{{ detalle.impuesto }}</td>
+                        <td>{{ detalle.total }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">{{ detalle.observacion.upper }}</td>
+                    </tr>
+                </table>
+                <br>
+                <table class="ancho-100">
+                    <tr class="text-center">
+                        <td>_________________________</td>
+                        <td rowspan="3">**ESTE DOCUMENTO NO TIENE VALIDEZ TRIBUTARIA</td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>{{ usuario.persona.numero_documento }}-{{ usuario.persona.get_nombres_completos }}</td>
+                    </tr>
+                    <tr class="text-center">
+                        <td><u>Usuario Recepta</u></td>
+                    </tr>
+                </table>
+            </div>
+        {% endfor %}
+
+        {% if not forloop.last %}
+            <div class="saltar-pagina-siguiente"></div>
+        {% endif %}
+
+    {% endfor %}
+</body>
+</html>

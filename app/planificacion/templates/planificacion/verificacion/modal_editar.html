@@ -1,0 +1,43 @@
+<div class="modal fade" id="modal-verificacion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{% url 'planificacion:verificacion_guardar' %}" enctype="multipart/form-data" method="POST"
+                  role="form" >
+                {% csrf_token %}
+                <input type="hidden" name="actividad" value="{{ actividad.id }}"/>
+                <input type="hidden" name="id" value="{{ verificacion.id }}"/>
+                <input type="hidden" name="next" value="{{ request.path }}"/>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Medio de Verificacion</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre"><span class="required">*</span> Descripcion</label>
+                        <textarea id="nombre" name="nombre" type="text" class="form-control"
+                                  required
+                                  placeholder="Ingrese una descripcion del medio de verificacion...">{{ verificacion.nombre }}</textarea>
+                    </div>
+                    <div class="input-group">
+                        <input name="documento" type="file" required>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input id="actividad-termino" type="checkbox" class="form-check-input"
+                                   name="actividad_termino"
+                                    {% if actividad.actividad_termino %} checked {% endif %}>
+                            <label for="actividad-termino">Este medio de verificación da por terminada la actividad?
+                            </label>
+                            <span class="text-danger">Si selecciona esta opción ya no podrá agregar más documentos de verificacion</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+            </form>
+         </div>
+    </div>
+</div>

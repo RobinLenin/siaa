@@ -1,0 +1,75 @@
+<style>
+	#mat-fab-btn{
+		position: fixed;
+		bottom: 45px;
+		right: 24px;
+		margin-bottom: 0;
+		z-index: 997;
+	}
+	#mat-fab-btn>span{
+		display: inline;
+	}
+</style>
+<mat-toolbar color="warn" class="md-hue-2" *ngIf="isVisible">
+	<mat-toolbar-row>
+		<div class="row col-lg-11 col-md-11 col-sm-11">
+			<span class="col-lg-10 col-md-10 col-sm-12">{{ titulo }}</span>
+			<div class="col-lg-2 col-md-2 col-sm-12">
+				<span class="fill-remaining-space"></span>
+				<span *ngIf="codToolbar=='TOOLBAR_BUSCADOR'">
+					<a mat-icon-button (click)="crear($event)" title="Nuevo" *ngIf="isNuevo">
+						<mat-icon class="material-icons md-24">playlist_add</mat-icon>
+					</a>
+					<button mat-icon-button [mat-menu-trigger-for]="menu" *ngIf="operaciones" title="Más Acciones">
+						<mat-icon>more_vert</mat-icon>
+					</button>
+					<mat-menu #menu="matMenu">
+						<span *ngFor="let item of i_multOperaciones; let i = index">
+							<button mat-menu-item (click)="changeNavegacion(item.codigo,item.path)"
+									[disabled]="item.desabilitar"> {{ item.nombre }} </button>
+						</span>
+					</mat-menu>
+					<a mat-icon-button (click)="editar($event)" title="Editar">
+						<mat-icon class="material-icons md-24">edit</mat-icon>
+					</a>
+					<a mat-icon-button title="Eliminar" [disabled]="!isEliminar">
+						<mat-icon class="material-icons md-24">delete</mat-icon>
+					</a>
+				</span>
+				<span *ngIf="codToolbar=='TOOLBAR_ADMIN'">
+					<a mat-icon-button title="Regresar" (click)="retorno($event)">
+						<mat-icon class="material-icons md-24">undo</mat-icon>
+					</a>
+					<a mat-icon-button (click)="limpiar()" title="Limpiar">
+						<mat-icon class="material-icons md-24">clear_all</mat-icon>
+					</a>
+					<a mat-icon-button (click)="guardar()" title="Guardar">
+						<mat-icon class="material-icons md-24">save</mat-icon>
+					</a>
+					<button mat-fab color="primary" id="mat-fab-btn" (click)="guardar()" title="Guardar">
+						<mat-icon class="material-icons md-24" style="vertical-align: top; display: inline">save</mat-icon>
+					</button>
+					<a mat-icon-button title="Eliminar" (click)="eliminar()">
+						<mat-icon class="material-icons md-24">delete</mat-icon>
+					</a>
+				</span>
+				<plantilla-imprimir id="imprimir"
+									title="Imprimir"
+									[ejecutar]="ejecutar"
+									[dataBruta]="dataBruta"
+									[activarImprimir]="true"
+									[titulo]="titulo"
+									[funcionalidad]="funcionPDF"
+									[departamento]="departamentoPDF"
+									[reporte]="titulo"
+									[(data)]="dataPDF"
+									[(typeTable)]="tipoPDF"
+									[columns]="columnsPDF">
+				</plantilla-imprimir>
+				<a mat-icon-button (click)="help()" title="Ayuda">
+					<mat-icon class="material-icons md-24">help</mat-icon>
+				</a>
+			</div>
+		</div>
+	</mat-toolbar-row>
+</mat-toolbar>

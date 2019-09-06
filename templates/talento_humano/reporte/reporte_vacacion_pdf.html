@@ -1,0 +1,59 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte Trayectoria</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<h2>Reporte Vacaciones</h2>
+<p class="derecha">
+    Fecha de Impresión: {% now "Y-m-d H:i" %}
+</p>
+
+<table>
+        {{vacacion.funcionario.usuario.persona.numero_documento }} |
+        {{vacacion.funcionario.usuario.persona.get_apellidos }}
+        {{vacacion.funcionario.usuario.persona.get_nombres }}
+        <tr>
+            <th>Puesto</th>
+            <th>Tipo de relación laboral</th>
+            <th>Desde</th>
+            <th>Hasta</th>
+            <th>Dias pendientes</th>
+            <th>Horas pendientes</th>
+            <th>Minutos pendientes</th>
+        </tr>
+        <tr>
+            <td>
+                {{ vacacion.asignacion_puesto.uaa_puesto }}
+            </td>
+            <td>
+                {{ vacacion.asignacion_puesto.tipo_relacion_laboral  }}
+            </td>
+            <td>
+                {{ vacacion.asignacion_puesto.fecha_inicio }}
+            </td>
+            <td>
+                {% if vacacion.asignacion_puesto.fecha_fin %}
+                    {{ vacacion.asignacion_puesto.fecha_fin }}
+                {% endif %}
+            </td>
+            <td>
+                {{ vacacion.dias_pendientes}}
+            </td>
+            <td>
+                {{ vacacion.horas_pendientes}}
+            </td>
+            <td>
+                {{ vacacion.minutos_pendientes }}
+            </td>
+        </tr>
+
+</table>
+
+Generado por {{ generado }}
+
+</body>

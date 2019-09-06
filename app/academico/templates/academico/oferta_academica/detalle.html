@@ -1,0 +1,217 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Oferta académica
+{% endblock %}
+
+{% block estilos %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/academico/oferta_academica_editar.css' %}">
+{% endblock estilos %}
+
+{% block migas %}
+    {% include 'navegacion.html' %}
+{% endblock %}
+
+{% block contenido %}
+    {% load guardian_tags %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.OfertaAcademica'|verbose_name }}</header>
+            <div class="tools">
+                <button class="btn btn-info"
+                        data-toggle="modal"
+                        data-target="#modal-oferta-academica-editar"
+                        {% if not perms.academico.change_ofertaacademica %} disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </button>
+                <a {% if perms.academico.delete_ofertaacademica %}
+                    class="btn btn-danger"
+                    onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                    h href="{% url 'academico:oferta_academica_eliminar' oferta_academica.id %}"
+                {% else %}
+                    class="btn btn-outline-danger disabled"
+                {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="header">
+                <div class="text-center">
+                    <h4>{{ oferta_academica.nombre }}</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group form-inline text-left">
+                    <span class="col-md-2">Periódo académico:</span>
+                    <div class="col-md-10">
+                        <h5>
+                            <a {% if perms.academico.view_periodoacademico %}
+                                href="{% url 'academico:periodo_academico_detalle' oferta_academica.periodo_academico.id %}"
+                            {% endif %}>{{ oferta_academica.periodo_academico.nombre }}</a>
+                        </h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-inline text-left">
+                            <span class="col-md-4">Fecha de inicio:</span>
+                            <div class="col-md-8">
+                                {{ oferta_academica.fecha_inicio }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-inline text-left">
+                            <span class="col-md-4">Fecha de fin:</span>
+                            <div class="col-md-8">
+                                {{ oferta_academica.fecha_fin }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-inline text-left">
+                            <span class="col-md-4">Estado:</span>
+                            <div class="col-md-8">
+                                {{ oferta_academica.estado }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'academico.PeriodoMatricula'|verbose_name_plural }}
+                        <button class="btn btn-circle btn-info btn-sm pull-right periodo-matricula-crear"
+                                data-toggle="modal" data-target="#modal-periodo-matricula-editar"
+                                {% if not perms.academico.add_periodomatricula %} disabled {% endif %}>
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% include 'academico/periodo_matricula/fragmento_lista.html' with periodos_matricula=oferta_academica.periodos_matricula.all %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.OfertaPensum'|verbose_name_plural|capfirst }}</header>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                {% if perms.academico.add_ofertapensum %}
+                    <div class="col-md-6 col-sm-6">
+                        <div class="card card-box card-programas-list">
+                            <div class="card-head">
+                                <h4>Seleccione los Pensums a ofertar</h4>
+                            </div>
+                            <div class="card-body" id="line-parent" style="overflow-y: auto;">
+                                <input class="form-control" id="buscar" type="text" placeholder="Buscar..">
+                                <div class="list-group" id="pensums-list">
+                                    {% for programa_estudio in programas_estudio %}
+                                        <div class="programa" data-carrera="{{ programa_estudio.nombre }}">
+                                            <div class="">
+                                                <a class="list-group-item" data-toggle="collapse"
+                                                   href="#programa_{{ programa_estudio.id }}">
+                                                    {{ programa_estudio.nombre }}
+                                                    - {{ programa_estudio.get_modalidad_display }}
+                                                </a>
+                                            </div>
+                                            <div id="programa_{{ programa_estudio.id }}" class="collapse"
+                                                 data-parent="#pensums-list">
+                                                <div class="card-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for pensum in programa_estudio.pensums.all %}
+                                                            <a id="pensum_{{ pensum.id }}"
+                                                               data-pensum="{{ pensum.nombre }}"
+                                                               data-programa="{{ programa_estudio.nombre }}"
+                                                               data-pensum-id="{{ pensum.id }}"
+                                                               data-oferta-academica-id="{{ oferta_academica.id }}"
+                                                                    {% if pensum.id in pensums_ofertados_ids %}
+                                                               class="list-group-item disabled agregar-pensum"
+                                                                    {% else %}
+                                                               class="list-group-item agregar-pensum"
+                                                                    {% endif %}
+                                                               href="#tabla-pensums"> {{ pensum.nombre }}</a>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="col-md-6 col-sm-6">
+                    <div class="card card-box">
+                        <div class="card-head">
+                            <h4>Pensums ofertados</h4>
+                        </div>
+                        <div class="card-body" id="line-parent">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="tabla-pensums">
+                                        <thead>
+                                        <tr>
+                                            <th>Programa Estudio</th>
+                                            <th>Pensum</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for oferta_pensum in oferta_academica.ofertas_pensum.all %}
+                                            {% get_obj_perms request.user for oferta_pensum as "ofertapensum_perms" %}
+                                            {% if perms.academico.delete_ofertapensum or perms.academico.view_ofertapensum or 'view_ofertapensum' in ofertapensum_perms %}
+                                                <tr>
+                                                    <td>
+                                                        <a
+                                                                {% if perms.academico.view_ofertapensum or 'view_ofertapensum' in ofertapensum_perms %}
+                                                                    href="{% url 'academico:oferta_pensum_detalle' oferta_pensum.id %}"
+                                                                {% endif %}>
+                                                            {{ oferta_pensum.pensum.programa_estudio.nombre }}
+                                                            - {{ oferta_pensum.pensum.programa_estudio.modalidad }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ oferta_pensum.pensum.nombre }}
+                                                    <td>
+                                                        <button data-oferta-pensum-id="{{ oferta_pensum.id }}"
+                                                                data-pensum-id="{{ oferta_pensum.pensum.id }}"
+                                                                title="Eliminar"
+                                                                {% if perms.academico.delete_ofertapensum %}
+                                                                class="btn btn-outline-danger eliminar-oferta-pensum"
+                                                                onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                                                                {% else %}
+                                                                class="btn btn-outline-danger disabled"
+                                                                {% endif %}>
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'academico/oferta_academica/modal_editar.html' with periodo_academico=oferta_academica.periodo_academico %}
+    {% include 'academico/periodo_matricula/modal_editar.html' %}
+{% endblock contenido %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/academico/oferta_academica_editar.js' %}"></script>
+{% endblock %}

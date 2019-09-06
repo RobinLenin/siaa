@@ -1,0 +1,42 @@
+<paginador-buscar [servicioUrl]="servicio"
+                  [itemsPorPagina]="itemsPorPagina"
+                  [filtro]="filtro"
+                  [disabled]="disabled"
+                  [placeholder]="placeholder"
+                  [myStyles]="myStyles"
+                  (notificadorDatos)="personas=$event"
+                  (notificadorFiltro)="cambioFiltro($event)"
+                  (notificadorEnter)="enterInputSearch($event)">
+</paginador-buscar>
+
+<div class="suggestions" style="overflow-x:hidden; position: absolute !important" *ngIf="esVisible">
+    <div fxLayout="row" fxLayoutAlign="end">
+        <button mat-icon-button
+                (click)="esVisible=false"
+                title="Cerrar">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-list>
+        <mat-list-item *ngFor="let item of personas">
+            <mat-checkbox [checked]="esItemSeleccionado(item, personasSeleccionadas)"
+                          (change)="itemSeleccionado(item, personasSeleccionadas)">
+            </mat-checkbox>
+            <img matListAvatar src="assets/img/avatar/avatar_01.png"
+                 *ngIf="item.sexo.codigo_th=='0'&& (item.foto_url==null || item.foto_url=='') ">
+            <img matListAvatar src="assets/img/avatar/avatar_02.png"
+                 *ngIf="item.sexo.codigo_th=='1' && (item.foto_url==null || item.foto_url=='')">
+            <img matListAvatar src="{{ item.foto_url }}" alt="{{item.nombres_completos|uppercase}}" *ngIf="item.foto_url!=null && item.foto_url!=''">
+            <h3 mat-line> {{ item.numero_documento }} </h3>
+            <p mat-line><span> {{ item.nombres_completos|uppercase }} </span></p>
+        </mat-list-item>
+    </mat-list>
+    <div style="margin: 0 auto; text-align: center">
+        <paginador-navegacion [servicioUrl]='servicio'
+                              [itemsPorPagina]='itemsPorPagina'
+                              [filtro]='filtro'
+                              [datos]="personas"
+                              (notificadorDatos)="personas=$event">
+        </paginador-navegacion>
+    </div>
+</div>

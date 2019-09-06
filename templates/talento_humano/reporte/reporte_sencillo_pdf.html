@@ -1,0 +1,65 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Asignación de puestos</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<h2>Reporte de Asignación de puestos</h2>
+<p class="derecha">
+    <strong>Desde:</strong> {{ fecha_inicio_desde|date:"Y-m-d" }} | <strong>Hasta:</strong> {{ fecha_inicio_hasta|date:"Y-m-d"}}
+</p>
+<p class="derecha">
+    Fecha de Impresión: {% now "Y-m-d H:i" %} <br>
+    Total de {{ total }} registros
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>Nro.</th>
+        <th>Cédula</th>
+        <th>Apellidos</th>
+        <th>Nombres</th>
+        <th>UAA</th>
+        <th>Puesto</th>
+        <th>Desde</th>
+        <th>Hasta</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for asignacion in asignaciones %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+                {{ asignacion.funcionario.usuario.persona.numero_documento }}
+            </td>
+            <td>{{ asignacion.funcionario.usuario.persona.get_apellidos }}</td>
+            <td>{{ asignacion.funcionario.usuario.persona.get_nombres }}</td>
+            <td>
+                {{ asignacion.uaa_puesto.uaa }}
+            </td>
+            <td>
+                {{ asignacion.uaa_puesto.puesto }}
+            </td>
+            <td>
+                {{ asignacion.fecha_inicio|date:"Y-m-d" }}
+            </td>
+            <td>
+                {{ asignacion.fecha_fin|date:"Y-m-d" }}
+            </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<p class="derecha">
+    Generado por {{ generado }}
+</p>
+
+</body>

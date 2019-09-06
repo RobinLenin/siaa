@@ -1,0 +1,106 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Hospital Veterinario
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo Hospital Veterinario</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <span class="parent-item">Hospital Veterinario</span> <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'hveterinario:index' %}">Propietarios</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Pacientes</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Lista de mascotas de <strong>{{propietario_seleccionado}}</strong> </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body ">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-9 col-sm-9 col-12">
+                    <form action="{% url 'hveterinario:paciente.lista_pacientes_por_propietario' id_propietario_seleccionado %}" method="get">
+                        {% with total_items=pacientes|length numero_items=pacientes.paginator.per_page filtro=filtro %}
+                        {% include 'tabla_encabezado.html' %}
+                        {% endwith %}
+                    </form>
+
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12 mb-2">
+                    <a href="{% url 'hveterinario:paciente' id_propietario_seleccionado  %}" class="btn btn-success float-right" role="button" aria-disabled="true">
+                        &nbsp;&nbsp;<i class="fa fa-plus"></i>&nbsp;&nbsp;Agregar&nbsp;&nbsp;
+                    </a>
+                </div>
+            </div>
+           
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                        <th>N° HC</th>
+                        <th>Fecha Registro HC</th>
+                        <th>Paciente</th>
+                        <th>Peso</th>
+                        <th>Tamaño</th>
+                        <th>Sexo</th>
+                        <th>Raza</th>
+                        <th>Color</th>
+                        <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                        {% for paciente in pacientes %}
+                        <tr>
+                            <td>{{paciente.numero_historia_clinica}}</td>
+                            <td>{{paciente.fecha_registro_historia_clinica}}</td>
+                            <td>{{paciente.nombre}}</td>
+                            <td>{{paciente.peso}}</td>
+                            <td>{{paciente.tamanio}}</td>
+                            <td>{{paciente.sexo}}</td>
+                            <td>{{paciente.raza}}</td>
+                            <td>{{paciente.color}}</td>
+                            <td>
+                                <a href="{% url 'hveterinario:consulta.lista_consulta_por_pacientes' paciente.id%}" 
+                                   class="btn btn-info" role="button" aria-disabled="true">
+                                    <i class="fa fa-file-text"></i>Consulta
+                                </a>
+
+                                <a href="{% url 'hveterinario:paciente' id_propietario_seleccionado paciente.id  %}" 
+                                   class="btn btn-warning" role="button" aria-disabled="true">
+                                    <i class="fa fa-edit"></i>Editar
+                                </a>
+                                
+                                <button type="button" class="btn btn-danger">Eliminar</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            {% with lista=pacientes filtro=filtro %}
+                {% include 'tabla_paginacion.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

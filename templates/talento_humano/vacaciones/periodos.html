@@ -1,0 +1,156 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Funcionarios
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'talento_humano:vacaciones.index' %}" class="parent-item">Vacaciones</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Periodos
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            Periodo de Vacaciones {{ periodo_fiscal }}
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                {% if planificacion %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>Nombre</th>
+                            <td>{{ planificacion.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha desde</th>
+                            <td>{{ planificacion.fecha_desde }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha Hasta</th>
+                            <td>{{ planificacion.fecha_hasta }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Detalle de los periodos</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Desde</th>
+                            <th>Hasta</th>
+                            <th>Número de días</th>
+                            <th>Opciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for detalle in planificacion.detalles.all %}
+                        <tr>
+                            <td>{{ detalle.nombre }}</td>
+                            <td>{{ detalle.descripcion }}</td>
+                            <td>{{ detalle.fecha_desde }}</td>
+                            <td>{{ detalle.fecha_hasta }}</td>
+                            <td>{{ detalle.get_numero_dias }}</td>
+                            <td>
+                                <a href="{% url 'talento_humano:vacaciones.periodo.detalle.eliminar' detalle.id%}"
+                                   onClick="javascript: return confirm('¿Estas seguro?');">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td>
+                                <a class="btn btn-info" data-toggle="modal" href="#detalle-planificacion">
+                                    Agregar periodo
+                                </a>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                {% else %}
+                <p>No éxiste periodo de vacaciones actualmente para este periodo fiscal, desea crearlo</p>
+                <a href="{% url 'talento_humano:vacaciones.periodo.crear' %}" class="btn btn-info">Crear</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detalle-planificacion">
+    <div class="modal-dialog">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;
+                    </button>
+                    <h4 class="modal-title">Nuevo periodo de vacaciones</h4>
+                </div>
+                <div class="modal-body">
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cerrar
+                    </button>
+                    <input type='submit' class='btn btn-primary' value='Agregar'/>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock %}
+
+{% block javascript %}
+<script>
+        $(function () {
+            $.datepicker.regional['es'] = {
+                minDate: "{{ planificacion.fecha_desde|date:'Y-m-d' }}",
+                maxDate: "{{ planificacion.fecha_hasta|date:'Y-m-d'  }}"
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+
+
+
+
+
+
+</script>
+{% endblock %}

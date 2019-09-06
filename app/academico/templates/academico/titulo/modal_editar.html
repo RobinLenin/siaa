@@ -1,0 +1,46 @@
+<div class="modal fade" id="modal-titulo-editar">
+    <div class="modal-dialog">
+        <form action="{% url 'academico:titulo_guardar' %}" method="POST" role="form" class="auto-validate">
+            {% csrf_token %}
+            <input type="hidden" name="pensum" value="{{ pensum.id }}"/>
+            <input type="hidden" name="id" value="{{ titulo.id }}"/>
+            <input type="hidden" name="next" value="{{ request.path }}"/>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.Titulo'|verbose_name|capfirst  }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input id="nombre" name="nombre" type="text" class="form-control letras_man_min"
+                               required placeholder="Nombre del titulo" value="{{ titulo.nombre }}">
+                    </div>
+                    {% now "Y-m-d" as ahora %}
+                    <div class="form-group">
+                        <label for="fecha_inicio">Fecha de inicio:</label>
+                        <input id="fecha_inicio" name="fecha_inicio" type="date" class="form-control"
+                               value="{{ titulo.fecha_inicio|date:"Y-m-d"|default:ahora }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha_fin">Fecha de fin:</label>
+                        <input id="fecha_fin" name="fecha_fin" type="date" class="form-control"
+                               value="{{ titulo.fecha_fin|date:"Y-m-d" }}"
+                               mayora="#fecha_inicio"
+                               data-msg-mayora="Debe ser mayor a la fecha de inicio">
+                    </div>
+                    <div class="form-check">
+                        <input id="activo" type="checkbox" class="form-check-input" name="activo"
+                                {% if titulo.activo %} checked {% endif %}>
+                        <label for="activo">¿Está activo?:</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,201 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Programa de estudio
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    {% load guardian_tags %}
+    {% get_obj_perms request.user for programa_estudio as "programaestudio_perms" %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.ProgramaEstudio'|verbose_name }}</header>
+            <div class="tools">
+                <button class="btn btn-info"
+                        data-toggle="modal"
+                        data-target="#modal-programa-estudio-editar"
+                        {% if not perms.academico.change_programaestudio and not 'change_programaestudio' in programaestudio_perms %} disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </button>
+                <a {% if perms.academico.delete_programaestudio or 'delete_programaestudio' in programaestudio_perms %}
+                    class="btn btn-danger"
+                    href="{% url 'academico:programa_estudio_eliminar' programa_estudio.id %}"
+                    onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                {% else %}
+                    class="btn btn-danger disabled"
+                {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="header">
+                <div class="text-center">
+                    <h4>{{ programa_estudio.nombre }}
+                        {% if programa_estudio.codigo_institucional and programa_estudio.codigo_senescyt %}
+                            ({{ programa_estudio.codigo_institucional }}-{{ programa_estudio.codigo_senescyt }})
+                        {% endif %}
+                    </h4>
+                </div>
+            </div>
+
+            <div class="form-group form-inline text-left">
+                <span class="col-md-2">Nombre:</span>
+                <div class="col-md-10">
+                    <h5>{{ programa_estudio.nombre }}</h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-md-4">Tipo:</span>
+                        <div class="col-md-8">
+                            <h5>{{ programa_estudio.get_tipo_display }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-md-4">Estado:</span>
+                        <div class="col-md-8">
+                            <h5>{{ programa_estudio.get_estado_display }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-inline text-left">
+
+                        <span class="col-md-4">Código institucional:</span>
+                        <div class="col-md-8">
+                            <h5>{{ programa_estudio.codigo_institucional }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-md-4">Código SENESCYT:</span>
+                        <div class="col-md-8">
+                            <h5>{{ programa_estudio.codigo_senescyt }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-md-4">Fecha de creación:</span>
+                        <div class="col-md-8">
+                            <h5>{{ programa_estudio.fecha_creacion }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-sm-4">Fecha de aprobación:</span>
+                        <div class="col-sm-8">
+                            <h5>{{ programa_estudio.fecha_aprobacion }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-md-4">Fecha de culminación:</span>
+                        <div class="col-md-8">
+                            <h5>{{ programa_estudio.fecha_culminacion | default:'' }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-md-4">Modalidad:</span>
+                        <div class="col-md-8">
+                            <h5>{{ programa_estudio.get_modalidad_display }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-inline text-left">
+                <span class="col-md-2">Facultad:</span>
+                <div class="col-md-10">
+                    <h5>{{ programa_estudio.facultad.nombre }}</h5>
+                </div>
+            </div>
+
+            <div class="form-group form-inline text-left">
+                <span class="col-md-2">Régimen:</span>
+                <div class="col-md-10">
+                    <h5>{{ programa_estudio.get_regimen_display }}</h5>
+                </div>
+            </div>
+
+            <div class="form-group form-inline text-left">
+                <span class="col-md-2">Tipo de formación:</span>
+                <div class="col-md-10">
+                    {% if programa_estudio.tipo_formacion %}
+                        <h5>{{ programa_estudio.tipo_formacion }}</h5>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group form-inline text-left">
+                <span class="col-md-2">Campo detallado:</span>
+                <div class="col-md-10">
+                    {% if programa_estudio.campo_detallado %}
+                        <h5>
+                            {{ programa_estudio.campo_detallado.campo_especifico.campo_amplio.nombre }} -
+                            {{ programa_estudio.campo_detallado.campo_especifico.nombre }} -
+                            {{ programa_estudio.campo_detallado.nombre }}
+                        </h5>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'academico.Pensum'|verbose_name_plural|capfirst }}
+                        <button class="btn btn-circle btn-info btn-sm pull-right"
+                                data-toggle="modal" data-target="#modal-pensum-editar"
+                                {% if not perms.academico.add_pensum %} disabled {% endif %}>
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% include 'academico/pensum/fragmento_lista.html' with pensums=programa_estudio.pensums.all %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'academico.AutoridadProgramaEstudio'|verbose_name_plural }}
+                        <button data-toggle="modal" data-target="#modal-autoridad-programa-estudio-editar"
+                                {% if not perms.academico.add_autoridadprogramaestudio %} disabled
+                                class="btn btn-circle btn-default btn-sm pull-right"
+                                {% else %} class="btn btn-circle btn-info btn-sm pull-right"{% endif %}>
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% include 'academico/autoridad_programa_estudio/fragmento_lista.html' with autoridades_programa_estudio=programa_estudio.autoridades_programa_estudio.all %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'academico/autoridad_programa_estudio/modal_editar.html' %}
+    {% include 'academico/programa_estudio/modal_editar.html' %}
+    {% include 'academico/pensum/modal_editar.html' %}
+
+{% endblock contenido %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/academico/autoridad_editar.js' %}"></script>
+    <script src="{% static 'js/academico/programa_estudio_editar.js' %}"></script>
+{% endblock %}

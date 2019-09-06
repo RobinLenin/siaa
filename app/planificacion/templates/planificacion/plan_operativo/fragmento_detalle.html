@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+    <div class="panel-heading row">
+        <div class="text-center col-sm-10">
+            <h4>{{ plan_operativo.nombre }}</h4>
+        </div>
+        <div class="btn-group col-sm-2">
+
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="form-group form-inline">
+            <span class="col-sm-2">Periodo:</span>
+            <div class="col-sm-10">
+                <h5>{{ plan_operativo.periodo }}</h5>
+            </div>
+        </div>
+        <hr>
+        <hr>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Metas
+                    </h5>
+            </div>
+            <div class="card-body">
+                {% include 'planificacion/meta_anual/fragmento_lista_detalle.html' %}
+            </div>
+        </div>
+    </div>
+</div>

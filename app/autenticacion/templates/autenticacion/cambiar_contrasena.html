@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Cambiar contraseña
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Cambiar contraseña</header>
+    </div>
+    <div class="card-body ">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <form id="form-cambio" class="auto-validate" action="{% block action %}{% endblock %}" method="POST" role="form" >
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-primary" type="submit">Actualizar contraseña</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/autenticacion/cambiar_contrasena.js' %}"></script>
+{% endblock javascript %}

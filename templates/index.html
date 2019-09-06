@@ -1,0 +1,160 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Ingreso al sistema
+{% endblock %}
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Bienvenido</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a class="parent-item" href="{% url 'index' %}">Inicio</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        {% if request.user.is_authenticated %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Información personal</h3>
+                </div>
+                <div class="panel-body">
+                    <p>Por favor solicitamos completar su información personal en la sección de perfil</p>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <tbody>
+                                <tr>
+                                    <th>Información Personal:</th>
+                                    {% if usuario.valida_datos_personales %}
+                                        <td><span class="label label-success">Listo</span></td>
+                                    {% else %}
+                                        <td><span class="label label-danger">Pendiente</span></td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <th>Fotografia:</th>
+                                    {% if usuario.foto_url %}
+                                        <td><span class="label label-success">Listo</span></td>
+                                    {% else %}
+                                        <td><span class="label label-danger">Pendiente</span></td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <th>Dirección y Teléfonos:</th>
+                                    {% if usuario.valida_direccion %}
+                                        <td><span class="label label-success">Listo</span></td>
+                                    {% else %}
+                                        <td><span class="label label-danger">Pendiente</span></td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <th>Formación Académica:</th>
+                                    {% if usuario.valida_formacion %}
+                                        <td><span class="label label-success">Listo</span></td>
+                                    {% else %}
+                                        <td><span class="label label-danger">Pendiente</span></td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <th>Información Familiar y Contactos:</th>
+                                    {% if usuario.valida_relacion %}
+                                        <td><span class="label label-success">Listo</span></td>
+                                    {% else %}
+                                        <td><span class="label label-danger">Pendiente</span></td>
+                                    {% endif %}
+                                </tr>
+                                {% if usuario.funcionario %}
+                                    <tr>
+                                        <th>Capacitación:</th>
+                                        {% if usuario.funcionario.es_trabajador %}
+                                            <td><span class="label label-default">Opcional</span></td>
+                                        {% else %}
+                                            {% if usuario.valida_capacitacion %}
+                                                <td><span class="label label-success">Listo</span></td>
+                                            {% else %}
+                                                <td><span class="label label-danger">Pendiente</span></td>
+                                            {% endif %}
+                                        {% endif %}
+                                    </tr>
+
+                                    <tr>
+                                        <th>Producción científica:</th>
+                                        {% if usuario.funcionario.es_docente %}
+                                            {% if usuario.valida_produccion_cientifica %}
+                                                <td><span class="label label-success">Listo</span></td>
+                                            {% else %}
+                                                <td><span class="label label-danger">Pendiente</span></td>
+                                            {% endif %}
+                                        {% else %}
+                                            <td><span class="label label-default">Opcional</span></td>
+                                        {% endif %}
+                                    </tr>
+
+                                    <tr>
+                                        <th>Trayectoria laboral:</th>
+                                        {% if usuario.funcionario.es_trabajador %}
+                                            <td><span class="label label-default">Opcional</span></td>
+                                        {% else %}
+                                            {% if usuario.valida_trayectoria_laboral %}
+                                                <td><span class="label label-success">Listo</span></td>
+                                            {% else %}
+                                                <td><span class="label label-danger">Pendiente</span></td>
+                                            {% endif %}
+                                        {% endif %}
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <a class="btn btn-primary pull-right" href="{% url 'seguridad:usuario_perfil' %}">
+                            <i class="fa fa-arrow-circle-right"></i> Ir a perfil
+                        </a>
+                        <div style="clear: both"></div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        {% if user.es_funcionario %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Funcionario</h3>
+                </div>
+                <div class="panel-body">
+                    Acceso a la sección como funcionario de la UNL
+                    <a class="btn btn-primary pull-right"
+                       href="{% url 'talento_humano:funcionarios.funcionario.usuario' %}">
+                        <i class="fa fa-arrow-circle-right"></i> Acceder
+                    </a>
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if user.es_estudiante %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Estudiante</h3>
+                </div>
+                <div class="panel-body">
+                    Funcionalidad en progreso
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

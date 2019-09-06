@@ -1,0 +1,192 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Reporte de Asignación de puestos
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de talento humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Reporte</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Reporte Avanzado</header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body ">
+        <form action="" method="get">
+            <div class="row">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseExample"
+                       aria-expanded="false"
+                       aria-controls="collapseExample">
+                        Filtro avanzado de busqueda
+                    </a>
+                </div>
+                <div class="col-md-12">
+                    <div class="collapse" id="collapseExample">
+                        <div class="well">
+                            <div class="input-group">
+                                <div class="table-responsive">
+                                    <table id="tbFiltros" class="table table-bordered table-hover table-sm">
+                                        {{ form.as_table }}
+                                    </table>
+                                </div>
+                                <input type='submit' class='btn btn-primary' value='Buscar'/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">Se encontraton {{ total }} de registros</div>
+            </div>
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Funcionario</th>
+                            <th>Asignación</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for asignacion in asignaciones %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'talento_humano:reporte.asignacion_puesto' asignacion.id %}">
+                                    {{ asignacion.funcionario.usuario.persona.numero_documento }}
+                                </a><br>
+                                {% if asignacion.funcionario.usuario.foto_url %}
+                                <img src="{{ asignacion.funcionario.usuario.foto_url }}"
+                                     alt="{{ asignacion.funcionario }}"><br>
+                                {% endif %}
+                                {{ asignacion.funcionario.usuario.persona.get_apellidos }}<br>
+                                {{ asignacion.funcionario.usuario.persona.get_nombres }}
+                            </td>
+
+                            <td>
+                                <strong>UAA: </strong>
+                                {{ asignacion.uaa_puesto.uaa }}<br>
+                                <strong>Régimen laboral: </strong>
+                                {{ asignacion.uaa_puesto.puesto.grupo_ocupacional.regimen_laboral }}<br>
+                                <strong>Grupo ocupacional: </strong>
+                                {{ asignacion.uaa_puesto.puesto.grupo_ocupacional }}<br>
+                                <strong>puesto: </strong>
+                                {{ asignacion.uaa_puesto.puesto }}<br>
+                                <strong>Tipo de relación laboral: </strong>
+                                {{ asignacion.tipo_relacion_laboral }}<br>
+                                <strong>Desde: </strong>
+                                {{ asignacion.fecha_inicio }}<br>
+                                {% if asignacion.fecha_fin %}
+                                <strong>Hasta: </strong>{{ asignacion.fecha_fin|default:"" }}<br>
+                                {% endif %}
+                                {% if asignacion.fecha_termino %}
+                                <strong>Termino: </strong>{{ asignacion.fecha_termino|default:"" }}<br>
+                                <strong>Tipo de termino: </strong>{{ asignacion.tipo_terminacion|default:"" }}<br>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    {% if asignaciones.has_previous %}
+                    <input type="hidden" value="{{ asignaciones.previous_page_number }}" name="anterior">
+                    <input type="submit" value="Anterior" name="pagina_anterior" class='btn btn-primary'>
+                    {% endif %}
+
+                    <a href="" class="btn btn-link" role="button">
+                        Página {{ asignaciones.number }} de {{ asignaciones.paginator.num_pages }}.
+                    </a>
+
+                    {% if asignaciones.has_next %}
+                    <input type="hidden" value="{{ asignaciones.next_page_number }}" name="siguiente">
+                    <input type="submit" value="Siguiente" name="pagina_siguiente" class='btn btn-primary'>
+                    {% endif %}
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
+                    <div class="btn-group">
+                        <button type="submit" formtarget="_blank" name="imprimir_sencillo_pdf"
+                                class='btn btn-primary'><i class="fa fa-file-pdf-o"></i> Exportar
+                        </button>
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <button type="submit" formtarget="_blank" name="imprimir_sencillo_pdf"
+                                        class="btn btn-link">
+                                    <i class="fa fa-file-pdf-o text-danger"></i> Sencillo PDF
+                                </button>
+                            </li>
+                            <li>
+                                <button type="submit" formtarget="_blank" name="imprimir_sencillo_excel"
+                                        class="btn btn-link">
+                                    <i class="fa fa-file-excel-o text-success"></i>Sencillo Excel
+                                </button>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <button type="submit" formtarget="_blank" name="detalle_pdf"
+                                        class="btn btn-link">
+                                    <i class="fa fa-file-pdf-o text-danger"></i> Detallado PDF
+                                </button>
+                            </li>
+                            <li>
+                                <button type="submit" formtarget="_blank" name="detalle_excel"
+                                        class="btn btn-link">
+                                    <i class="fa fa-file-excel-o text-success"></i>Detallado Excel
+                                </button>
+                            </li>
+
+                        </ul>
+                    </div>
+                    {% if activo %}
+                    <input type="submit" value="Imprimir vacaciones" formtarget="_blank" name="imprimir_vacaciones"
+                           class='btn btn-primary'>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+        $(function () {//Refactorizar .datepicker ya se encuentra en el siaaf.js
+            $.datepicker.regional['es'] = {
+                minDate: -3650,
+                maxDate: 1000
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+            $('#tbFiltros th:first').css('width', '160px');
+        });
+</script>
+{% endblock %}

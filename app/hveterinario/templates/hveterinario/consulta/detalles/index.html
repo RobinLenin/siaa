@@ -1,0 +1,1100 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Hospital Veterinario
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo Hospital Veterinario</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <span class="parent-item">Hospital Veterinario</span> <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item"
+                    href="{% url 'hveterinario:consulta.lista_consulta_por_pacientes' consulta_seleccionada.paciente.id %}">Consulta</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Detalles</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#anamnesis">Anamnesis</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#ex-clinico">Ex. Clínico</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#d-diferencial-presuntivo">D. Diferencial y
+                        Prensutivo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#ex-complementarios">Ex. Complementarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#d-final">D. Final</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tratamiento">Tratamiento</a>
+                </li>
+            </ul>
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body ">
+        <div class="container-fluid">
+            <div class="tab-content">
+                <div id="anamnesis" class="tab-pane container active">
+                    <form class="needs-validation shadow-sm bg-white p-2" novalidate
+                        action="{% url 'hveterinario:consulta.detalles.anamnesis' consulta_seleccionada.id%}"
+                        method="post">
+                        {% csrf_token %}
+                        <!--Para las hembras-->
+                        {% if consulta_seleccionada.paciente.sexo == "H" %}
+                        <div class="form-row">
+                            <div class="col-md-3 mb-2">
+                                <label class="mb-0" for="ultimo_celo"><strong>Último celo</strong></label>
+                                <input type="text" class="form-control" id="ultimo_celo" placeholder="aaaa/mm/dd"
+                                    name="ultimo_celo" value="{{anamnesis.ultimo_celo |date:'Y-m-d'}}" required>
+                                <div class="invalid-feedback">Ingrese una fecha valida</div>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label class="mb-0" for="fecha_ultimo_parto"><strong>Último parto</strong></label>
+                                <input type="text" class="form-control" id="fecha_ultimo_parto" placeholder="aaaa/mm/dd"
+                                    name="fecha_ultimo_parto" value="{{anamnesis.fecha_ultimo_parto |date:'Y-m-d'}}"
+                                    required>
+                                <div class="invalid-feedback">Ingrese una fecha valida</div>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="mb-0" for="complicaciones_parto"><strong>Complicaciones
+                                        Parto</strong></label>
+                                <input type="text" class="form-control" id="complicaciones_parto"
+                                    placeholder="Complicaciones Parto" name="complicaciones_parto"
+                                    value="{{anamnesis.complicaciones_parto}}" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                            <div class="col-md-2 mb-2 text-center">
+                                <label class="mb-2" for="secreciones_vulvares"><strong>Secreción vulvar</strong></label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="secreciones_vulvares"
+                                        id="inlineRadio1" value="true"
+                                        {% if anamnesis.secreciones_vulvares %}checked="checked" {% endif %} required>
+                                    <label class="form-check-label" for="inlineRadio1">Sí</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="secreciones_vulvares"
+                                        id="inlineRadio2" value="false"
+                                        {% if not anamnesis.secreciones_vulvares %}checked="checked" {% endif %}
+                                        required>
+                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!--Para los machos-->
+                        {% if consulta_seleccionada.paciente.sexo == "M" %}
+                        <div class="form-row">
+                            <div class="col-md-10 mb-2">
+                                <label class="mb-0" for="numero_montas"><strong>Número Montas</strong></label>
+                                <input type="number" class="form-control" id="numero_montas" placeholder="Número montas"
+                                    name="numero_montas" value="{{anamnesis.numero_montas}}" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                            <div class="col-md-2 mb-2 text-center">
+                                <label class="mb-2" for="secreciones_prepuciales"><strong>Secreción
+                                        prepucial</strong></label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="secreciones_prepuciales"
+                                        id="inlineRadio1" value="true"
+                                        {% if anamnesis.secreciones_prepuciales %}checked="checked" {% endif %}
+                                        required>
+                                    <label class="form-check-label" for="inlineRadio1">Sí</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="secreciones_prepuciales"
+                                        id="inlineRadio2" value="false"
+                                        {% if not anamnesis.secreciones_prepuciales %}checked="checked" {% endif %}
+                                        required>
+                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!--Para ambos-->
+                        <div class="form-row">
+                            <div class="col-md-6 mb-2">
+                                <label class="mb-0" for="enfermedades_anteriores"><strong>Enfermedades
+                                        Anteriores</strong></label>
+                                <input type="text" class="form-control" id="enfermedades_anteriores"
+                                    placeholder="Enfermedades Anteriores" name="enfermedades_anteriores"
+                                    value="{{anamnesis.enfermedades_anteriores}}" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="mb-0" for="ultima_desparasitacion"><strong>Último
+                                        desparacitación</strong></label>
+                                <input type="text" class="form-control" id="ultima_desparasitacion"
+                                    placeholder="aaaa/mm/dd" name="ultima_desparasitacion"
+                                    value="{{anamnesis.ultima_desparasitacion |date:'Y-m-d'}}" required>
+                                <div class="invalid-feedback">Ingrese una fecha valida</div>
+                            </div>
+                            <div class="col-md-2 mb-2 text-center">
+                                <label class="mb-2" for="vacunas"><strong>Vacunas</strong></label>
+                                <br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="vacunas" id="inlineRadio1"
+                                        value="true" {% if anamnesis.vacunas %} checked="checked" {% endif%} required>
+                                    <label class="form-check-label" for="inlineRadio1">Sí</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="vacunas" id="inlineRadio2"
+                                        value="false" {% if not anamnesis.vacunas %} checked="checked" {% endif%}
+                                        required>
+                                    <label class="form-check-label" for="inlineRadio2">No</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-2">
+                                <label class="mb-0" for="tratamiento_anterior"><strong>Tratamiento
+                                        Anterior</strong></label>
+                                <input type="text" class="form-control" id="tratamiento_anterior"
+                                    placeholder="Tratamiento Anterior" name="tratamiento_anterior"
+                                    value="{{anamnesis.tratamiento_anterior}}" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="mb-0" for="alimentacion"><strong>Alimentación</strong></label>
+                                <input type="text" class="form-control" id="alimentacion" placeholder="Alimentación"
+                                    name="alimentacion" value="{{anamnesis.alimentacion}}" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label class="mb-0" for="conducta"><strong>Conducta</strong></label>
+                                <select class="custom-select mr-sm-2 mb-sm-0" id="conducta" name="conducta">
+                                    <option value="T" {% if anamnesis.conducta == "T" %}selected="selected" {% endif %}>
+                                        Tranquilo</option>
+                                    <option value="N" {% if anamnesis.conducta == "N" %}selected="selected" {% endif %}>
+                                        Nervioso</option>
+                                    <option value="A" {% if anamnesis.conducta == "A" %}selected="selected" {% endif %}>
+                                        Agresivo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-6 mb-1">
+                                <button class="btn btn-primary btn-md float-right mr-2 " type="submit">Aceptar</button>
+                            </div>
+                            <div class="col-md-6 mb-1">
+                                <a href="{% url 'hveterinario:consulta.lista_consulta_por_pacientes' consulta_seleccionada.paciente.id %}"
+                                    class="btn btn-danger" role="button" aria-disabled="true">
+                                    <i class="fa fa-file-text"></i>Cancelar
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </form>
+                </div>
+                <div id="ex-clinico" class="tab-pane container">
+                    <!--Examen clínico-->
+                    <form class="needs-validation p-2 shadow-sm bg-white" novalidate
+                                action="{% url 'hveterinario:consulta.detalles.examen.clinico' consulta_seleccionada.id %}"
+                                method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    {% load l10n %}
+                                    <!--Para los decimales-->
+                                    <div class="col-md-3 mb-2">
+                                        <label class="mb-0" for="frecuencia_cardiaca"><strong>Frecuencia
+                                                Cardíaca</strong></label>
+                                        <input type="number" step="0.01" min="0" class="form-control" id="frecuencia_cardiaca"
+                                            placeholder="F. Cardíaca" name="frecuencia_cardiaca"
+                                            value="{{examen_clinico.frecuencia_cardiaca|unlocalize}}" required>
+                                        <div class="invalid-feedback">Campo requerido.</div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="mb-0" for="frecuencia_respiratoria"><strong>Frecuencia
+                                                Respiratoria</strong></label>
+                                        <input type="number" step="0.01" min="0" class="form-control"
+                                            id="frecuencia_respiratoria" placeholder="F. Respiratoria"
+                                            name="frecuencia_respiratoria"
+                                            value="{{examen_clinico.frecuencia_respiratoria|unlocalize}}" required>
+                                        <div class="invalid-feedback">Campo requerido.</div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="mb-0" for="temperatura"><strong>Temperatura</strong></label>
+                                        <input type="number" step="0.01" min="0" class="form-control" id="temperatura"
+                                            placeholder="Temperatura" name="temperatura"
+                                            value="{{examen_clinico.temperatura|unlocalize}}" required>
+                                        <div class="invalid-feedback">Campo requerido.</div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="mb-0" for="linfonodulos"><strong>Linfonódulos</strong></label>
+                                        <input type="number" step="0.01" min="0" class="form-control" id="linfonodulos"
+                                            placeholder="Linfonódulos" name="linfonodulos"
+                                            value="{{examen_clinico.linfonodulos|unlocalize}}" required>
+                                        <div class="invalid-feedback">Campo requerido.</div>
+                                    </div>
+
+                                </div>
+                                <div class="form-row">
+                                    {% load l10n %}
+                                    <div class="col-md-3 mb-2">
+                                        <label class="mb-0" for="tllc"><strong>TLLC</strong></label>
+                                        <input type="number" step="0.01" min="0" class="form-control" id="tllc"
+                                            placeholder="TLLC" name="tllc" value="{{examen_clinico.tllc|unlocalize}}" required>
+                                        <div class="invalid-feedback">Campo requerido.</div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="mb-0" for="pulso"><strong>Pulso</strong></label>
+                                        <input type="number" step="0.01" min="0" class="form-control" id="pulso"
+                                            placeholder="Pulso" name="pulso" value="{{examen_clinico.pulso|unlocalize}}"
+                                            required>
+                                        <div class="invalid-feedback">Campo requerido.</div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="mb-0" for="mucosa"><strong>Mucosa</strong></label>
+                                        <input type="text" class="form-control" id="mucosa" placeholder="Mucosa" name="mucosa"
+                                            value="{{examen_clinico.mucosa}}" required>
+                                        <div class="invalid-feedback">Campo requerido</div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="mb-0" for="tipo_mucosa"><strong>Tipo Mucosa</strong></label>
+                                        <select class="custom-select mr-sm-2 mb-sm-0" id="tipo_mucosa" name="tipo_mucosa">
+                                            <option value="C" {% if examen_clinico.tipo_mucosa == "C" %}selected="selected"
+                                                {% endif %}>Conjuntiva</option>
+                                            <option value="O" {% if examen_clinico.tipo_mucosa == "O" %}selected="selected"
+                                                {% endif %}>Oral</option>
+                                            <option value="G" {% if examen_clinico.tipo_mucosa == "G" %}selected="selected"
+                                                {% endif %}>Genital</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-1">
+                                        <button class="btn btn-primary btn-md float-right mr-2 " type="submit">Aceptar</button>
+                                    </div>
+                                    <div class="col-md-6 mb-1">
+                                        <a href="{% url 'hveterinario:consulta.lista_consulta_por_pacientes' consulta_seleccionada.paciente.id %}"
+                                            class="btn btn-danger" role="button" aria-disabled="true">
+                                            <i class="fa fa-file-text"></i>Cancelar
+                                        </a>
+                                    </div>
+
+                                </div>
+
+                                <!--<input type="hidden" name="consulta_id" value="{{ consulta_seleccionada.id  }}" />
+                                <input type="hidden" type="text" name="datos" />
+                                <div class="col-md-6 mb-1">
+                                    <button class="btn btn-primary btn-md float-right mr-2 " type="submit">Aceptar</button>
+                                </div>-->
+                    </form>
+                    {% if consulta_seleccionada.consulta_examen_clinico %}
+                    <!--Sistemas - DATOS presuntivos-->
+                    <div class="shadow-sm bg-white p-2">
+                        <div class="form-row">
+                            <!--Sistema Tegumentario-->
+                            <div class="col-md-6 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.examen.clinico.datos_presuntivos' consulta_seleccionada.id%}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-0">
+                                            <div class="form-group mb-1">
+                                                <label class="mb-0" for="dato_presuntivo"><strong>Sistema Tegumentario</strong></label>
+                                                <textarea style="background: #fde9d7" class="form-control" rows="6" id="dato_presuntivo" 
+                                                          name="dato_presuntivo" required>{% if datos_tegumentario %}{{datos_tegumentario}}{% endif %}</textarea>
+                                                <div class="invalid-feedback">Ingrese datos</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-2 mt-0">
+                                            <button class="btn btn-primary btn-md"
+                                                type="submit">Aceptarr</button>
+                                        </div>
+                                    </div>
+
+                                    <!--Para enviar el id del sistema correspondiente Tegumentario 1-->
+                                    <input type="hidden" name="tipo_sistema_cod" value="T" />
+                                </form>
+                            </div>
+                            <!--Sistema Músculo-Esquelético-->
+                            <div class="col-md-6 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.examen.clinico.datos_presuntivos' consulta_seleccionada.id %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-0">
+                                            <div class="form-group mb-1">
+                                                <label class="mb-0" for="dato_presuntivo"><strong>Sistema Músculo-Esquelético</strong></label>
+                                                <textarea style="background: #ffffd9" class="form-control" rows="6" id="dato_presuntivo" name="dato_presuntivo" 
+                                                          required>{% if datos_musculo_esqueletico %}{{datos_musculo_esqueletico}}{% endif %}</textarea>
+                                                <div class="invalid-feedback">Ingrese datos</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-1">
+                                            <button class="btn btn-primary"
+                                                type="submit">Aceptar</button>
+                                        </div>
+                                    </div>
+                                    <!--Para enviar el id del sistema correspondiente Músculo-Esquelético 2-->
+                                    <input type="hidden" name="tipo_sistema_cod" value="ME" />
+                                </form>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <!--Sistema Respiratorio-->
+                            <div class="col-md-6 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.examen.clinico.datos_presuntivos' consulta_seleccionada.id %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-0">
+                                            <div class="form-group mb-1">
+                                                <label class="mb-0" for="dato_presuntivo"><strong>Sistema Respiratorio</strong></label>
+                                                <textarea style="background: #d1e6f7" class="form-control" rows="6" 
+                                                id="dato_presuntivo" name="dato_presuntivo" required>{% if datos_respiratorio %}{{datos_respiratorio}}{% endif %}</textarea>
+                                                <div class="invalid-feedback">Ingrese datos</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-primary btn-md"
+                                                type="submit">Aceptar</button>
+                                        </div>
+                                    </div>
+                                    <!--Para enviar el id del sistema correspondiente Respiratorio 3-->
+                                    <input type="hidden" name="tipo_sistema_cod" value="R" />
+                                </form>
+                            </div>
+                            <!--Sistema Cardiovascular-->
+                            <div class="col-md-6 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.examen.clinico.datos_presuntivos' consulta_seleccionada.id %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-0">
+                                            <div class="form-group mb-1">
+                                                <label class="mb-0" for="dato_presuntivo"><strong>Sistema Cardiovascular</strong></label>
+                                                <textarea style="background: #eb644b" class="form-control" rows="6" 
+                                                    id="dato_presuntivo" name="dato_presuntivo" required>{% if datos_cardiovascular %}{{datos_cardiovascular}}{% endif %}</textarea>
+                                                <div class="invalid-feedback">Ingrese datos</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-1">
+                                            <button class="btn btn-primary"
+                                                type="submit">Aceptar</button>
+                                        </div>
+                                    </div>
+                                    <!--Para enviar el id del sistema correspondiente Cardiovascular 4-->
+                                    <input type="hidden" name="tipo_sistema_cod" value="C" />
+                                </form>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <!--Sistema Digestivo-->
+                            <div class="col-md-6 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.examen.clinico.datos_presuntivos' consulta_seleccionada.id %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-0">
+                                            <div class="form-group mb-1">
+                                                <label class="mb-0" for="dato_presuntivo"><strong>Sistema Digestivo</strong></label>
+                                                <textarea style="background: #fffe8a" class="form-control" rows="6" 
+                                                    id="dato_presuntivo" name="dato_presuntivo" required>{% if datos_digestivo %}{{datos_digestivo}}{% endif %}</textarea>
+                                                <div class="invalid-feedback">Ingrese datos</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-primary btn-md"
+                                                type="submit">Aceptar</button>
+                                        </div>
+                                    </div>
+                                    <!--Para enviar el id del sistema correspondiente Digestivo 5-->
+                                    <input type="hidden" name="tipo_sistema_cod" value="D" />
+                                </form>
+                            </div>
+                            <!--Sistema Nervioso-->
+                            <div class="col-md-6 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.examen.clinico.datos_presuntivos' consulta_seleccionada.id %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-0">
+                                            <div class="form-group mb-1">
+                                                <label class="mb-0" for="dato_presuntivo"><strong>Sistema Nervioso</strong></label>
+                                                <textarea style="background: #c4aae8" class="form-control" rows="6" 
+                                                    id="dato_presuntivo" name="dato_presuntivo" required>{% if datos_nervioso %}{{datos_nervioso}}{% endif %}</textarea>
+                                                <div class="invalid-feedback">Ingrese datos</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-1">
+                                            <button class="btn btn-primary"
+                                                type="submit">Aceptar</button>
+                                        </div>
+                                    </div>
+                                    <!--Para enviar el id del sistema correspondiente Nervioso 6-->
+                                    <input type="hidden" name="tipo_sistema_cod" value="N" />
+                                </form>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <!--Sistema Genitourinario-->
+                            <div class="col-md-6 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.examen.clinico.datos_presuntivos' consulta_seleccionada.id %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-0">
+                                            <div class="form-group mb-1">
+                                                <label class="mb-0" for="dato_presuntivo"><strong>Sistema Genitourinario</strong></label>
+                                                <textarea style="background: #d5b884" class="form-control" rows="6" 
+                                                    id="dato_presuntivo" name="dato_presuntivo" required>{% if datos_genitourinario %}{{datos_genitourinario}}{% endif %}</textarea>
+                                                <div class="invalid-feedback">Ingrese datos</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-primary btn-md"
+                                                type="submit">Aceptar</button>
+                                        </div>
+                                    </div>
+                                    <!--Para enviar el id del sistema correspondiente Genitourinario 7-->
+                                    <input type="hidden" name="tipo_sistema_cod" value="G" />
+                                </form>
+                            </div>
+                            <!--Sistema Auditivo y Ocular-->
+                            <div class="col-md-6 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.examen.clinico.datos_presuntivos' consulta_seleccionada.id %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-0">
+                                            <div class="form-group mb-1">
+                                                <label class="mb-0" for="dato_presuntivo"><strong>Sistema Auditivo y Ocular</strong></label>
+                                                <textarea style="background: #e8d9b0" class="form-control" rows="6" 
+                                                    id="dato_presuntivo" name="dato_presuntivo" required>{% if datos_auditivo_y_ocular %}{{datos_auditivo_y_ocular}}{% endif %}</textarea>
+                                                <div class="invalid-feedback">Ingrese datos</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-1">
+                                            <button class="btn btn-primary"
+                                                type="submit">Aceptar</button>
+                                        </div>
+                                    </div>
+                                    <!--Para enviar el id del sistema correspondiente Auditivo y Ocular 8-->
+                                    <input type="hidden" name="tipo_sistema_cod" value="AO" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div id="d-diferencial-presuntivo" class="tab-pane container">
+                    <div class="shadow-sm bg-white p-2">
+                        <div class="form-row">
+                            <!--Lista de Problemas-->
+                            <div class="col-md-4 mb-2">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="thead-light text-center text-uppercase">
+                                            <th>Lista de Problemas</th>
+                                        </thead>
+                                        <tbody>
+
+                                            {% if not datos_presuntivos %}
+                                                    <tr><td class="bg-white">No hay registros de datos presuntivos</td></tr>
+                                            {% endif %}
+
+                                            {% for dato in datos_tegumentario_lista %}
+                                                <tr><td style="background: #fde9d7">{{dato}}</td></tr>
+                                            {% endfor %}
+
+                                            {% for dato in datos_musculo_esqueletico_lista %}
+                                                <tr><td style="background: #ffffd9">{{dato}}</td></tr>
+                                            {% endfor %}
+
+                                            {% for dato in datos_respiratorio_lista %}
+                                                <tr><td style="background: #d1e6f7">{{dato}}</td></tr>
+                                            {% endfor %}
+
+                                            {% for dato in datos_cardiovascular_lista %}
+                                                <tr><td style="background: #eb644b">{{dato}}</td></tr>
+                                            {% endfor %}
+
+                                            {% for dato in datos_digestivo_lista %}
+                                                <tr><td style="background: #fffe8a">{{dato}}</td></tr>
+                                            {% endfor %}
+
+                                            {% for dato in datos_nervioso_lista %}
+                                                <tr><td style="background: #c4aae8">{{dato}}</td></tr>
+                                            {% endfor %}
+
+                                            {% for dato in datos_genitourinario_lista %}
+                                                <tr><td style="background: #d5b884">{{dato}}</td></tr>
+                                            {% endfor %}
+
+                                            {% for dato in datos_auditivo_y_ocular_lista %}
+                                                <tr><td style="background: #e8d9b0">{{dato}}</td></tr>
+                                            {% endfor %}
+                                    
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!--Lista Maestra-->
+                            {% if datos_presuntivos %}
+                            <div class="col-md-4 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.lista.maestra' consulta_seleccionada.id%}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="table-responsive text-center">
+                                        <table class="table table-bordered mb-1">
+                                            <thead class="thead-light text-center text-uppercase">
+                                                <th>Lista Maestra</th>
+                                            </thead>
+                                            <tbody>
+                                            {% for  dato in datos_subjetivos_combinados_rango %}
+                                                <tr>
+                                                    <td class="p-0">
+                                                        <input type="text" class="w-100 border border-0 px-2 pt-3 pb-2" 
+                                                        id="dato_subjetivo" name="dato_subjetivo{{forloop.counter}}" value="{{dato}}"/>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            </tbody>
+                                        </table>
+                                        <button class="btn btn-primary mt-0" type="submit">Aceptar</button>
+                                        <input type="hidden" name="numero_total_datos_presuntivo" value="{{numero_total_datos_presuntivo}}"/>
+                                    </div>
+                                    
+                                </form>
+
+                            </div>
+                            {% endif %}
+                            <!--Diagnóstico Diferencial-->
+                            {% if lista_maestra %}
+                            <div class="col-md-4 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.diagnostico.diferencial' consulta_seleccionada.id%}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="table-responsive text-center">
+                                        <table class="table table-bordered mb-1">
+                                            <thead class="thead-light text-center text-uppercase">
+                                                <th>Diagnóstico Diferencial</th>
+                                            </thead>
+                                            <tbody>
+                                            {% for dato in datos_objetivos_combinados_rango %}
+                                                <tr>
+                                                    <td class="p-0">
+                                                        <input type="text" class="w-100 border border-0 px-2 pt-3 pb-2" 
+                                                        id="dato_objetivo" name="dato_objetivo{{forloop.counter}}" value="{{dato}}"/>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            </tbody>
+                                        </table>
+                                        <button class="btn btn-primary mt-0" type="submit">Aceptar</button>
+                                        <input type="hidden" name="numero_total_datos_presuntivo" value="{{numero_total_datos_presuntivo}}"/>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <hr class="mt-2">
+                        <!--Diagnóstico Presuntivo-->
+                        {% if diagnostico_diferencial %}
+                        <div class="form-row mt-3">
+                            <div class="col-md-12 mb-2">
+                                <form class="needs-validation" novalidate
+                                    action="{% url 'hveterinario:consulta.detalles.diagnostico.presuntivo' consulta_seleccionada.id%}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <div class="table-responsive text-center">
+                                        <table class="table table-bordered mb-1">
+                                            <thead class="thead-light text-center text-uppercase">
+                                                <th>Diagnóstico Presuntivo</th>
+                                            </thead>
+                                            <tbody>
+                                            {% for dato in datos_dg_presuntivo_combinados_rango %}
+                                                <tr>
+                                                    <td class="p-0">
+                                                        <input type="text" class="w-100 border border-0 p-2" 
+                                                        id="dato_dg_presuntivo" name="dato_dg_presuntivo{{forloop.counter}}" value="{{dato}}"/>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            </tbody>
+                                        </table>
+                                        <button class="btn btn-primary mt-0" type="submit">Aceptar</button>
+                                        <input type="hidden" name="numero_total_datos_presuntivo" value="{{numero_total_datos_presuntivo}}"/>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="ex-complementarios" class="tab-pane container">
+                    <form class="needs-validation shadow-sm bg-white p-2" novalidate
+                        action="{% url 'hveterinario:consulta.detalles.examenes.complementarios' consulta_seleccionada.id%}"
+                        method="post">
+                        {% csrf_token %}
+                        <div class="px-2 pt-2" style="border: 2px solid #ccc; border-radius: 5px;">
+                            <div class="form-row">
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">                            
+                                        <input class="form-check-input" type="checkbox" id="cuadro_hematico" name="cuadro_hematico" 
+                                               {% if examenes_complementarios.cuadro_hematico %} checked="checked" {% endif %}
+                                               value="true">
+                                        <label class="form-check-label" for="cuadro_hematico">
+                                            Cuadro Hemático
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="quimica_sanguinea" name="quimica_sanguinea" 
+                                               {% if examenes_complementarios.quimica_sanguinea %}checked="checked" {% endif %}
+                                               value="true">
+                                        <label class="form-check-label" for="quimica_sanguinea">
+                                            Química Sanguínea
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"  id="coprologico" name="coprologico" 
+                                               {% if examenes_complementarios.coprologico %}checked="checked" {% endif %}
+                                               value="true">
+                                        <label class="form-check-label" for="coprologico">
+                                            Coprológico
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="radiologia" name="radiologia" 
+                                               {% if examenes_complementarios.radiologia %} checked="checked"{% endif%}
+                                               value="true">
+                                        <label class="form-check-label" for="radiologia">
+                                            Radiología
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="electrolitos" name="electrolitos" 
+                                               {% if examenes_complementarios.electrolitos %} checked="checked"{% endif%}
+                                               value="true">
+                                        <label class="form-check-label" for="radiologia">
+                                            Electrólitos
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="emo" name="emo"
+                                               {% if examenes_complementarios.emo %} checked="checked"{% endif%}
+                                               value="true">
+                                        <label class="form-check-label" for="emo">
+                                            EMO
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="gases_sanguineos" name="gases_sanguineos"
+                                               {% if examenes_complementarios.gases_sanguineos %} checked="checked"{% endif%}
+                                               value="true">
+                                        <label class="form-check-label" for="gases_sanguineos">
+                                            Gases sanguíneos
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="electrocardiografia" name="electrocardiografia"
+                                               {% if examenes_complementarios.electrocardiografia %} checked="checked"{% endif%}
+                                               value="true">
+                                        <label class="form-check-label" for="electrocardiografia">
+                                            Electrocardiografía
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-row mb-1">
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="antibiograma" name="antibiograma"
+                                               {% if examenes_complementarios.antibiograma %} checked="checked"{% endif%}
+                                               value="true">
+                                        <label class="form-check-label" for="antibiograma">
+                                            Antibiograma
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="citologia" name="citologia"
+                                               {% if examenes_complementarios.citologia %} checked="checked"{% endif%}
+                                               value="true">
+                                        <label class="form-check-label" for="citologia">
+                                            Citología
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="cultivos" name="cultivos"
+                                               {% if examenes_complementarios.cultivos %} checked="checked"{% endif%}
+                                               value="true">
+                                        <label class="form-check-label" for="cultivos">
+                                            Cultivos
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="ecografia" name="ecografia"
+                                               {% if examenes_complementarios.ecografia %} checked="checked"{% endif%}
+                                               value="true">
+                                        <label class="form-check-label" for="ecografia">
+                                            Ecografía
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="mb-0" for="otro_examen"><strong>Otro examen</strong></label>
+                                        <textarea class="form-control" id="otro_examen" rows="2"
+                                                name="otro_examen">{{examenes_complementarios.otro_examen}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row mt-3">
+                            <div class="col-md-12">
+                                 <div class="form-group mb-0">
+                                    <label class="mb-0" for="resultados_significativos"><strong>Resultados Significativos</strong></label>
+                                    <textarea class="form-control" id="resultados_significativos" rows="6"
+                                             name="resultados_significativos" required>{{examenes_complementarios.resultados_significativos}}</textarea>
+                                    <div class="invalid-feedback">Campo requerido</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row text-center mt-2">
+                            <div class="col-md-12 mb-1">
+                                <button class="btn btn-primary" type="submit">Aceptar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="d-final" class="tab-pane container">
+                    <form class="needs-validation shadow-sm bg-white p-2" novalidate
+                        action="{% url 'hveterinario:consulta.detalles.diagnostico.final' consulta_seleccionada.id%}"
+                        method="post">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                 <div class="form-group mb-0">
+                                    <label class="mb-0" for="dato_dg_final"><strong>Diagnóstico Final</strong></label>
+                                    <textarea class="form-control" id="dato_dg_final" rows="8"
+                                             name="dato_dg_final" required>{{diagnostico_final.dato_dg_final}}</textarea>
+                                    <div class="invalid-feedback">Campo requerido</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row text-center mt-2">
+                            <div class="col-md-12 mb-1">
+                                <button class="btn btn-primary" type="submit">Aceptar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="tratamiento" class="tab-pane container">
+
+                    {% if not consulta_seleccionada.consulta_diagnostico_final %}
+                        <p>No se ha creado el diagnóstico final</p>
+                    {% endif %}
+
+                    {% if consulta_seleccionada.consulta_diagnostico_final %}
+                    <form class="needs-validation shadow-sm bg-white p-2" novalidate
+                            action="{% url 'hveterinario:consulta.detalles.tratamiento' consulta_seleccionada.id%}"
+                            method="post">
+                            {% csrf_token %}
+
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <label class="mb-0" for="quirurgico"><strong>Quirúrgico</strong></label>
+                                <input type="text" class="form-control" id="quirurgico" placeholder="Quirúrgico"
+                                    name="quirurgico" value="{{tratamiento.quirurgico}}" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div class="col-md-12">
+                                <label class="mb-0" for="farmacologico"><strong>Farmacológico</strong></label>
+                                <input type="text" class="form-control" id="farmacologico" placeholder="Farmacológico"
+                                    name="farmacologico" value="{{tratamiento.farmacologico}}" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                        </div>
+                        <div class="form-row text-center mt-2">
+                            <div class="col-md-12 mb-1">
+                                <button class="btn btn-primary" type="submit">Aceptar</button>
+                            </div>
+                        </div>
+                    
+                    </form>
+                    {% endif %}
+
+                    <!-- INSCRIPCIÓN-->
+                    {% if tratamiento %}
+                    <hr>
+                    <div class="form-row">
+                        <div class="col-11">
+                            <h2 class="text-center text-uppercase"><strong>Inscripción del Tratamiento</strong></h1>
+                        </div>
+                        <div class="col-1">
+                            <button id="agregarInscripcion" class="btn btn-success float-right" 
+                                        data-toggle="modal" data-target="#modal-inscripcion-tratamiento">
+                                    Agregar<i class="fa fa-plus"></i>
+                            </button>
+                            
+                        </div>
+                    </div>
+                    <div class="shadow-sm bg-white p-2">
+                        <div class="table-responsive mt-2">
+                            <table class="table table-bordered">
+                                <thead class="thead-light text-center">
+                                    <th>Producto</th>
+                                    <th>Presentación</th>
+                                    <th>Dosis Base</th>
+                                    <th>Vía</th>
+                                    <th>Dosificación</th>
+                                    <th>Frecuencia</th>
+                                    <th>Duración</th>
+                                    <th>Acciones</th>
+                                </thead>
+                                <tbody>
+                                {% for dato_inscipcion in inscripciones_tratamiento %}
+                                    <tr>
+                                        <td>{{dato_inscipcion.producto}}</td>
+                                        <td>{{dato_inscipcion.presentacion}}</td>
+                                        <td>{{dato_inscipcion.dosis_base}}</td>
+                                        <td>{{dato_inscipcion.via}}</td>
+                                        <td>{{dato_inscipcion.dosificacion}}</td>
+                                        <td>{{dato_inscipcion.frecuencia}}</td>
+                                        <td>{{dato_inscipcion.duracion}}</td>
+                                        
+                                        <td>
+                                            <button class="btn btn-outline-warning editar-inscripcion" title="Editar Objetivo"
+                                                    data-id="{{ dato_inscipcion.id }}"
+                                                    data-producto="{{ dato_inscipcion.producto }}"
+                                                    data-presentacion="{{ dato_inscipcion.presentacion }}"
+                                                    data-dosis-base="{{ dato_inscipcion.dosis_base }}"
+                                                    data-via="{{ dato_inscipcion.via }}"
+                                                    data-dosificacion="{{ dato_inscipcion.dosificacion }}"
+                                                    data-frecuencia="{{ dato_inscipcion.frecuencia }}"
+                                                    data-duracion="{{ dato_inscipcion.duracion }}"
+                                                    ><i class="fa fa-pencil"></i>Editar
+
+                                            </button>
+                                                                    
+                                            <button type="button" class="btn btn-danger">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %} 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal" id="modal-inscripcion-tratamiento">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+                            
+            <!-- Modal Header -->
+            <div class="modal-header text-center ">
+                <h3 class="text-uppercase font-weight-bold text-secondary">Inscripción del Tratamiento</h3>
+                <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->  
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="needs-validation shadow-sm bg-white p-2" id="form2" name="form2" novalidate
+                          action="{% url 'hveterinario:consulta.detalles.inscripcion.tratamiento' consulta_seleccionada.id%}"
+                          method="post">
+                          {% csrf_token %}
+                          <input type="hidden" id="modal-inscripcion-id">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <label class="mb-0" for="producto"><strong>Producto</strong></label>
+                                <input type="text" class="form-control" placeholder="Producto" name="inscripcion_producto" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label class="mb-0" for="presentacion"><strong>Presentación</strong></label>
+                                <input type="text" class="form-control" placeholder="Producto" name="inscripcion_presentacion" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="mb-0" for="dosis_base"><strong>Dosis Base</strong></label>
+                                <input type="text" class="form-control" placeholder="Dosis Base" name="inscripcion_dosis_base" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label class="mb-0" for="via"><strong>Vía</strong></label>
+                                <input type="text" class="form-control" placeholder="Vía" name="inscripcion_via" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="mb-0" for="dosificacion"><strong>Dosificación</strong></label>
+                                <input type="text" class="form-control" placeholder="Dosificación" name="inscripcion_dosificacion" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label class="mb-0" for="frecuencia"><strong>Frecuencia</strong></label>
+                                <input type="text" class="form-control" placeholder="Frecuencia" name="inscripcion_frecuencia" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="mb-0" for="duracion"><strong>Duración</strong></label>
+                                <input type="text" class="form-control" placeholder="Duración" name="inscripcion_duracion" required>
+                                <div class="invalid-feedback">Campo requerido</div>
+                            </div>
+                        </div>
+                        <div class="form-row mt-3 text-center">
+                            <div class="col-md-12 mb-1">
+                                <button class="btn btn-primary btn-md" type="submit">Aceptar</button>
+                            </div>
+                        </div>
+                </form>
+                
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<!--Validar forms-->
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>   
+<!--USO de datapicker para la fecha de registro de historial clínico de paciente -->
+<script>
+    $(function () {
+        $.datepicker.regional['es'] = {
+            dateFormat: 'yy-mm-dd',
+            minDate: -31390,
+            maxDate: -1
+        };
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+        $("#ultimo_celo").datepicker();
+        $("#fecha_ultimo_parto").datepicker();
+        $("#ultima_desparasitacion").datepicker();
+    });
+</script>
+
+
+{% load staticfiles %}
+<script src="{% static 'js/js_cookie.js' %}"></script>
+<script src="{% static 'js/hveterinario/inscripcion_tratamiento.js' %}"></script>
+
+{% endblock %}
+

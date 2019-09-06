@@ -1,0 +1,42 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Unidad Académica/Administrativa</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Fecha Termino</th>
+            <th>Puesto</th>
+            <th>RMU</th>
+            <th>Tipo de relación Laboral</th>
+            <th>Vigente</th>
+            <th>Activo</th>
+            <th>Término</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for apuesto in asignaciones_puestos %}
+            <tr>
+                <td>{{ apuesto.uaa_puesto.uaa }}</td>
+                <td>{{ apuesto.fecha_inicio }}</td>
+                <td>{{ apuesto.fecha_fin|default:"" }}</td>
+                <td>{{ apuesto.fecha_termino|default:"" }}</td>
+                <td>{{ apuesto.puesto }}</td>
+                <td>{{ apuesto.get_sueldo }}</td>
+                <td>{{ apuesto.tipo_relacion_laboral }}</td>
+                <td>{{ apuesto.vigente|yesno:"Si, No" }}</td>
+                <td>{{ apuesto.activo|yesno:"Si, No" }}</td>
+                <td>{{ apuesto.termino|yesno:"Si, No" }}</td>
+                <td>
+                    {% if perms.talento_humano.change_asignacionpuesto %}
+                        <a href="{% url 'talento_humano:asignacion_puestos.funcionario.editar' apuesto.id %}"
+                           class="btn btn-outline-info" title="Editar"> <i class="fa fa-edit"></i>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

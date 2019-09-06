@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Organico estructural
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            Orgánico estructural
+        </header>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                {% for uaa in uaas %}
+                {% include 'organico/uaa_fragmento_estructura.html' with uaa=uaa %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

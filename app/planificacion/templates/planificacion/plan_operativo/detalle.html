@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+
+
+{% block estilos %}
+    {% load staticfiles %}
+    <!-- mi comentario-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pedi/tabla_dinamica.css' %}">
+{% endblock estilos %}
+
+{% block titulo %}
+    Plan Estrategicos
+{% endblock %}
+
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Módulo Planificacion</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{% url 'planificacion:plan_operativo_lista' %}" class="parent-item">Planes
+                        Operativos</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Plan Operativo: {{ plan_operativo.periodo }}</li>
+            </ol>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block contenido %}
+    <ul class="nav customtab nav-tabs" role="tablist">
+        <li class="nav-item"><a href="#lista" class="nav-link active" data-toggle="tab">Lista</a></li>
+        <li class="nav-item"><a href="#grilla" class="nav-link" data-toggle="tab">Grilla</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="lista">
+            <div class="row">
+                <div class="col-md-12">
+                        <div class="card card-box">
+                            <div class="card-head">
+                                <header>Plan Operativo</header>
+                                <div class="tools">
+                                    <a title="Eliminar Plan Operativo" class="btn btn-danger"
+                                       {% if perms.planificacion.delete_planoperativo %}
+                                            href="{% url 'planificacion:plan_operativo_eliminar' plan_operativo.id%}"
+                                        {% endif %}>
+                                        <i class="fa fa-trash-o"></i> Eliminar
+                                    </a>
+                                    <div class="dropdown dropleft float-right">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            Herramientas
+                                        </button>
+                                        <div class="dropdown-menu">
+                                          <a class="dropdown-item" target="_blank"
+                                                       href="">
+                                                        <i class="fa fa-file-pdf-o"></i>Reporte</a>
+                                        </div>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="card-body ">
+                                {% include 'planificacion/plan_operativo/fragmento_detalle.html'%}
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="grilla">
+            <div class="row card-group">
+            {% for meta_anual in metas_anuales %}
+                <div class="col-xl-3 col-md-6 col-12">
+                     {% include 'planificacion/meta_anual/fragmento_detalle_card.html' %}
+                </div>
+            {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/planificacion/objetivo_estrategico_lista.js' %}"></script>
+    <script src="{% static 'js/planificacion/tabla_dinamica.js' %}"></script>
+{% endblock javascript %}

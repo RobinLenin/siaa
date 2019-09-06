@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Pensums
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.Pensum'|verbose_name_plural|capfirst  }}</header>
+            <div class="tools">
+            </div>
+        </div>
+        <div class="card-body ">
+            {% include 'academico/pensum/fragmento_lista.html' %}
+        </div>
+    </div>
+
+    {% include 'academico/pensum/modal_editar.html' %}
+{% endblock %}
+
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/datatable.js' %}"></script>
+{% endblock %}

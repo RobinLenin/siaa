@@ -1,0 +1,44 @@
+/*
+* Estilo de tabla para ser visible
+* cuando se invoca desde un buscador
+*/
+.suggestions
+  z-index 500
+  background  white
+  border  1px solid #80B6E1
+  float none
+  width 750px
+  position fixed
+  overflow-y  scroll
+  height 350px
+
+.suggestions ul
+    padding 0
+    margin 0
+    list-style none
+
+.suggestions ul li
+	list-style none
+	padding 0px
+	margin 0px
+
+.suggestions ul li a
+	padding 5px
+	display block
+	text-decoration none
+	color #7E7E7A
+
+.suggestions ul li a:hover
+	background-color: #80B6E1
+
+/*
+* Estilo de tabla para centrar los
+* componentes verticalmente
+*/
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th
+    vertical-align: middle !important;

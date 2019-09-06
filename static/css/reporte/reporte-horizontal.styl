@@ -1,0 +1,98 @@
+* {
+    font-family: "Times New Roman", Times, serif;
+    //padding-top: 1em;
+}
+
+table {
+    border-collapse: collapse;
+    display: table;
+    font-size: xx-small;
+    vertical-align: middle;
+    width: 100%;
+}
+
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+}
+
+td {
+    padding:.5em;
+    text-align: left ;
+}
+
+th {
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+.actividad {
+    width: 20%;
+}
+
+.derecha {
+    text-align: right;
+}
+
+.detalle {
+    width: 65%;
+}
+
+.detalle-encabezado {
+    text-align: justify;
+}
+
+
+.page-break {
+    page-break-before: always
+}
+
+.sin-borde {
+    border: none;
+}
+
+@page{
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    counter-increment: page;
+    margin: 20mm 15mm 20mm 20mm;
+    size: A4 landscape;
+
+    @top-center {
+        background: url('../../img/logo.png') no-repeat 0 0;
+        background-size: 16%;
+        background-position: 0px 160px;
+        content: " ";
+        font-size: 1.5em;
+        width: 100%;
+    }
+
+    @top-left {
+        padding-left 80px
+        content: " ";
+        font-size: 1.5em;
+        font-weight: bold;
+        width: 400px;
+    }
+
+    @top-right {
+        font-size: 1.5em;
+        font-weight: bold;
+        width: 100%;
+        content: "SIAAF"
+    }
+
+    @bottom-left {
+        content: "Sistema de Información Académica, Administrativo y Financiero";
+        font-size: .75em;
+        padding-bottom: 6mm;
+    }
+
+    @bottom-right {
+        content: "Página " counter(page) " de " counter(pages);
+        font-size: .75em;
+        padding-bottom: 6mm;
+    }
+
+
+}

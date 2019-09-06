@@ -1,0 +1,46 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>{% if title %} {{ title }} {% else %} Reporte {% endif %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <style type="text/css" media="screen, print">
+        @page {
+            size: {% if size %} {{ size }} {% else %} 'A4' {% endif %};
+            margin: {% if margin %} {{ margin }} {% else %} 2cm 2cm 2cm 2cm {% endif %};
+
+            @bottom-right {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 80%
+            }
+            @bottom-left {
+                text-align: right;
+                content: "Sistema de Información Académica Administrativo Financiero (SIAAF)";
+                font-size: 80%
+            }
+        }
+    </style>
+</head>
+<body>
+    <h3 class="text-center">{{ titulo }}</h3>
+    <h4 class="text-center">{{ subtitulo }}</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>Asunto:</th>
+            <td>{{ asunto }}</td>
+            <th>Impresión:</th>
+            <td>{{ fecha }}</td>
+        </tr>
+        <tr>
+            <th>Detalle:</th>
+            <td>{{ detalle }}</td>
+            <th>Usuario:</th>
+            <td>{{ usuario }}</td>
+        </tr>
+    </table>
+    {% block contenido %}
+    {% endblock %}
+</body>
+</html>

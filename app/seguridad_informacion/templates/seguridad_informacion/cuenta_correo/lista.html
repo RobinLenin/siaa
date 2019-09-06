@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Cuentas correo
+{% endblock %}
+
+{% block estilos %}
+    {% load staticfiles %}
+    <link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"  type="text/css"/>
+
+
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Administración de cuentas de correo</header>
+            <div class="tools">
+                <div class="pull-right">
+                    <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-cuenta-correo-editar">
+                        <i class="fa fa-plus-circle"></i>Nuevo
+                    </button>
+                    <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-cuenta-correo-vincular">
+                        <i class="fa fa-refresh"></i>Vincular a Google
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="table-scrollable">
+                    <div id="cuentas_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                        <!--
+                        <form action="{% url 'seguridad_informacion:cuenta_correo_lista' %}" method="get">
+                            {% with total_items=paginator.count numero_items=numero_items filtro=filtro %}
+                                {% include 'tabla_encabezado.html' %}
+                            {% endwith %}
+                        </form>
+                        -->
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <table class="table table-hover" id="cuentas">
+                                    <thead>
+                                    <tr>
+                                        <th>Identificación</th>
+                                        <th>Apellidos</th>
+                                        <th>Nombres</th>
+                                        <th>Email</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'seguridad_informacion/cuenta_correo/modal_editar.html' %}
+    {% include 'seguridad_informacion/cuenta_correo/modal_vincular.html' %}
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/seguridad_informacion/cuenta_correo_detalle.js' %}?v=1.3"></script>
+{% endblock %}

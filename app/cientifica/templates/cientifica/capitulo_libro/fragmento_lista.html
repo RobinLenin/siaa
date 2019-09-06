@@ -1,0 +1,50 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Código institucional</th>
+            <th>Nombre</th>
+            <th>Fecha de publicación</th>
+            <th>Campo detallado</th>
+            <th>ISBN</th>
+            <th>Nombre del libro</th>
+            <th>Editor</th>
+            <th>Observación</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for libro in capitulos_libros %}
+            <tr>
+                <td>{{ libro.codigo_institucional }}</td>
+                <td>{{ libro.nombre }}</td>
+                <td>{{ libro.fecha_publicacion }}</td>
+                <td>{{ libro.campo_detallado }}</td>
+                <td>{{ libro.isbn }}</td>
+                <td>{{ libro.nombre_libro }}</td>
+                <td>{{ libro.editor }}</td>
+                <td>{{ libro.observacion|default:"" }}
+                    {% if libro.url %}
+                        <a href="{{ libro.url }}" target="_blank" rel="noreferrer nooponer nofollow">Link</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-info"
+                           title="Editar"
+                           href="{% url 'cientifica:capitulo_libro_editar' libro.id %}?next={{ request.path }}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a class="btn btn-outline-danger"
+                           title="Eliminar"
+                           onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                           href="{% url 'cientifica:capitulo_libro_eliminar' libro.id %}?next={{ request.path }}">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

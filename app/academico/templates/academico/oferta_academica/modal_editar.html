@@ -1,0 +1,80 @@
+<div class="modal fade" id="modal-oferta-academica-editar">
+    <div class="modal-dialog">
+        <form action="{% url 'academico:oferta_academica_guardar' %}" method="POST" role="form" class="auto-validate">
+            {% csrf_token %}
+            <input type="hidden" name="periodo_academico" value="{{ periodo_academico.id }}"/>
+            <input type="hidden" name="id" value="{{ oferta_academica.id }}"/>
+            <input type="hidden" name="next" value="{{ request.path }}"/>
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.OfertaAcademica'|verbose_name }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input id="nombre"
+                                       name="nombre"
+                                       type="text"
+                                       maxlength="255"
+                                       class="form-control mayuscula letras_numeros"
+                                       placeholder="Nombre de la oferta académica"
+                                       value="{{ oferta_academica.nombre }}"
+                                       required>
+                            </div>
+                        </div>
+                        {% now "Y-m-d" as ahora %}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fecha_inicio">Fecha de inicio:</label>
+                                <input type="date"
+                                       class="form-control fecha"
+                                       placeholder="Fecha de inicio"
+                                       name="fecha_inicio"
+                                       id="fecha_inicio"
+                                       value="{{ oferta_academica.fecha_inicio|date:"Y-m-d"|default:ahora }}"
+                                       required
+                                       menora="#fecha_fin"
+                                       data-msg-menora="Debe ser menor a la fecha de fin">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fecha_fin">Fecha de fin:</label>
+                                <input type="date"
+                                       class="form-control fecha"
+                                       placeholder="Fecha de fin"
+                                       name="fecha_fin"
+                                       id="fecha_fin"
+                                       value="{{ oferta_academica.fecha_fin|date:"Y-m-d"|default:ahora }}"
+                                       required
+                                       mayora="#fecha_inicio"
+                                       data-msg-mayora="Debe ser mayor a la fecha de inicio">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Estado: </label><b id="label_estado">{{ oferta_academica.estado|default:"INACTIVO" }}</b>
+                                <input id="estado" name="estado" type="hidden" value="{{ oferta_academica.estado }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-default"
+                            data-dismiss="modal">
+                        <i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit"
+                            class="btn btn-primary">
+                        <i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

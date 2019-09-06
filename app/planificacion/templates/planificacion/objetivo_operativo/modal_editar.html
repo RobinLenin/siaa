@@ -1,0 +1,36 @@
+<div class="modal fade" id="modal-objetivo-operativo">
+    <form action="{% url 'planificacion:objetivo_operativo_guardar' %}" method="POST" role="form">
+        {% csrf_token %}
+        <input type="hidden" id="objetivo_estrategico_id" name="objetivo_estrategico" value="{{ objetivo_estrategico.id }}">
+        {% if objetivo_operativo %}
+            <input type="hidden" name="id" value="{{ objetivo_operativo.id }}">
+        {% endif %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Objetivo Operativo</h4>
+                </div>
+                <div class="modal-body was-validated">
+                    <div class="form-group">
+                        <label for="operativo-nombre">Descripcion:</label>
+                        <textarea id="operativo-nombre" type="text" class="form-control" name="nombre"
+                                  placeholder="Ingrese descripcion  del objetivo..." required>{{ objetivo_operativo.nombre }}</textarea>
+                        <div class="valid-feedback">Correcto.</div>
+                        <div class="invalid-feedback">Por favor ingrese la descripcion del objetivo.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="operativo-codigo">Codigo:</label>
+                        <input id="operativo-codigo" type="text" class="form-control" name="codigo" required value="{{ objetivo_operativo.codigo }}">
+                        <div class="valid-feedback">Correcto.</div>
+                        <div class="invalid-feedback">Por favor ingrese el código del objetivo.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Perfil de Usuario
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html'  with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+
+    {% if perms.core.change_persona and perms.talento_humano.change_formacionacademica %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Actualizar Información de Servicio Gubarnamentales</h3>
+            </div>
+            <div class="panel-body">
+                <a class="btn btn-info"
+                   href="{% url 'talento_humano:funcionarios.funcionario.actualizar.bsg' usuario.funcionario.id %}">
+                    <i class="fa fa-refresh"></i> Actualizar
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="panel tab-border card-box">
+        <header class="panel-heading panel-heading-gray custom-tab ">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active">
+                    <a href="#tab_informacion_personal"
+                       class="active"
+                       role="tab"
+                       data-toggle="tab">Información Personal</a>
+                </li>
+                <li><a href="#tab_direccion"
+                       role="tab"
+                       data-toggle="tab">Dirección y Teléfonos</a>
+                </li>
+                <li><a href="#tab_formacion_academica"
+                       role="tab"
+                       data-toggle="tab">Formación Académica</a>
+                </li>
+                <li><a href="#tab_relacion"
+                       role="tab"
+                       data-toggle="tab">Información Familiar y Contactos</a>
+                </li>
+                {% if usuario.funcionario %}
+                    <li><a href="#tab_capacitacion"
+                           role="tab"
+                           data-toggle="tab">Capacitación</a>
+                    </li>
+                    <li><a href="#tab_produccion_cientifica"
+                           role="tab"
+                           data-toggle="tab">Producción Científica</a>
+                    </li>
+                    <li><a href="#tab_trayectoria_laboral"
+                           role="tab"
+                           data-toggle="tab">Trayectoria Laboral</a>
+                    </li>
+                    <li><a href="#tab_evaluacion_desempenio"
+                           role="tab"
+                           data-toggle="tab">Evaluación de Desempeño</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </header>
+        <div class="panel-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_informacion_personal">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Datos personales
+                                        <a href="{% url 'core:persona_editar' usuario.persona.id %}?next={{ request.path }}"
+                                           class="btn btn-info btn-circle btn-xs pull-right" role="button">
+                                            <i class="fa fa-edit"></i> Editar
+                                        </a>
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {% include 'core/persona/fragmento_detalle.html' with persona=usuario.persona %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Datos de cuenta</h3>
+                                </div>
+                                <div class="panel-body">
+                                    {% include 'seguridad/usuario/fragmento_detalle.html' with usuario=usuario %}
+                                </div>
+                            </div>
+                        </div>
+                        {% if usuario.funcionario %}
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                {% include 'talento_humano/informacion_bancaria/fragmento_lista.html' with persona=usuario.persona %}
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                {% include 'talento_humano/declaracion_bienes/fragmento_lista.html' with persona=usuario.persona %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tab_direccion">
+                    {% include 'core/direccion/fragmento_lista.html' with persona=usuario.persona %}
+                </div>
+                <div class="tab-pane fade" id="tab_formacion_academica">
+                    {% include 'talento_humano/formacion_academica/fragmento_lista.html' with persona=usuario.persona %}
+                </div>
+                <div class="tab-pane fade" id="tab_relacion">
+                    {% include 'core/relacion/fragmento_lista.html' with persona=usuario.persona %}
+                </div>
+                <div class="tab-pane fade" id="tab_capacitacion">
+                    {% include 'talento_humano/capacitacion/fragmento_lista.html' with persona=usuario.persona %}
+                </div>
+                <div class="tab-pane fade" id="tab_produccion_cientifica">
+                    {% include 'cientifica/produccion_cientifica/fragmento_editar.html' with persona=usuario.persona %}
+                </div>
+                <div class="tab-pane fade" id="tab_trayectoria_laboral">
+                    {% include 'talento_humano/funcionario/fragmento_lista_trayectoria_laboral.html' with funcionario=usuario.funcionario %}
+                </div>
+                <div class="tab-pane fade" id="tab_evaluacion_desempenio">
+                    {% include 'talento_humano/evaluacion_desempenio/fragmento_lista.html' with funcionario=usuario.funcionario %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}

@@ -1,0 +1,156 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Ausentismo Funcionarios
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:ausentismos.index' %}">Ausentismos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">{{ funcionario }}
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            Administración de Ausentismos
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>Funcionario</th>
+                            <td>{{ funcionario }}</td>
+                        </tr>
+                        <tr>
+                            <th>Puesto</th>
+                            <td>
+                                {% if funcionario.get_asignacion_puesto_vigente %}
+                                    {{ funcionario.get_asignacion_puesto_vigente.uaa_puesto }}
+                                {% else %}
+                                    No tiene asignado un puesto vigente
+                                {% endif %}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h3>Ausentismos</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Descripcion</th>
+                            <th>Permiso</th>
+                            <th>Desde</th>
+                            <th>Hasta</th>
+                            <th>Dias</th>
+                            <th>Horas</th>
+                            <th>Minutos</th>
+                            <th>Registro</th>
+                            <th>Observación</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ausentismo in funcionario.ausentismofuncionario_set.all %}
+                        <tr>
+                            <td>{{ ausentismo.ausentismo.tipo_ausentismo }}</td>
+                            <td>{{ ausentismo.ausentismo.nombre }}</td>
+                            <td>{{ ausentismo.tipo_permiso }}</td>
+                            <td>{{ ausentismo.fecha_inicio }}</td>
+                            <td>{{ ausentismo.fecha_fin }}</td>
+                            <td>{{ ausentismo.dias }}</td>
+                            <td>{{ ausentismo.horas }}</td>
+                            <td>{{ ausentismo.minutos }}</td>
+                            <td>{{ ausentismo.fecha_registro }}</td>
+                            <td>{{ ausentismo.observacion }}</td>
+                            <td>
+                                <a href="{% url 'talento_humano:ausentismo.eliminar' ausentismo.id  funcionario.id %}"
+                                   onClick="javascript: return confirm('¿Estas seguro?');">
+                                    Quitar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <a class="btn btn-primary" data-toggle="modal" href="#ausentismos">Registrar Ausentismos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ausentismos">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Ausentismos</h4>
+            </div>
+            <div class="modal-body">
+                <ul>
+
+                    {% for ausentismo in ausentismos %}
+                    <li>
+                        <a href="{% url 'talento_humano:ausentismos.funcionario.registrar' funcionario.id ausentismo.id %}">
+                            {{ ausentismo.nombre }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+        $(function () {
+            $.datepicker.regional['es'] = {
+                minDate: "{{ planificacion.fecha_desde|date:'Y-m-d' }}",
+                maxDate: "{{ planificacion.fecha_hasta|date:'Y-m-d'  }}"
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Artículo de revista
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Datos del artículo de revista</header>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <form action="{% url 'cientifica:articulo_revista_guardar' produccion_cientifica.id %}"
+                          method="post"
+                          class="form-horizontal auto-validate">
+                        {% csrf_token %}
+                        <table class="table table-hover">
+                            {{ articulo_revista_form }}
+                            <input type="hidden" name="next" value="{{ next }}">
+                            <input type="hidden" name="id" value="{{ articulo_revista.id }}"/>
+                        </table>
+                        <div class="text-center">
+                            <button type='submit' class='btn btn-primary m-r-20'>
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                            <a class='btn btn-default' href="{{ next }}#tab_produccion_cientifica">
+                                <i class="fa fa-ban"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}

@@ -1,0 +1,36 @@
+{% comment %}
+Estilos a importar en html
+{% block estilos %}
+    {% load staticfiles %}
+    <link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+{% endblock %}
+{% endcomment %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-2">
+        <div class="dataTables_length">
+            <label>Mostrar
+                <select name="numero_items" aria-controls="usuarios"
+                        class="form-control form-control-sm">
+                    <option value="10" {% if numero_items == 10 %} selected {% endif %}>10</option>
+                    <option value="25" {% if numero_items == 25 %} selected {% endif %}>25</option>
+                    <option value="50" {% if numero_items == 50 %} selected {% endif %}>50</option>
+                    <option value="100" {% if numero_items == 100 %} selected {% endif %}>100</option>
+                </select>
+                Registros
+            </label>
+        </div>
+    </div>
+    <div class="col-12 col-sm-9 col-md-9">
+        <div class="input-group mt-2">
+            <input class="form-control" maxlength="200" name="filtro" value="{{ filtro }}" placeholder="Buscar por..."
+                   type="text">
+            <span class="input-group-btn">
+                <input type='submit' class='btn btn-primary' value='Buscar'/>
+                </span>
+        </div>
+        <p>Se encontraron {{ total_items }} registros</p>
+    </div>
+</div>
+

@@ -1,0 +1,50 @@
+{% load guardian_tags %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha de inicio</th>
+            <th>Fecha de fin</th>
+            <th>Estado</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for oferta_academica in ofertas_academicas %}
+            <tr>
+                <td>
+                    <a {% if perms.academico.view_ofertaacademica %}
+                        href="{% url 'academico:oferta_academica_detalle' oferta_academica.id %}"
+                    {% endif %}>
+                        {{ oferta_academica.nombre}}
+                    </a>
+                </td>
+                <td>
+                    {{ oferta_academica.fecha_inicio}}
+                </td>
+                <td>
+                    {{ oferta_academica.fecha_fin}}
+                </td>
+                <td>
+                    {{ oferta_academica.estado}}
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a title="Eliminar"
+                                {% if perms.academico.delete_ofertaacademica %}
+                           class="btn btn-outline-danger"
+                           onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                           href="{% url 'academico:oferta_academica_eliminar' oferta_academica.id %}"
+                                {% else %}
+                           class="btn btn-outline-danger disabled"
+                                {% endif %}>
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

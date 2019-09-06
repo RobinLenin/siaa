@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Funcionarios
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a> <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:asignacion_puestos.lista' %}">
+                    Asignación de puestos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item"
+                   href="{% url 'talento_humano:asignacion_puestos.funcionario' asignacion_puesto.funcionario.id %}">
+                    {{ asignacion_puesto.funcionario }}</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Cambio de Puesto</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            <h1>{{ asignacion_puesto.funcionario }}</h1>
+            <h3>Puesto: {{ asignacion_puesto.uaa_puesto.puesto }}</h3>
+            <h3>Unidad académica administrativa: {{ asignacion_puesto.uaa_puesto.uaa }}</h3>
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <p>Cambio de puesto del funcionario a otra unidad académica administrativa, donde exista el mismo puesto</p>
+        <p>Seleccione el puesto donde desea realizar el cambio</p>
+        <div class="row">
+            <ul>
+                {% for uaa_puesto in uaa_puestos %}
+                <li>
+                    <a href="{% url 'talento_humano:asignacion_puestos.funcionario.cambio.registrar' asignacion_puesto.id uaa_puesto.id%}">
+                        {{ uaa_puesto }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

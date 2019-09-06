@@ -1,0 +1,70 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte Trayectoria</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<h2>Reporte Trayectoria Laboral</h2>
+<p class="derecha">
+    Fecha de Impresión: {% now "Y-m-d H:i" %}
+</p>
+
+
+
+<table>
+        <tr>
+            <th>Unidad Academica/Administrativa</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Fecha Termino</th>
+            <th>Duración</th>
+            <th>Puesto</th>
+            <th>RMU</th>
+            <th>Tipo de relacion Laboral</th>
+            <th>Vigente</th>
+            <th>Activo</th>
+        </tr>
+            {{funcionario.usuario.persona.numero_documento }} |
+            {{funcionario.usuario.persona.get_apellidos }}
+            {{funcionario.usuario.persona.get_nombres }}
+        {% for asignacion in funcionario.asignaciones_puestos.all %}
+        <tr>
+
+            <td>
+                {{ asignacion.uaa_puesto.uaa}}
+            </td>
+            <td>
+                {{ asignacion.fecha_inicio  }}
+            </td>
+            <td>
+                {{ asignacion.fecha_fin|default:""}}
+            </td>
+            <td>
+                {{ asignacion.fecha_termino|default:""}}
+            </td>
+            <td>{{ asignacion.get_duracion_info }}</td>
+            <td>
+                {{ asignacion.puesto}}
+            </td>
+            <td>
+                {{ asignacion.get_sueldo }}
+            </td>
+            <td>
+                {{ asignacion.tipo_relacion_laboral }}
+            </td>
+            <td>{{ asignacion.vigente|yesno:"Si, No" }}</td>
+            <td>{{ asignacion.activo|yesno:"Si, No" }}</td>
+        </tr>
+
+        {% endfor %}
+
+
+</table>
+
+Generado por {{ generado }}
+
+</body>

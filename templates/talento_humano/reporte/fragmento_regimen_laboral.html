@@ -1,0 +1,21 @@
+<tr>
+    <th colspan="2" class="titulo">Régimen Laboral</th>
+</tr>
+{% if regimen.nombre %}
+    <tr>
+        <th>Nombre</th>
+        <td>{{ regimen.nombre }}</td>
+    </tr>
+{% endif %}
+{% if regimen.descripcion %}
+    <tr>
+        <th>Nivel</th>
+        <td>{{ regimen.descripcion }}</td>
+    </tr>
+{% endif %}
+{% if regimen.tipo_remuneracion %}
+    <tr>
+        <th>Tipo  de remuneración</th>
+        <td>{{ regimen.tipo_remuneracion }}</td>
+    </tr>
+{% endif %}

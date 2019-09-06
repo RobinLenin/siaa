@@ -1,0 +1,26 @@
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">{{ navegacion.0 }} </div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            {% for item in navegacion.1 %}
+                <li {% if forloop.last %} class="active" {% endif %}>
+                    {% if forloop.first %}
+                        <i class="fa fa-home"></i>
+                    {% endif %}
+                    {% if item.1 %}
+                        <a class="parent-item" href="{{ item.1 }}">{{ item.0 }}</a>
+                    {% else %}
+                        <span class="parent-item">{{ item.0 }}</span>
+                    {% endif %}
+                    {% if not forloop.last %}
+                        <i class="fa fa-angle-right"></i>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+
+

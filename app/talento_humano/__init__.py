@@ -1,0 +1,1 @@
+default_app_config = 'app.talento_humano.apps.TalentoHumanoConfig'

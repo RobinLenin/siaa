@@ -1,0 +1,66 @@
+<div class="modal fade" id="modal-periodo-matricula-editar">
+    <form action="{% url 'academico:periodo_matricula_guardar' %}"
+          method="POST" role="form" class="auto-validate"
+          id="form-periodo-matricula-editar">
+        {% csrf_token %}
+        <input type="hidden" name="id" id="periodo-matricula-id" value="{{ periodo_matricula.id }}"/>
+        <input type="hidden" name="oferta_academica" id="periodo-matricula-oferta-academica" value="{{ oferta_academica.id }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.PeriodoMatricula'|verbose_name }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label for="periodo-matricula-tipo">Período matricula:</label>
+                                <select name="tipo" id="periodo-matricula-tipo" class="form-control" required>
+                                    <option value="" selected="selected">-- Seleccione --</option>
+                                    {% for key, value in CHOICE_TIPO %}
+                                        <option value="{{ key }}"
+                                                {% if periodo_matricula.tipo == key %}selected{% endif %}>
+                                            {{ value }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% now "Y-m-d" as ahora %}
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="periodo-matricula-fecha-inicio">Fecha de inicio:</label>
+                                <input type="date"
+                                       class="form-control fecha"
+                                       name="fecha_inicio"
+                                       title="Fecha de inicio"
+                                       id="periodo-matricula-fecha-inicio"
+                                       value="{{ periodo_matricula.fecha_inicio|date:"Y-m-d"|default:ahora }}"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="periodo-matricula-fecha-fin">Fecha de fin:</label>
+                                <input type="date"
+                                       class="form-control fecha"
+                                       name="fecha_fin"
+                                       title="Fecha fin"
+                                       id="periodo-matricula-fecha-fin"
+                                       value="{{ periodo_matricula.fecha_fin|date:"Y-m-d"|default:ahora }}"
+                                       mayorIgualA="#periodo-matricula-fecha-inicio"
+                                       data-msg-mayorIgualA="Debe ser mayor o igual a la fecha de inicio"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

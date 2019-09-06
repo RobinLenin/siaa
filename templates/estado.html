@@ -1,0 +1,18 @@
+{% comment %}
+recibe dos parametros:
+estado(str): estado actual
+estados( []) : lista de posibles estados
+
+uso:
+{%  include 'estado.html' with estado=actividad.estado estados=actividad.ESTADOS %}
+{% endcomment %}
+{% load staticfiles %}
+<link href="{% static 'css/estado.css' %}" rel="stylesheet" type="text/css" />
+<div class="pull-right">
+    <!-- Collect the nav links, forms, and other content for toggling -->
+        <ul class="estado breadcrumb">
+            {% for item,valor in estados %}
+                <li ><a {% if item == estado %} class="active"{% endif %}>{{ valor }}</a></li>
+        {% endfor %}
+        </ul>
+</div>

@@ -1,0 +1,71 @@
+<mat-sidenav-container fullscreen>
+    <mat-sidenav #sidenav opened [mode]="mode" [ngClass]="estilo">
+        <mat-card class="sidebar-head">
+            <img mat-card-image src="assets/img/perfil/profile-menu.svg">
+        </mat-card>
+        <mat-list>
+            <mat-list-item>
+                <h3 mat-line>Bienvenido(a):</h3>
+                <p mat-line *ngIf="usuario">
+					<span>{{ usuario.persona.primer_nombre }}
+                        {{ usuario.persona.segundo_nombre }}
+                        {{ usuario.persona.primer_apellido }}
+                        {{ usuario.persona.segundo_apellido }}
+					</span>
+                </p>
+            </mat-list-item>
+        </mat-list>
+        <mat-card-content>
+            <div class="sidebar-body">
+                <ul class="nav sidebar-nav row">
+                    <mat-accordion class="col-sm-12">
+                        <li class="col-sm-12">
+                            <a fxLayoutAlign="start center" [routerLink]="['dashboard']"
+                               (click)="sidenav.toggle();">
+                                <mat-icon mat-list-avatar>home</mat-icon>
+                                Inicio
+                            </a>
+                        </li>
+                        <mat-divider></mat-divider>
+                        <li *ngFor="let item of funcionalidades">
+                            <funcionalidad [funcionalidad]="item"></funcionalidad>
+                        </li>
+                    </mat-accordion>
+                </ul>
+            </div>
+        </mat-card-content>
+    </mat-sidenav>
+
+    <mat-toolbar color="primary" class="sidebar-top">
+        <button mat-icon-button (click)="sidenav.toggle()">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <span>
+			Sistema de Información Académico Administrativo Financiero (SIAAF)
+		</span>
+        <span class="flex"></span>
+        <select #langSelect (change)="translate.use(langSelect.value)">
+            <option *ngFor="let lang of translate.getLangs()" [value]="lang"
+                    [selected]="lang === translate.currentLang">{{ lang }}
+            </option>
+        </select>
+        <button mat-icon-button>
+            <mat-icon>email</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>notifications</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>person</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>list</mat-icon>
+        </button>
+        <button mat-icon-button (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+        </button>
+    </mat-toolbar>
+    <router-outlet>
+        <cargando *ngIf="cargando"></cargando>
+    </router-outlet>
+</mat-sidenav-container>

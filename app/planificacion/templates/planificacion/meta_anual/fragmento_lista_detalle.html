@@ -1,0 +1,39 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Indicador
+            <th>Descripcion
+            <th>Accion
+        </tr>
+        </thead>
+        <tbody>
+        {% for meta_anual in metas_anuales %}
+            <tr>
+                <td>{{ meta_anual.indicador}}
+                <td><a  href="{% url 'planificacion:meta_anual_detalle' meta_anual.id %}">
+                    {{ meta_anual.nombre|default:meta_anual.periodo}}
+                    </a>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-danger btn-xs eliminar-meta" data-id="{{ meta_anual.id }}"><i
+                                title="Eliminar" class="fa fa-trash-o"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!--Modal para Agregar resultado -->
+
+
+
+
+
+
+

@@ -1,0 +1,171 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Usuario
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Detalle del usuario: {{ usuario.nombre_de_usuario }}</header>
+            <div class="tools">
+                <div class="pull-right">
+                    <a class="btn btn-default"
+                       href="{% url 'seguridad_informacion:usuario_vincular_google' usuario.id %}">
+                        <i class="fa fa-refresh"></i> Vincular a Google
+                    </a>
+                    {% if LDAP_ACTIVE %}
+                        /
+                        <a class="btn btn-default"
+                           href="{% url 'seguridad_informacion:usuario_vincular_ldap' usuario.id %}">
+                            <i class="fa fa-refresh"></i> Vincular a LDAP
+                        </a>
+                    {% endif %}
+                    /
+                    <a href="{% url 'seguridad_informacion:usuario_resetear_password' usuario.id %}"
+                       class="btn btn-default">
+                        <i class="fa fa fa-edit"></i> Resetear password
+                    </a>
+                    /
+                    <a id="lnkEstado"
+                       href="javascript:void(0);"
+                       class="btn {% if usuario.activo %} btn-danger {% else %} btn-success {% endif %}">
+                        <i class="fa fa fa-edit"></i>
+                        {% if usuario.activo %} Inactivar {% else %} Activar {% endif %} usuario
+                    </a>
+                    /
+                    <a href="{% url 'seguridad_informacion:usuario_validar' usuario.id %}"
+                       class="btn btn-default">
+                        <i class="fa fa fa-edit"></i> Validar usuario
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tbody>
+                    <tr>
+                        <th>Fotografía</th>
+                        <td>
+                            {% if usuario.foto_url %}
+                                <img src="{{ usuario.foto_url }}" alt="{{ usuario.persona }}">
+                            {% else %}
+                                <li class="fa fa-camera fa-4x"></li> <span>Sin fotografía</span>
+                            {% endif %}
+                            <br/>
+                            <a class=""
+                               href="{% url 'seguridad:usuario_actualizar_fotografia' usuario.id %}?next={{ request.path }}">
+                                Actualizar fotografía
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{ usuario.persona.tipo_documento }}</th>
+                        <td>{{ usuario.persona.numero_documento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombres completos</th>
+                        <td>{{ usuario.persona.get_nombres_completos }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de nacimiento</th>
+                        <td>{{ usuario.persona.fecha_nacimiento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Correo institucional</th>
+                        <td>
+                            {% if usuario.google %}
+                                <span class="text-success"><i
+                                        class="fa fa-check"></i> {{ usuario.correo_electronico_institucional }}</span>
+                            {% else %}
+                                <span class="text-danger"><i
+                                        class="fa fa-remove"></i> {{ usuario.correo_electronico_institucional }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if usuario.estudiante %}
+                        <tr>
+                            <th>Es Estudiante</th>
+                            <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                        </tr>
+                    {% endif %}
+
+                    {% if usuario.funcionario %}
+                        <tr>
+                            <th>Es funcionario</th>
+                            <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                        </tr>
+                        {% if usuario.funcionario.es_administrativo %}
+                            <tr>
+                                <th>Funcionario administrativo</th>
+                                <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                            </tr>
+                        {% endif %}
+                        {% if usuario.funcionario.es_docente %}
+                            <tr>
+                                <th>Docente</th>
+                                <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                            </tr>
+                        {% endif %}
+                        {% if usuario.funcionario.es_trabajador %}
+                            <tr>
+                                <th>Trabajador</th>
+                                <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                            </tr>
+                        {% endif %}
+                        {% for asignacion_de_puesto in usuario.funcionario.asignaciondepuesto_set.all %}
+                            {% if asignacion_de_puesto.vigente %}
+                                <tr>
+                                    <th>Puesto</th>
+                                    <td>
+                                        {{ asignacion_de_puesto.uaa_puesto.uaa }} <br>
+                                        {{ asignacion_de_puesto.uaa_puesto.puesto }} <br>
+                                        {{ asignacion_de_puesto.uaa_puesto.puesto.grupo_ocupacional }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    <tr>
+                        <td colspan="2">
+                            <strong>Estado: </strong>
+                            {% if usuario.activo %}
+                                <span class="label label-success">Activo</span>
+                            {% else %}
+                                <span class="label label-danger">Inactivo</span>
+                            {% endif %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>LDAP: </strong>
+                            {% if usuario.ldap %}
+                                <span class="label label-success">Si</span>
+                            {% else %}
+                                <span class="label label-danger">No</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        $(function () {
+            $('#lnkEstado').click(function () {
+                var ne = '{% if usuario.activo %} Inactivar {% else %} Activar {% endif %}';
+                var c = confirm('¿Está seguro de querer "' + ne + '" la cuenta de usaurio.');
+                if (c) {
+                    window.location = '{% url 'seguridad_informacion:usuario_cambiar_estado' usuario.id %}';
+                }
+            });
+        });
+    </script>
+{% endblock %}

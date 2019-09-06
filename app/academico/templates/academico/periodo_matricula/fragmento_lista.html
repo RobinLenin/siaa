@@ -1,0 +1,45 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Tipo</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for periodo_matricula in periodos_matricula %}
+            <tr>
+                <td>{{ periodo_matricula.get_tipo_display }}
+                <td>{{ periodo_matricula.fecha_inicio }}
+                <td>{{ periodo_matricula.fecha_fin }}
+                <td>
+                    <div class="btn-group">
+                        <button title="Editar periodo matrícula"
+                                class="btn btn-outline-info periodo-matricula-editar"
+                                data-oferta-academica-id="{{ periodo_matricula.oferta_academica.id }}"
+                                data-periodo-matricula-id="{{ periodo_matricula.id }}"
+                                data-periodo-matricula-tipo="{{ periodo_matricula.tipo }}"
+                                data-periodo-matricula-fecha-inicio="{{ periodo_matricula.fecha_inicio|date:"Y-m-d" }}"
+                                data-periodo-matricula-fecha-fin="{{ periodo_matricula.fecha_fin|date:"Y-m-d" }}"
+                                {% if not perms.academico.change_periodomatricula %} disabled {% endif %}>
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <a title="Eliminar periodo matrícula"
+                                {% if perms.academico.delete_periodomatricula %}
+                           class="btn btn-outline-danger"
+                           onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                           href="{% url 'academico:periodo_matricula_eliminar' periodo_matricula.id %}"
+                                {% else %}
+                           class="btn btn-outline-danger disabled"
+                                {% endif %}>
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

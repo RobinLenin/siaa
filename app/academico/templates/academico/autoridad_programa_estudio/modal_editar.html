@@ -1,0 +1,138 @@
+<div class="modal fade" id="modal-autoridad-programa-estudio-editar">
+    <form method="POST"
+          action="{% url 'academico:autoridad_programa_estudio_guardar' %}"
+          role="form"
+          class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ autoridad_programa_estudio.id }}">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="programa_estudio" value="{{ programa_estudio.id }}">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.AutoridadProgramaEstudio'|verbose_name }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="funcionario">Funcionarios:</label>
+                        <select id="funcionario" name="funcionario" class="form-control select2" required>
+                            <option value="" selected="selected">-- Seleccione --</option>
+                            {% for item in funcionarios %}
+                                <option value="{{ item.id }}"
+                                        {% if autoridad_programa_estudio.funcionario.id == item.id %}selected{% endif %}>
+                                    {{ item.usuario__persona__primer_nombre }}
+                                    {{ item.usuario__persona__segundo_nombre | default:'' }}
+                                    {{ item.usuario__persona__primer_apellido | default:'' }}
+                                    {{ item.usuario__persona__segundo_apellido | default:'' }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="tipo-autoridad">Tipo:</label>
+                                <select id="tipo-autoridad" name="tipo" class="form-control" required>
+                                    <option value="" selected="selected">-- Seleccione --</option>
+                                    {% for key, value in CHOICE_TIPO_AUTORIDAD %}
+                                        <option value="{{ key }}"
+                                                {% if autoridad_programa_estudio.tipo == key %}selected{% endif %}>
+                                            {{ value }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="abreviatura">Abreviatura:</label>
+                                <input type="text"
+                                       class="form-control letras_man_min"
+                                       placeholder="PhD., Mg., Ing."
+                                       id="abreviatura"
+                                       name="abreviatura"
+                                       value="{{ autoridad_programa_estudio.abreviatura }}"
+                                       minlength="3"
+                                       maxlength="14"
+                                       required>
+                            </div>
+                        </div>
+
+                        {% now "Y-m-d" as ahora %}
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="fecha_inicio">Fecha de inicio:</label>
+                                <input type="date"
+                                       class="form-control fecha"
+                                       name="fecha_inicio"
+                                       title="Fecha de inicio del cargo"
+                                       id="fecha_inicio"
+                                       value="{{ autoridad_programa_estudio.fecha_inicio|date:"Y-m-d"|default:ahora }}"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="fecha_fin">Fecha de fin:</label>
+                                <input type="date"
+                                       class="form-control fecha"
+                                       name="fecha_fin"
+                                       title="Fecha de fin del cargo"
+                                       id="fecha_fin"
+                                       value="{{ autoridad_programa_estudio.fecha_fin|date:"Y-m-d" }}"
+                                       mayorIgualA="#fecha_inicio"
+                                       data-msg-mayorIgualA="Debe ser mayor o igual a la fecha de inicio">
+                            </div>
+                        </div>
+
+                         <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label for="referencia_ingreso">Referencia de ingreso:</label>
+                                <textarea type="text"
+                                       class="form-control"
+                                       name="referencia_ingreso"
+                                       title="Referencia de ingreso al cargo"
+                                       id="referencia_ingreso"
+                                       maxlength="250"
+                                       required>{{ autoridad_programa_estudio.referencia_ingreso }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label for="referencia_salida">Referencia de salida:</label>
+                                <textarea type="text"
+                                       class="form-control"
+                                       name="referencia_salida"
+                                       title="Referencia de salida al cargo"
+                                       id="referencia_salida"
+                                       maxlength="250">{{ autoridad_programa_estudio.referencia_salida|default:"" }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estado">Estado: </label><b id="label_activo"> {{ autoridad_facultad.activo|yesno:"Activo,Inactivo" }}</b>
+                        <div class="estado">
+                            <input id="activo"
+                                   type="checkbox"
+                                   class="form-check-input"
+                                   name="activo"
+                                   {% if autoridad_facultad.activo %} checked {% endif %}>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

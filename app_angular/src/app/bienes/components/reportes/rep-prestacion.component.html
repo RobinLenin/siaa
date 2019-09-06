@@ -1,0 +1,91 @@
+<base-toolbar [dataImprimir]="dataImprimir"
+              [tipoPDF]="'TABLA_REPORTE'"
+              [titulo]="'REPORTE DINÁMICO PRESTACIONES'"
+              [codToolbar]="'TOOLBAR_VACIO'"
+              [ejecutar]="'GENERA_RP'"
+              [funcionPDF]="'ADMINISTRADOR DE REPORTES'"
+              [departamentoPDF]="'Gestión de Laboratorios'"
+              [dataBruta]="prestacionesRep | reporteDinamicoPipe: carreraId:tipoReporte:fechaDesde:fechaHasta"
+              [(columnsPDF)]="columns">
+</base-toolbar>
+<style>
+    table {
+        width: 100%;
+    }
+</style>
+<form class="container form-horizontal">
+    <mat-card layout="column">
+        <mat-card-content style="margin: 0 auto;">
+            <fecha-min-max (fechaDesde)="onFechaDesdeSelect($event)" (fechaHasta)="onFechaHastaSelect($event)"></fecha-min-max>
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="label14" for="cbmTipoReporte">Tipo Reporte:</label></div>
+                <div class="col-md-3">
+                    <mat-select placeholder="[Seleccione]" [(ngModel)]="tipoReporte" name="selectReporte" (ngModelChange)="selectReporte($event)" required>
+                        <mat-option [value]="1">Reporte Por Carrera</mat-option>
+                        <mat-option [value]="2">Reporte Por Persona</mat-option>
+                    </mat-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="label14" for="cbmTipoReporte" *ngIf="isRepGeneral">Carrera:</label></div>
+                <div class="col-md-6">
+                    <select-carrera (notificador)="onCarreraSelect($event)" *ngIf="isRepGeneral"></select-carrera>
+                </div>
+
+            </div>
+        </mat-card-content>
+    </mat-card>
+</form>
+<br>
+<mat-card layout="column ">
+    <mat-card-content>
+        <header></header>
+        <div class="example-container mat-elevation-z8">
+            <mat-table [dataSource]="prestacionesRep | reporteDinamicoPipe: carreraId:tipoReporte:fechaDesde:fechaHasta">
+                <!-- Year Column -->
+                <ng-container matColumnDef="year">
+                    <mat-header-cell *matHeaderCellDef><i aria-hidden="true "></i> Año </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.anio}} </mat-cell>
+                </ng-container>
+                <!-- Month Column -->
+                <ng-container matColumnDef="month">
+                    <mat-header-cell *matHeaderCellDef><i aria-hidden="true "></i> Mes </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.mes}} </mat-cell>
+                </ng-container>
+                <!-- DNI Column -->
+                <ng-container matColumnDef="dni">
+                    <mat-header-cell *matHeaderCellDef><i aria-hidden="true "></i> DNI </mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.persona.numero_documento}}</mat-cell>
+                </ng-container>
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef><i aria-hidden="true "></i> Nombres </mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.persona.primer_nombre |uppercase}} {{element.persona.segundo_nombre |uppercase}}</mat-cell>
+                </ng-container>
+                <!-- Last Name Column -->
+                <ng-container matColumnDef="last_name">
+                    <mat-header-cell *matHeaderCellDef><i aria-hidden="true "></i> Apellidos </mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.persona.primer_apellido |uppercase}} {{element.persona.segundo_apellido |uppercase}}</mat-cell>
+                </ng-container>
+                <!-- Career Column -->
+                <ng-container matColumnDef="career">
+                    <mat-header-cell *matHeaderCellDef><i aria-hidden="true "></i> Carrera </mat-header-cell>
+                    <mat-cell *matCellDef="let element" >
+                        <span *ngIf="element.carrera">{{element.carrera.nombre}}</span>
+                        <span *ngIf="!element.carrera">S/N</span>
+                    </mat-cell>
+                </ng-container>
+                <!-- Amount Column -->
+                <ng-container matColumnDef="amount">
+                    <mat-header-cell *matHeaderCellDef><i aria-hidden="true "></i> Cantiad </mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.cantidad}}</mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+
+    </mat-card-content>
+</mat-card>

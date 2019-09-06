@@ -1,0 +1,124 @@
+<toolbar-acciones [titulo]="'Emisión de Facturas'"
+                  [botones]="botones"
+                  [resultado]="facturasEmitir.length"
+                  [activarBuscador]="activarBuscador"
+                  (notificadorInit)="ngOnInit()"
+                  (notificadorBuscador)="changeBuscador()">
+</toolbar-acciones>
+
+<mat-card>
+    <mat-card-content>
+        <mat-select placeholder="Seleccione un Punto de Emisión *"
+                   class="full-ancho padding-top"
+                   [(ngModel)]="puntoEmision"
+                   (ngModelChange)="ngOnInit()">
+            <mat-option *ngFor="let item of puntosEmision"
+                       [value]="item.id">
+                {{ item.descripcion }}
+                <small>({{ item.codigo_establecimiento }}-{{ item.codigo_facturero }})</small>
+            </mat-option>
+        </mat-select>
+    </mat-card-content>
+
+    <mat-card-content *ngIf="activarBuscador">
+        <mat-form-field class="full-ancho">
+            <input matInput
+                   placeholder="Buscar"
+                   [(ngModel)]="query">
+        </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-content *ngIf="puntoEmision">
+        <form #formFechas="ngForm" (ngSubmit)="formFechas.form.valid && generarFacturas()">
+            <mat-grid-list cols="4" rowHeight="40px">
+                <mat-grid-tile [colspan]="3"
+                              [rowspan]="4"
+                              class="izquierda">
+                    <div class="full-ancho">
+                        <fecha-min-max [start_dt]="fechaDesde"
+                                       [end_dt]="fechaHasta"
+                                       [placeholder_desde] = '"(Mes/Día/Año)"'
+                                       [placeholder_hasta] = '"(Mes/Día/Año)"'
+                                       (fechaDesde)="fechaDesde=$event"
+                                       (fechaHasta)="fechaHasta=$event">
+                        </fecha-min-max>
+                    </div>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1">
+                   <mat-radio-group [(ngModel)]="tipoAccion" name="tipoAccion" (ngModelChange)="changeTipoAccion()">
+                      <mat-radio-button value="EMITIR">Emitir</mat-radio-button>
+                      <mat-radio-button value="ANULAR">Anular</mat-radio-button>
+                    </mat-radio-group>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1">
+                    <button mat-raised-button
+                            class="full-ancho"
+                            color="primary"
+                            type="submit" >Previsualizar facturas
+                    </button>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1">
+                    <button mat-raised-button
+                            class="full-ancho"
+                            color="primary"
+                            type="button"
+                            [disabled]="!facturasEmitir.length"
+                            (click)="verConsolidadoFacturas()">Reporte Consolidado
+                    </button>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1">
+                    <button mat-raised-button
+                            class="full-ancho"
+                            color="primary"
+                            type="button"
+                            [disabled]="(tipoAccion=='EMITIR' && !facturasEmitir.length) || (tipoAccion=='ANULAR' && !facturasEmitirSelec.length)"
+                            (click)="confirmarGuardarAccion()">{{ tipoAccion=='EMITIR' ? 'Guardar facturas':'Anular facturas' }}
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover" *ngIf="facturasEmitir.length">
+                <thead>
+                <tr>
+                    <th *ngIf="tipoAccion=='ANULAR'"><mat-checkbox (change)="selectedTodos()" [(ngModel)]="selecTodos"></mat-checkbox></th>
+                    <th><i aria-hidden="true"></i>Nro. Documento</th>
+                    <th><i aria-hidden="true"></i>Fecha emisión</th>
+                    <th><i aria-hidden="true"></i>Cliente</th>
+                    <th><i aria-hidden="true"></i>Identificación</th>
+                    <th><i aria-hidden="true"></i>Total ($)</th>
+                    <td></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of facturasEmitir |buscar : query" #itemsFilter>
+                    <td *ngIf="tipoAccion=='ANULAR'"><mat-checkbox (change)="selectedItem(item)" [checked]="esItemSeleccionado(item)"></mat-checkbox></td>
+                    <td>{{ item.numero_documento }}</td>
+                    <td>{{ item.fecha_emision| date: 'yyyy-MM-dd HH:mm:ss a' }}</td>
+                    <td>
+                        <mat-icon class="aling-vertical">person</mat-icon>
+                        {{ item.persona.nombres_completos }}</td>
+                    <td>{{ item.persona.numero_documento }}</td>
+                    <td>{{ item.total }}</td>
+                    <td>
+                        <button md-icon-button (click)="verPreviaFactura(item)">
+                            <mat-icon md-list-avatar>insert_drive_file</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                     <tr>
+                        <td colspan="7">
+                            <mat-chip-list>
+                              <mat-chip *ngFor="let item of facturasEmitirTipo"> <b>{{ item.nombre|uppercase }} </b> ({{ item.total}}) </mat-chip>
+                            </mat-chip-list>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </mat-card-content>
+</mat-card>
+

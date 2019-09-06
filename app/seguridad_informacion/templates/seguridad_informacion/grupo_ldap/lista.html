@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Grupos
+{% endblock %}
+
+{% block estilos %}
+    {% load staticfiles %}
+    <link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Administración de grupos Ldap</header>
+            <div class="tools">
+                <a class="btn btn-info" href="{% url 'seguridad_informacion:grupo_ldap_crear' %}">
+                    <i class="fa fa-plus-circle"></i> Nuevo
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                <form action="{% url 'seguridad_informacion:grupo_ldap_lista' %}" method="get">
+                    {% with total_items=paginator.count numero_items=paginator.per_page filtro=filtro %}
+                        {% include 'tabla_encabezado.html' %}
+                    {% endwith %}
+                </form>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover data_table">
+                                <thead>
+                                <tr>
+                                    <th>Identificador</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Ldap</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for grupo in grupos %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'seguridad_informacion:grupo_ldap_detalle' grupo.id %}">{{ grupo.id }}</a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'seguridad_informacion:grupo_ldap_detalle' grupo.id %}">{{ grupo.nombre }}</a>
+                                        </td>
+                                        <td>{{ grupo.descripcion }}</td>
+                                        <td>
+                                            {% if grupo.ldap %}
+                                                <span class="fa fa-check" aria-hidden="true"></span>
+                                            {% else %}
+                                                <span class="fa fa-remove" aria-hidden="true"></span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                {% with lista=grupos filtro=filtro %}
+                    {% include 'tabla_paginacion.html' %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Usuarios
+{% endblock %}
+
+{% block estilos %}
+    {% load staticfiles %}
+    <link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Administración de usuarios</header>
+            <div class="tools">
+                    <a href="{% url 'seguridad_informacion:usuario_vincular_ldap_all' %}"
+                       class="btn btn-default">
+                        <i class="fa fa-refresh"></i> Vincualar a Ldap
+                    </a>
+                    <a href="{% url 'seguridad_informacion:usuario_actualizar_fotografia_all' %}"
+                       class="btn btn-default">
+                        <i class="fa fa-refresh"></i> Actualizar Fotografía
+                    </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="table-scrollable">
+                    <div id="usuarios_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                        <form action="{% url 'seguridad_informacion:usuario_lista' %}" method="get">
+                            {% with total_items=paginator.count numero_items=numero_items filtro=filtro %}
+                                {% include 'tabla_encabezado.html' %}
+                            {% endwith %}
+                        </form>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <table class="table" id="usuarios">
+                                    <thead>
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Cédula</th>
+                                        <th>Fotografía</th>
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                        <th>Estado</th>
+                                        <th>Tipo</th>
+                                        <th>Ldap</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for usuario in usuarios %}
+                                        <tr>
+                                            <td>
+                                                <a href="{% url 'seguridad_informacion:usuario_detalle' usuario.id %}">{{ usuario }}</a>
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'seguridad_informacion:usuario_detalle' usuario.id %}">
+                                                    {{ usuario.persona.numero_documento }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {% if usuario.foto_url %}
+                                                    <img src="{{ usuario.foto_url }}"
+                                                         alt="{{ usuario }}"
+                                                         class="img-thumbnail">
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ usuario.persona }}</td>
+                                            <td>
+                                                {% if usuario.google %}
+                                                    <span class="text-success"><i
+                                                            class="fa fa-check"></i> {{ usuario.correo_electronico_institucional }}</span>
+                                                {% else %}
+                                                    <span class="text-danger"><i
+                                                            class="fa fa-remove"></i> {{ usuario.correo_electronico_institucional }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if usuario.activo %}
+                                                    <span class="label label-success">Activo</span>
+                                                {% else %}
+                                                    <span class="label label-danger">Inactivo</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if usuario.es_estudiante %}
+                                                    <span class="label label-default">estudiante</span>
+                                                {% endif %}
+                                                {% if usuario.funcionario %}
+                                                    {% if usuario.funcionario.es_administrativo %}
+                                                        <span class="label label-default">administrativo</span>
+                                                    {% endif %}
+                                                    {% if usuario.funcionario.es_docente %}
+                                                        <span class="label label-default">docente</span>
+                                                    {% endif %}
+                                                    {% if usuario.funcionario.es_trabajador %}
+                                                        <span class="label label-default">trabajador</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if usuario.ldap %}
+                                                    <span class="fa fa-check"></span>
+                                                {% else %}
+                                                    <span class="fa fa-remove"></span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% with lista=usuarios filtro=filtro %}
+                            {% include 'tabla_paginacion.html' %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+

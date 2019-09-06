@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Puesto
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:puestos.index' %}">Puestos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">{{ puesto.denominacion }}
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="page-header">
+        <h1>Puesto: <small>{{ puesto }}</small></h1>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        {% include 'talento_humano/puestos/ver_puesto.html' %}
+        {% include 'talento_humano/puestos/ver_actividades.html' %}
+        {% include 'talento_humano/puestos/ver_conocimientos.html' %}
+        {% include 'talento_humano/puestos/ver_destrezas.html' %}
+    </div>
+
+{% endblock %}

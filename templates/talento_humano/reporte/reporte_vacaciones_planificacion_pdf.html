@@ -1,0 +1,78 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte de vacaciones</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<h2>Reporte de vacaciones por planificación</h2>
+<p class="derecha">
+    Fecha de Impresión: {% now "Y-m-d H:i" %} <br>
+    Total de {{ total }} registros
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th rowspan="2">Identificación</th>
+        <th rowspan="2">Apellidos</th>
+        <th rowspan="2">Nombres</th>
+        <th rowspan="2">Detalle</th>
+        <th rowspan="2">Desde</th>
+        <th rowspan="2">Hasta</th>
+        <th rowspan="2">N° Días</th>
+        <th colspan="3">Pendientes</th>
+    </tr>
+    <tr>
+        <th>Días</th>
+        <th>Horas</th>
+        <th>Minutos</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for registro in registros %}
+        <tr>
+            <td>
+                {{ registro.vacaciones__funcionario__usuario__persona__numero_documento }}
+            </td>
+            <td>
+                {{ registro.vacaciones__funcionario__usuario__persona__primer_apellido }} {{ registro.vacaciones__funcionario__usuario__persona__segundo_apellido }}
+            </td>
+            <td>
+                {{ registro.vacaciones__funcionario__usuario__persona__primer_nombre }} {{ registro.vacaciones__funcionario__usuario__persona__segundo_nombre }}
+            </td>
+            <td>
+                {{ registro.detalle_planificacion__codigo }}
+            </td>
+            <td>
+                {{ registro.fecha_inicio|date:"d-m-Y" }}
+            </td>
+            <td>
+                {{ registro.fecha_fin|date:"d-m-Y" }}
+            </td>
+            <td>
+                {{ registro.dias }}
+            </td>
+            <td>
+                {{ registro.vacaciones__dias_pendientes }}
+            </td>
+            <td>
+                {{ registro.vacaciones__horas_pendientes }}
+            </td>
+            <td>
+                {{ registro.vacaciones__minutos_pendientes }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+
+<p class="derecha">
+    Generado por {{ generado }}
+</p>
+
+</body>

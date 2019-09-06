@@ -1,0 +1,126 @@
+<base-toolbar [titulo]="'ADMINISTRACION PRESTACIONES'"
+			  [url_nuevo]="'home/prestacion'"
+			  [url_actualizar]="'home/prestaciones'"
+			  [url_editar]="'home/prestacion'"
+			  [codToolbar]="'TOOLBAR_BUSCADOR'"
+			  [funcionPDF]="'Administrador de Prestaciones'"
+			  [departamentoPDF]="'Gestión de Laboratorios'"
+			  [(dataPDF)]="dataPDF"
+			  [(columnsPDF)]="columns">
+</base-toolbar>
+
+<paginador-buscar [servicioUrl]='servicio'
+				  [itemsPorPagina]="numberOfItemsPerPage"
+				  (notificadorDatos)="detallesPrestaciones=$event">
+</paginador-buscar>
+
+<mat-card>
+	<mat-card-content>
+		<header>
+		</header>
+		<div class="example-container mat-elevation-z8">
+			<mat-table [dataSource]="detallesPrestaciones">
+				<!-- Acction Column -->
+				<ng-container matColumnDef="action" class="col-sm-1">
+					<mat-header-cell *matHeaderCellDef mat-sort-header>  </mat-header-cell>
+					<mat-cell *matCellDef="let element">
+						<mat-checkbox id="chkPrestacion{{element.persona.numero_documento}}" (change)="selectedItem(element, detallesPrestacionSelect)"
+									  [checked]="exists(element,detallesPrestacionSelect)"
+									  [indeterminate]="isIndeterminate">
+						</mat-checkbox>
+					</mat-cell>
+				</ng-container>
+				<!-- Code Column -->
+				<ng-container matColumnDef="codigo_prestacion">
+					<mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.codigo_prestacion}} </mat-cell>
+				</ng-container>
+				<!-- Date Register Column -->
+				<ng-container matColumnDef="fecha_registro">
+					<mat-header-cell *matHeaderCellDef> Fecha de Regístro </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.fecha_registro}} </mat-cell>
+				</ng-container>
+				<!-- Hour Input Column -->
+				<ng-container matColumnDef="hora_entrada">
+					<mat-header-cell *matHeaderCellDef> Hora de Entrada </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.hora_entrada}} </mat-cell>
+				</ng-container>
+				<!-- Date End Column -->
+				<ng-container matColumnDef="fecha_finalizacion">
+					<mat-header-cell *matHeaderCellDef> Fecha de Finalización </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.fecha_finalizacion}} </mat-cell>
+				</ng-container>
+				<!-- Hour Output Column -->
+				<ng-container matColumnDef="hora_salida">
+					<mat-header-cell *matHeaderCellDef> Hora de Salida </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.hora_salida}} </mat-cell>
+				</ng-container>
+				<!-- Number Column -->
+				<ng-container matColumnDef="numero">
+					<mat-header-cell *matHeaderCellDef> # </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.numero}} </mat-cell>
+				</ng-container>
+				<!-- DNI Column -->
+				<ng-container matColumnDef="numero_documento">
+					<mat-header-cell *matHeaderCellDef> DNI </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.persona.numero_documento}} </mat-cell>
+				</ng-container>
+				<!-- Name Column -->
+				<ng-container matColumnDef="nombres">
+					<mat-header-cell *matHeaderCellDef> Nombres </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.persona.primer_nombre |uppercase}} {{element.persona.segundo_nombre |uppercase}} </mat-cell>
+				</ng-container>
+				<!-- Last Name Column -->
+				<ng-container matColumnDef="apellidos">
+					<mat-header-cell *matHeaderCellDef> Apellidos </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.persona.primer_apellido |uppercase}} {{element.persona.segundo_apellido |uppercase}} </mat-cell>
+				</ng-container>
+				<!-- Career Column -->
+				<ng-container matColumnDef="carrera">
+					<mat-header-cell *matHeaderCellDef> Carrera </mat-header-cell>
+					<mat-cell *matCellDef="let element">
+						<span *ngIf="element.carrera!=null">{{ element.carrera.nombre }} </span>
+					</mat-cell>
+				</ng-container>
+				<!-- Status Column -->
+				<ng-container matColumnDef="estado">
+					<mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+					<mat-cell *matCellDef="let element">
+						<div id="icon">
+							<i class="material-icons orange" *ngIf="element.estado.codigo_th=='EST_PRES_ESPERA'"
+							   title="{{ element.estado.nombre }}">pause_circle_filled</i>
+							<i class="material-icons verde" *ngIf="element.estado.codigo_th=='EST_PRES_ACTIVO'"
+							   title="{{ element.estado.nombre }}">check_circle</i>
+							<i class="material-icons rojo" *ngIf="element.estado.codigo_th=='EST_PRES_FINALIZA'"
+							   title="{{ element.estado.nombre }}">cancel</i>
+						</div>
+					</mat-cell>
+				</ng-container>
+				<!-- Status Column -->
+				<ng-container matColumnDef="finalizar">
+					<mat-header-cell *matHeaderCellDef> Finalizar </mat-header-cell>
+					<mat-cell *matCellDef="let element">
+							<button id="btn_fin" mat-raised-button color="warn"  (click)="onChangePersona(element)" *ngIf="element.estado.codigo_th=='EST_PRES_ACTIVO'"
+                                    [disabled]="element.estado.codigo_th!='EST_PRES_ACTIVO'">Finalizar</button>
+
+					</mat-cell>
+				</ng-container>
+
+				<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+				<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+			</mat-table>
+		</div>
+
+		<div style="margin: 0 auto; text-align: center">
+			<br>
+			<br class="visible-xs">
+			<mat-divider></mat-divider>
+			<paginador-navegacion *ngIf="config.paginationEnabled"
+								  [servicioUrl]='servicio'
+								  [itemsPorPagina]='numberOfItemsPerPage'
+								  [mostrarTotal]="true"
+								  (notificadorDatos)="cargardp($event)">
+			</paginador-navegacion>
+		</div>
+	</mat-card-content>
+</mat-card>

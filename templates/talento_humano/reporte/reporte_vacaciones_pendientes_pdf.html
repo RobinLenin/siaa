@@ -1,0 +1,63 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte de vacaciones</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<h2>Reporte de vacaciones pendientes</h2>
+<p class="derecha">
+    Mayor o igual: {{numeroBase}} días<br>
+    Funcionarios activos: {{activo}} <br>
+    Fecha de Impresión: {% now "Y-m-d H:i" %} <br>
+    Total de {{ total }} registros
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th >Identificación</th>
+        <th >Apellidos</th>
+        <th >Nombres</th>
+        <th >Días</th>
+        <th >Horas</th>
+        <th >Minutos</th>
+
+    </tr>
+
+    </thead>
+    <tbody>
+    {% for registro in registros %}
+        <tr>
+            <td>
+                {{ registro.funcionario__usuario__persona__numero_documento }}
+            </td>
+            <td>
+                {{ registro.funcionario__usuario__persona__primer_apellido }} {{ registro.funcionario__usuario__persona__segundo_apellido }}
+            </td>
+            <td>
+                {{ registro.funcionario__usuario__persona__primer_nombre }} {{ registro.funcionario__usuario__persona__segundo_nombre }}
+            </td>
+            <td>
+                {{ registro.dias_pendientes }}
+            </td>
+            <td>
+                {{ registro.horas_pendientes }}
+            </td>
+            <td>
+                {{ registro.minutos_pendientes }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+
+<p class="derecha">
+    Generado por {{ generado }}
+</p>
+
+</body>

@@ -1,0 +1,40 @@
+<div class="modal fade" id="modal-prerrequisito-editar">
+    <form action="{% url 'academico:asignatura_nivel_guardar_prerrequisito' %}" method="POST" role="form"
+          class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ asignatura_nivel.id }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Prerrequisitos</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="asignatura">Asignatura:</label>
+                        <h5>{{ asignatura_nivel.asignatura.nombre }}</h5>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Seleccione los prerrequisitos
+                        </label>
+                        <select name="prerrequisitos" id="select-prerrequisitos" class="form-control select2" multiple>
+                            {% with prerrequisitos=asignatura_nivel.get_prerrequisitos_ids %}
+                                {% for asignatura in prerrequisitos_values %}
+                                    <option value="{{ asignatura.id }}"
+                                            {% if asignatura.id in prerrequisitos %} selected {% endif %}>
+                                        {{ asignatura.asignatura__nombre }}
+                                        - Nivel {{ asignatura.nivel__numero }}
+                                    </option>
+                                {% endfor %}
+                            {% endwith %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

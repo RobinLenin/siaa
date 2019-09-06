@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta name="description" content="Responsive Admin Template"/>
+    <meta name="author" content="RedstarHospital"/>
+    <title>SIAAF - Iniciar</title>
+    <!-- google font -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
+          type="text/css"/>
+    <!-- icons -->
+    {% load staticfiles %}
+    <link href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'fonts/material-design-icons/material-icon.css' %}">
+    <!-- bootstrap -->
+    <link href="{% static 'plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- style -->
+    <link rel="stylesheet" href="{% static 'css/theme/light/login_page.css' %}?v=1.1">
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+</head>
+
+<body>
+<div class="limiter">
+    <center>
+        <br/>
+        <h4 class="p-b-34 text-white">Sistema de Información Académico Administrativo Financiero - SIAAF</h4>
+    </center>
+    <br/>
+    <div class="container-login100 page-background">
+        <div class="vertical-align">
+            <div>
+                {% for msg in messages %}
+                    <div class="alert alert-{{ msg.level_tag }}" role="alert">
+                        {{ msg.message }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="wrap-login100">
+                <form class="login100-form validate-form"
+                      action="{% block action %}{% endblock %}"
+                      method="POST"
+                      role="form">
+                    {% csrf_token %}
+
+                    <span class="login100-form-logo-noclass">
+                        <center>
+                            <img alt="unl" src="{% static 'img/logo.png' %}" width="280">
+                        </center>
+                    </span>
+
+                    <span class="login100-form-title p-b-34 p-t-27"
+                          title="Sistema de Información Académico Administrativo Financiero">
+						Iniciar Sesión
+					</span>
+
+                    <div class="wrap-input100 validate-input" data-validate="Correo electrónico">
+                        <input class="input100"
+                               type="text"
+                               id="{{ formulario.username.id_for_label }}"
+                               name="{{ formulario.username.name }}"
+                               placeholder="Correo electrónico institucional"
+                               required="required"/>
+                        <span class="focus-input100" data-placeholder="&#xf007"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Enter password">
+                        <input class="input100"
+                               type="password"
+                               id="{{ formulario.password.id_for_label }}"
+                               name="{{ formulario.password.name }}"
+                               placeholder="Contraseña"
+                               required="required"/>
+                        <span class="focus-input100" data-placeholder="&#xf084"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button type="submit" value="Ingresar" class="login100-form-btn">
+                            Ingresar
+                        </button>
+                    </div>
+
+                    {% if LDAP_ACTIVE %}
+                        <div>
+                            <hr/>
+                            <table width="100%">
+                                <tr>
+                                    <td valign="bottom">
+                                        <img src="{{ SAC_URL }}/img/check-sac.png"
+                                             title="Este sitio usa el Servicio de Autenticación Centralizada - SAC"
+                                             alt="sac"/>
+                                    </td>
+                                    <td valign="bottom">
+                                        <a class="text-secondary pull-right"
+                                           href="{{ SAC_URL }}/recuperarContrasenia.php?sistema=https://siaaf.unl.edu.ec"
+                                           style="font-weight: bold;">
+                                            Recuperar contraseña
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    {% endif %}
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
+</html>

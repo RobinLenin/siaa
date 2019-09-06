@@ -1,0 +1,27 @@
+#: api/padron_electoral/views.py:190
+msgid "CONSULTAR_JUNTA_ERROR"
+msgstr ""
+
+#: api/padron_electoral/views.py:198
+msgid "CONSULTAR_JUNTA_NO_EMPADRONADO"
+msgstr ""
+
+#: app/alumni/admin.py:31
+msgid "Registro Senescyt"
+msgstr ""
+
+#: app/alumni/admin.py:37
+msgid "Aptos"
+msgstr ""
+
+#: app/alumni/admin.py:38
+msgid "No aptos"
+msgstr ""
+
+#: siaa/settings.py:184
+msgid "spanish"
+msgstr ""
+
+#: siaa/settings.py:185
+msgid "english"
+msgstr ""

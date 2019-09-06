@@ -1,0 +1,57 @@
+<div class="modal fade" id="modal-resultado" data-responsables="{{ resultado.responsables_ids }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Resultado Esperado</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'planificacion:resultado_guardar' %}" method="POST" role="form"
+                      class="auto-validate">
+                    {% csrf_token %}
+                    <input type="hidden" name="objetivo_operativo" value="{{ objetivo_operativo.id }}"/>
+                    <input type="hidden" name="next" value="{{ request.path }}"/>
+                    <input type="hidden" name="id" value="{{ resultado.id }}"/>
+                    <div>
+                        <h3>Descripcion</h3>
+                        <div class="form-group">
+                            <label for="codigo">(*) Codigo</label>
+                            <input id="codigo" name="codigo" type="text" class="form-control"
+                                   value="{{ resultado.codigo }}" required>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre">(*) Nombre</label>
+                            <input id="nombre" name="nombre" type="text" class="form-control"
+                                   value="{{ resultado.nombre }}" required>
+                        </div>
+                        <h3>Responsables</h3>
+
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-md-4 control-label">Seleccione Responsables
+                            </label>
+                            <div class="col-lg-9 col-md-8">
+                                <select name="responsables" id="select-puestos" class="form-control" multiple>
+                                    {% for puesto in puestos_values %}
+                                        <option value="{{ puesto.id }}"
+                                                {% if puesto.id in resultado.responsables_ids %}selected{% endif %}>
+                                            {{ puesto.denominacion }}
+                                            - {{ puesto.grupo_ocupacional__regimen_laboral__nombre }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="modal fade" id="modal-asignatura-nivel-editar">
+    <form action="{% url 'academico:asignatura_nivel_guardar' %}" method="POST" role="form" class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="nivel" value="{{ nivel.id }}">
+        <input type="hidden" name="id" value="{{ asignatura_nivel.id }}"/>
+        <input type="hidden" name="next" value="{{ request.path }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.AsignaturaNivel'|verbose_name|capfirst }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="asignaturan">Asignatura:</label>
+                        <select id="asignaturan"
+                                name="asignatura"
+                                class="form-control select2"
+                                required>
+                            <option value="" selected>-- Seleccione --</option>
+                            {% for asignatura in asignaturas %}
+                                <option value="{{ asignatura.id }}"
+                                        {% if asignatura_nivel.asignatura.id == asignatura.id %}selected{% endif %}>
+                                    {{ asignatura.nombre }} - {{ asignatura.codigo_institucional|default:'' }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% if nivel.pensum.programa_estudio.tipo != nivel.pensum.programa_estudio.TIPO_CURSO_APOYO %}
+                        <div class="form-group">
+                            <label for="campo_formacion">Campo Formación:</label>
+                            <select id="campo_formacion"
+                                    name="campo_formacion"
+                                    class="form-control"
+                                    required>
+                                <option value="">-- Seleccione --</option>
+                                {% for campo in campos_formacion %}
+                                    <option value="{{ campo.id }}"
+                                            {% if asignatura_nivel.campo_formacion.id == campo.id %}selected{% endif %}>
+                                        {{ campo }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="tipo">Tipo:</label>
+                                <select id="tipo" name="tipo" class="form-control" required>
+                                    <option value="">-- Seleccione --</option>
+                                    {% for item in CHOICE_TIPO %}
+                                        <option value="{{ item.0 }}"
+                                                {% if asignatura_nivel.tipo == item.0 %}selected{% endif %}>
+                                            {{ item.1 }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="duracion">Duración:</label>
+                                <div class="input-group">
+                                    <input type="number"
+                                           min="0"
+                                           class="form-control"
+                                           placeholder="0"
+                                           id="duracion"
+                                           name="duracion"
+                                           value="{{ asignatura_nivel.duracion }}"
+                                           readonly>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">{{ nivel.pensum.get_duracion_unidad_display }}(s)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

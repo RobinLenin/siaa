@@ -1,0 +1,62 @@
+<div class="modal fade" id="modal-periodo-academico-editar">
+    <form action="{% url 'academico:periodo_academico_guardar' %}" method="POST" role="form" class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ periodo_academico.id }}"/>
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.PeriodoAcademico'|verbose_name }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input id="nombre" name="nombre" type="text" class="form-control  mayuscula"
+                               required placeholder="Nombre del Período Académico"
+                               value="{{ periodo_academico.nombre }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="asistencia_minima">Asistencia Minima Aprobar:</label>
+                        <input type="number"
+                               class="form-control"
+                               name="asistencia_minima_aprobar"
+                               id="asistencia_minima"
+                               min="0"
+                               value="{{ periodo_academico.asistencia_minima_aprobar|default:0 }}"
+                               required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="nota_minima">Nota Minima Aprobar:</label>
+                        <input type="number"
+                               class="form-control"
+                               name="nota_minima_aprobar"
+                               id="nota_minima"
+                               min="0"
+                               value="{{ periodo_academico.nota_minima_aprobar|default:0 }}">
+                    </div>
+                        <div class="form-group">
+                            <label for="tipo">Período Lectivo:</label>
+                            <select id="periodo_lectivo" name="periodo_lectivo" class="form-control" required>
+                                <option value="" selected="selected">-- Seleccione --</option>
+                                {% for item in periodos_lectivos %}
+                                    <option value="{{ item.id }}"
+                                            {% if periodo_academico.periodo_lectivo.nombre == item.nombre %}selected{% endif %}>
+                                        {{ item.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            {{ item.nombre }}
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

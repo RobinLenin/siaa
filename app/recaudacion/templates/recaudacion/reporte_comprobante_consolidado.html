@@ -1,0 +1,88 @@
+{% extends "weasyprint/pdf_base.html" %}
+
+{% block contenido %}
+
+    {% load  tags %}
+    {% get_total_documentos documentos as total %}
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>Número</th>
+            <th>Fecha</th>
+            {% if facturasGuardadas %}
+                <th>Clave de acceso</th>
+                <th>Estado</th>
+            {% endif %}
+            <th>Cliente</th>
+            <th>Rubro</th>
+            <th class="text-right">Cantidad</th>
+            <th class="text-right">Precio Unit</th>
+            <th class="text-right">Subtotal</th>
+            <th class="text-right">Impuesto</th>
+            <th class="text-right">Valor Imp.</th>
+            <th class="text-right">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for documento in documentos %}
+            {% for detalle in documento.documento_detalles %}
+                <tr>
+                    <td>{{ documento.numero_documento }}</td>
+                    <td>{% get_fecha documento.fecha_emision %}</td>
+                    {% if facturasGuardadas %}
+                        <td style="width: 110px; overflow-wrap: break-word;">{{ documento.clave_acceso }}</td>
+                        <td> {{ documento.estado }} FE:{{ documento.estado_fe }}</td>
+                    {% endif %}
+                    <td>{{ documento.persona.nombres_completos | upper }}</td>
+                    <td>{{ detalle.codigo }}-{{ detalle.detalle }} {{ detalle.detalle_adicional }}</td>
+                    <td class="text-right">{{ detalle.cantidad }}</td>
+                    <td class="text-right">{{ detalle.precio }}</td>
+                    <td class="text-right">{{ detalle.subtotal }} </td>
+                    <td class="text-right">{{ detalle.tipo_impuesto.nombre }}</td>
+                    <td class="text-right">{{ detalle.impuesto }}</td>
+                    <td class="text-right">{{ detalle.total }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr class="text-right">
+            <td {% if facturasGuardadas %} colspan="8" {% else %} colspan="6" {% endif %}><b>TOTALES </b></td>
+            <td>{{ total.subtotal }}</td>
+            <td></td>
+            <td>{{ total.impuesto }}</td>
+            <td>{{ total.total }}</td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <div class="padding-0-15">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th><u>Total Emitidas</u></th>
+                <th><u>Total Anuladas</u></th>
+                <th><u>Total</u></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><b>{{ total.total_emitidas }}</b></td>
+                <td><b>{{ total.total_anuladas }}</b></td>
+                <td><b>{{ total.total }}</b></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <table class="ancho-100">
+        <tr class="text-center">
+            <td>
+                <br><br><br>
+                ------------------------------------------<br>
+                {{ usuario.persona.numero_documento }}-{{ usuario.persona.get_nombres_completos }}
+            </td>
+        </tr>
+    </table>
+{% endblock %}

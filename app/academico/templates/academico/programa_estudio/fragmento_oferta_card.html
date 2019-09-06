@@ -1,0 +1,25 @@
+{% load guardian_tags %}
+{% get_obj_perms request.user for programa_estudio as "programaestudio_perms" %}
+<div class="card">
+    <div class="card-header text-center">
+        {{ programa_estudio.nombre }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title text-center">
+            {{ programa_estudio.get_tipo_display }}
+        </h5>
+        <p class="card-text">
+            {{ programa_estudio.modalidad }}<br>
+            {{ programa_estudio.codigo_senescyt }}<br>
+            {{ programa_estudio.tipo_formacion | default:"Sin tipo de formación" }}
+        </p>
+    </div>
+    <div class="card-footer text-center">
+        {% if perms.academico.view_programaestudio or "view_programaestudio" in programaestudio_perms %}
+            <div >
+                <a class="mr-auto" href="{% url 'academico:programa_estudio_detalle_perfil' programa_estudio.id %}">Ver
+                    detalle</a>
+            </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="card">
+
+    <div class="card-header text-center">
+        {{ pensum_complementario.pensum.programa_estudio.nombre }}
+    </div>
+    <div class="card-body text-center">
+        <h5 class="card-title">
+            {{ pensum_complementario.pensum.nombre }}
+        </h5>
+        <p class="card-text  {% if pensum_complementario.tipo == TIPO_OBLIGATORIO %} text-danger {% else %} text-success{% endif %}">
+            {{ pensum_complementario.get_tipo_display }}</p>
+    </div>
+
+    <div class="card-footer row">
+
+        {% if perms.academico.view_pensum %}
+            <div class="col-sm-6 col-md-6">
+                <a class="mr-auto" href="{% url 'academico:pensum_detalle' pensum_complementario.pensum.id %}">Ver
+                    pensum</a>
+            </div>
+        {% endif %}
+        <div class="col-sm-6 col-md-6">
+            <a title="Eliminar"
+                    {% if perms.academico.delete_pensumcomplementario %}
+               class="btn btn-xs btn-outline-danger pull-right"
+               onclick="return confirm('¿Está seguro de eliminar el registro?')"
+               href="{% url 'academico:pensum_complementario_eliminar' pensum_complementario.id %}"
+                    {% else %}
+               class="btn btn-outline-danger disabled pull-right"
+                    {% endif %}>
+                <i class="fa fa-trash-o"></i>
+            </a>
+        </div>
+
+
+    </div>
+
+
+</div>

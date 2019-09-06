@@ -1,0 +1,36 @@
+<div class="panel panel-default">
+    <div class="panel-heading row">
+        <div class="text-center col-sm-8">
+            <h4>{{ verificacion.nombre }}</h4>
+        </div>
+        <div class="btn-group-vertical col-sm-4">
+
+        </div>
+
+    </div>
+    <div class="panel-body">
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Actividad:</span>
+            <div class="col-sm-10">
+                <h5 align="justify">{{ verificacion.actividad }}</h5>
+            </div>
+            <span class="col-sm-2">Descripcion:</span>
+            <div class="col-sm-10">
+                <h5 align="justify"><a href="{{ verificacion.documento.url }}">{{ verificacion.nombre }}</a></h5>
+            </div>
+            <span class="col-sm-2">Fecha de creacion:</span>
+            <div class="col-sm-4">
+                <h5>{{ verificacion.created_at }}</h5>
+            </div>
+            <span class="col-sm-2">Usuario:</span>
+            <div class="col-sm-4">
+                <h5>{{ verificacion.created_by }}</h5>
+            </div>
+            <span class="col-sm-2">Fue termino de la actividad:</span>
+            <div class="col-sm-10">
+                <h5>{{ verificacion.actividad_termino|yesno:"Si,No," }}</h5>
+            </div>
+        </div>
+
+    </div>
+</div>

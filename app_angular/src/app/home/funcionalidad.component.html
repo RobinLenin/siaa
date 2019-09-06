@@ -1,0 +1,16 @@
+<a fxLayoutAlign="start center" *ngIf="!funcionalidad.hijas.length" (click)="changeNavegacion(funcionalidad);">
+  <mat-icon  mat-list-icon>{{ funcionalidad.icon }}</mat-icon>
+  {{ funcionalidad.nombre }}
+</a>
+<mat-expansion-panel *ngIf="funcionalidad.hijas.length" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon mat-list-icon>{{ funcionalidad.icon }}</mat-icon>
+      {{ funcionalidad.nombre }}
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <li class="col-sm-12" *ngFor="let subfuncionalidad of funcionalidad.hijas">
+    <funcionalidad [funcionalidad]="subfuncionalidad"></funcionalidad>
+  </li>
+</mat-expansion-panel>
+

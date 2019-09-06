@@ -1,0 +1,102 @@
+
+<div class="panel panel-default">
+    <div class="panel-heading row">
+        <div class="text-center ">
+            <h4>{{ actividad.codigo}} {{ actividad.nombre }}</h4>
+        </div>
+
+    </div>
+    <div class="panel-body">
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Meta Anual:</span>
+            <div class="col-sm-10">
+                <h5 align="justify">{{ actividad.meta_anual }}</h5>
+            </div>
+        </div>
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Indicador:</span>
+            <div class="col-sm-10">
+                <h5 align="justify">{{ actividad.indicador }}</h5>
+            </div>
+        </div>
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Meta Especifica:</span>
+            <div class="col-sm-10">
+                <h5 align="justify">{{ meta.meta_especifica }}</h5>
+            </div>
+        </div>
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Fecha de inicio:</span>
+            <div class="col-sm-4">
+                <h5 >{{ actividad.inicio }}</h5>
+            </div>
+            <span class="col-sm-2">Peso en la meta:</span>
+            <div class="col-sm-4">
+                <h5 >{{ actividad.peso }}%</h5>
+            </div>
+            <span class="col-sm-2">Fecha de Fin:</span>
+            <div class="col-sm-4">
+                <h5 >{{ actividad.fin }}</h5>
+            </div>
+            <span class="col-sm-2">Progreso de la actividad:</span>
+            <div class="col-sm-4">
+                <h5 >{{ actividad.progreso }}%</h5>
+            </div>
+            <span class="col-sm-2">Estado:</span>
+            <div class="col-sm-4">
+                <h5 >{{ actividad.get_estado }}</h5>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4>Presupuesto
+
+                    <a title="Agregar/Editar Presupuesto" class="btn btn-info btn-circle btn-xs pull-right"
+                       data-toggle="modal" href="#modal-presupuesto"
+                        {% if not perms.planificacion.change_presupuesto%} disabled {% endif %}>
+                       {% if actividad.presupuesto %} <i class="fa fa-edit"></i> Editar {% else %} <i class="fa fa-plus-circle"></i>  Agregar{% endif %}
+                    </a>
+                </h4>
+            </div>
+            <div class="card-body">
+
+                <div class="form-group form-inline text-left">
+                            <span class="col-sm-2">Tipo:</span>
+                            <div class="col-sm-4">
+                                <h5 align="justify">{{ actividad.presupuesto.tipo}}</h5>
+                            </div>
+                            <span class="col-sm-2">Presupuesto:</span>
+                            <div class="col-sm-4">
+                                <h5 align="justify">{{ actividad.presupuesto.valor|default:"Sin presupuesto" }}</h5>
+                            </div>
+                            <span class="col-sm-2">Destino:</span>
+                            <div class="col-sm-4">
+                                <h5 align="justify">{{ actividad.presupuesto.destino }}</h5>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+
+    </div>
+
+
+
+        <div class="card">
+                    <div class="card-header">
+                        <h4>Medios de Verificacion
+                            <button class="btn btn-info pull-right btn-circle btn-xs" data-toggle="modal"
+                                    data-target="#modal-verificacion">
+                                <i class="fa fa-plus-circle"></i>
+                                Nuevo
+                            </button>
+                        </h4>
+                    </div>
+                   <div class="card-body">
+                        {% include 'planificacion/verificacion/fragmento_lista.html' with verificaciones=actividad.verificaciones.all %}
+                    </div>
+                </div>
+
+    </div>
+</div>

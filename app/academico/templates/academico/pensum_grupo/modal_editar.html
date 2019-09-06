@@ -1,0 +1,63 @@
+<div class="modal fade" id="modal-pensum-grupo-editar">
+    <form action="{% url 'academico:pensum_grupo_guardar' %}" method="POST" role="form" class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ pensum_grupo.id }}"/>
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.PensumGrupo'|verbose_name }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input id="nombre" name="nombre" type="text" class="form-control  mayuscula"
+                               required placeholder="Nombre de la agrupación (IDIOMAS, COMPUTACIÓN...)" value="{{ pensum_grupo.nombre }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="nivel_inicio">Nivel de inicio:</label>
+                        <input type="number"
+                               class="form-control"
+                               name="nivel_inicio"
+                               id="nivel_inicio"
+                               min="1"
+                               max="12"
+                               value="{{ pensum_grupo.nivel_inicio|default:1 }}"
+                               required
+                               >
+                    </div>
+                    <div class="form-group">
+                        <label for="nivel_fin">Nivel de fin:</label>
+                        <input type="number"
+                               class="form-control"
+                               name="nivel_fin"
+                               id="nivel_fin"
+                               min="0"
+                               max="12"
+                               value="{{ pensum_grupo.nivel_fin|default:0 }}"
+                               mayora="#nivel_inicio"
+                               data-msg-mayora="Debe ser mayor a Nivel de inicio">
+                    </div>
+                    <div class="form-group">
+                        <label for="nro_optativo_obligatorios">Pensums optativos minimos a aprobar:</label>
+                        <input id="nro_optativo_obligatorios" name="nro_optativo_obligatorios" type="number"
+                               min="0" max="{{ nro_optativos|default:0 }}"
+                               class="form-control"
+                               placeholder="Cero si no es obligatorio aprobar ningun optativo"
+                               value="{{ pensum_grupo.nro_optativo_obligatorios|default:0 }}"
+                               required
+                                {% if pensum_grupo.id == null  %}
+                                   readonly
+                                {% endif %}>
+                        <small>No puede ingresar un numero mayor a los pensums asociados que son optativos. <b> Actualmente {{ nro_optativos|default:0 }}</b></small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

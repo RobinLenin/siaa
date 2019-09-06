@@ -1,0 +1,33 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <div class="row row col-lg-11 col-md-11 col-sm-11">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <span class="col-sm-1" *ngIf="mostrarTotal">{{etiquetaTotal}} ({{itemsTotal}})</span>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <span class="fill-remaining-space"></span>
+                <span>
+                    <button mat-mini-fab color="color_accent" (click)="changePage($event, 1)">
+                        <mat-icon class="">first_page</mat-icon>
+                    </button>&nbsp;
+                    <button mat-mini-fab color="color_accent" (click)="previousPage($event)">
+                        <mat-icon class="">chevron_left</mat-icon>
+                    </button>
+                    &nbsp;
+                    <span>PAGINA</span>&nbsp;
+                    <mat-form-field style="width: 10%" >
+                        <input matInput id="txtPagina" [(ngModel)]="pagina" (keyup)="changeKeyPage($event)">
+                    </mat-form-field>
+                    <span>de  {{paginasTotal}}</span>
+                    &nbsp;
+                    <button mat-mini-fab color="color_accent" (click)="nextPage($event)">
+                        <mat-icon class="">chevron_right</mat-icon>
+                    </button>&nbsp;
+                    <button mat-mini-fab color="color_accent" (click)="changePage($event, paginasTotal)">
+                        <mat-icon class="">last_page</mat-icon>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>

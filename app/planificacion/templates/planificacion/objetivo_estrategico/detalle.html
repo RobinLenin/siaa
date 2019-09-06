@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    PEDI
+{% endblock %}
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Modulo de Planificacion</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{% url 'planificacion:plan_estrategico_lista' %}" class="parent-item">Planes
+                        Estrategicos</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:plan_estrategico_detalle' objetivo_estrategico.plan_estrategico.id %}"
+                       class="parent-item">{{ objetivo_estrategico.plan_estrategico.nombre }}</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Objetivo Estrategico</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Objetivo Estrategico</header>
+            <div class="tools">
+                <a title="Editar Objetivo Estrategico" class="btn btn-info"
+                   data-toggle="modal" data-target="#modal-objetivo-estrategico"
+                    {% if not perms.planificacion.change_objetivo_estrategico %} disabled {% endif %}>
+                <i class="fa fa-edit"></i> Editar
+                </a>
+                <a title="Eliminar Objetivo Estrategico" class="btn btn-danger"
+                   href="{% url 'planificacion:objetivo_estrategico_eliminar' objetivo_estrategico.id %}"
+                {% if not perms.planificacion.delete_objetivo_estrategico %} disabled {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            {% include 'planificacion/objetivo_estrategico/fragmento_detalle.html' %}
+        </div>
+    </div>
+
+    {% include 'planificacion/objetivo_estrategico/modal_editar.html' with plan_estrategico=objetivo_estrategico.plan_estrategico%}
+    {% include 'planificacion/objetivo_operativo/modal_editar.html' %}
+
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/planificacion/objetivo_operativo_lista.js' %}"></script>
+{% endblock javascript %}

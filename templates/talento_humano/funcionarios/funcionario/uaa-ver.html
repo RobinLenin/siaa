@@ -1,0 +1,17 @@
+<p>{{ uaa }}</p>
+<ul>
+    {% for uaa_puesto in uaa.uaapuesto_set.all %}
+        <li>
+            <a href="{% url 'talento_humano:funcionarios.funcionario.uaa_puesto' funcionario.id uaa_puesto.id %}">
+                {{ uaa_puesto.puesto }}  -  ({{ uaa_puesto.puesto.grupo_ocupacional }})  - ({{ uaa_puesto.puesto.grupo_ocupacional.rmu }})
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+<ul>
+    {% for ua in uaa.serie.all %}
+        <li>
+            {% include 'talento_humano/funcionarios/funcionario/uaa-ver.html' with uaa=ua %}
+        </li>
+    {% endfor %}
+</ul>

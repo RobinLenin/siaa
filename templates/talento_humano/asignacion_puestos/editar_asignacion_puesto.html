@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Editar asignación de puesto
+{% endblock %}
+
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a> <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:asignacion_puestos.lista' %}">Asignación de puestos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:asignacion_puestos.funcionario' asignacion_puesto.funcionario.id %}">{{ asignacion_puesto.funcionario }}</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Editar</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>{{ asignacion_puesto.uaa }}
+            {{ asignacion_puesto.puesto }}
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="" method="post" class="form-horizontal">
+            {% csrf_token %}
+            <table class="table table-hover">
+                {{ form }}
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type='submit' class='btn btn-primary btn-sm' value='Editar'/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+        $(function () {
+            $.datepicker.regional['es'] = {
+                minDate: -3650,
+                maxDate: 1000
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+
+
+</script>
+{% endblock %}

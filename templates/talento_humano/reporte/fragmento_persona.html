@@ -1,0 +1,149 @@
+<tr>
+    <th colspan="2" class="titulo">Datos personales</th>
+</tr>
+<tr>
+    <th>Tipo de documento</th>
+    <td>{{ persona.tipo_documento }}</td>
+</tr>
+<tr>
+    <th>Número de documento</th>
+    <td>{{ persona.numero_documento }}</td>
+</tr>
+{% if persona.get_foto_url %}
+    <tr>
+        <th>Fotografía</th>
+        <td><img src="{{ persona.get_foto_url }}" alt=""></td>
+    </tr>
+{% endif %}
+{% if persona.numero_libreta_militar %}
+    <tr>
+        <th>Libreta Militar</th>
+        <td>{{ persona.numero_libreta_militar }}</td>
+    </tr>
+{% endif %}
+{% if persona.primer_apellido %}
+    <tr>
+        <th>Primer apellido</th>
+        <td>{{ persona.primer_apellido }}</td>
+    </tr>
+{% endif %}
+{% if persona.segundo_apellido %}
+    <tr>
+        <th>Segundo apellido</th>
+        <td>{{ persona.segundo_apellido }}</td>
+    </tr>
+{% endif %}
+{% if persona.primer_nombre %}
+    <tr>
+        <th>Primer nombre</th>
+        <td>{{ persona.primer_nombre }}</td>
+    </tr>
+{% endif %}
+{% if persona.segundo_nombre %}
+    <tr>
+        <th>Primer nombre</th>
+        <td>{{ persona.segundo_nombre }}</td>
+    </tr>
+{% endif %}
+{% if persona.fecha_nacimiento %}
+    <tr>
+        <th>Fecha de nacimiento</th>
+        <td>{{ persona.fecha_nacimiento }}</td>
+    </tr>
+    <tr>
+        <th>Edad</th>
+        <td>{{ persona.edad }} años</td>
+    </tr>
+{% endif %}
+{% if persona.condicion_cedulado %}
+    <tr>
+        <th>Condición cedulado</th>
+        <td>{{ persona.condicion_cedulado }}</td>
+    </tr>
+{% endif %}
+{% if persona.profesion %}
+    <tr>
+        <th>Profesión</th>
+        <td>{{ persona.profesion }}</td>
+    </tr>
+{% endif %}
+{% if persona.discapacidad %}
+    <tr>
+        <th>Discapacidad</th>
+        <td>{{ persona.discapacidad|yesno:'Si, No' }}</td>
+    </tr>
+    <tr>
+        <th>Número de carnet de CONADIS</th>
+        <td>{{ persona.numero_carnet_conadis }}</td>
+    </tr>
+    <tr>
+        <th>Porcentaje discapacidad</th>
+        <td>{{ persona.porcentaje_discapacidad }} %</td>
+    </tr>
+    <tr>
+        <th>Fecha de registro CONADIS</th>
+        <td>{{ persona.fecha_registro_conadis }} </td>
+    </tr>
+    <tr>
+        <th>Tipo de discapacidadS</th>
+        <td>{{ persona.tipo_discapacidad }} </td>
+    </tr>
+    <tr>
+        <th>Grado de discapacidadS</th>
+        <td>{{ persona.grado_discapacidad }} </td>
+    </tr>
+{% endif %}
+{% if persona.estado_civil %}
+    <tr>
+        <th>Estado civil</th>
+        <td>{{ persona.estado_civil }}</td>
+    </tr>
+{% endif %}
+{% if persona.tipo_sangre %}
+    <tr>
+        <th>Tipo de sangre</th>
+        <td>{{ persona.tipo_sangre }}</td>
+    </tr>
+{% endif %}
+{% if persona.sexo %}
+    <tr>
+        <th>Sexo</th>
+        <td>{{ persona.sexo }}</td>
+    </tr>
+{% endif %}
+{% if persona.nacionalidad %}
+    <tr>
+        <th>Nacionalidad</th>
+        <td>{{ persona.nacionalidad }}</td>
+    </tr>
+{% endif %}
+{% if persona.anios_residencia %}
+    <tr>
+        <th>Años de residencia</th>
+        <td>{{ persona.anios_residencia }}</td>
+    </tr>
+{% endif %}
+{% if persona.tipo_etnia %}
+    <tr>
+        <th>Tipo de etnia</th>
+        <td>{{ persona.tipo_etnia }}</td>
+    </tr>
+{% endif %}
+{% if persona.nacionalidad_indigena %}
+    <tr>
+        <th>Nacionalidad indigena</th>
+        <td>{{ persona.nacionalidad_indigena }}</td>
+    </tr>
+{% endif %}
+{% if persona.correo_electronico %}
+    <tr>
+        <th>Correo electrónico</th>
+        <td>{{ persona.correo_electronico }}</td>
+    </tr>
+{% endif %}
+{% if persona.correo_electronico_alternativo %}
+    <tr>
+        <th>Correo electrónico alternativo</th>
+        <td>{{ persona.correo_electronico_alternativo }}</td>
+    </tr>
+{% endif %}

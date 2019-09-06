@@ -1,0 +1,32 @@
+<div class="table-responsive-lg">
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Descripcion
+            <th>Documento
+            <th>Acción
+        </tr>
+        </thead>
+        <tbody>
+        {% for verificacion in verificaciones %}
+            <tr>
+                <td><a href="{% url 'planificacion:verificacion_detalle' verificacion.id %}">{{ verificacion.nombre }}</a>
+                <td><a class="btn btn-default btn-xs" target="_blank" href="{{ verificacion.documento.url }}"><i class="fa fa-download "></i></a>
+                <td>
+                    <div class="btn-group">
+                        <a type="button" class="btn btn-outline-danger btn-xs" data-id="{{ verificacion.id }}"
+                        href="{% url 'planificacion:verificacion_eliminar' verificacion.id %}">
+                            <i title="Eliminar" class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+

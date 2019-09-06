@@ -1,0 +1,83 @@
+<toolbar-acciones [titulo]="'Establecimientos'"
+                  [botones]="botones"
+                  [resultado]="punto_emision.length"
+                  [activarEditar]="activarEditar"
+                  [activarEliminar]="activarEliminar"
+                  [activarBuscador]="activarBuscador"
+                  (notificadorInit)="ngOnInit()"
+                  (notificadorCrear)="crear()"
+                  (notificadorEditar)="editar()"
+                  (notificadorEliminar)="confirmarEliminarPuntoEmision()"
+                  (notificadorBuscador)="changeBuscador()">
+</toolbar-acciones>
+<mat-card>
+    <mat-card-content>
+        <header>
+        </header>
+        <div fxLayout="row" *ngIf="activarBuscador">
+            <mat-form-field fxFlex>
+                <input matInput
+                       placeholder="Buscar"
+                       [(ngModel)]="query">
+            </mat-form-field>
+        </div>
+
+        <div class="example-container mat-elevation-z8">
+            <mat-table [dataSource]="punto_emision |buscar:query">
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <mat-checkbox id="chkPuntoEmision{{element.id}}" (change)="selectedItem(element)"></mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Código Column -->
+                <ng-container matColumnDef="codigo_establecimiento">
+                    <mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.codigo_establecimiento }} | {{ element.codigo_facturero }} </mat-cell>
+                </ng-container>
+
+                <!-- Descripcion Column -->
+                <ng-container matColumnDef="descripcion">
+                    <mat-header-cell *matHeaderCellDef> Descripcion </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.descripcion }} </mat-cell>
+                </ng-container>
+
+                <!-- Nro. Desde Column -->
+                <ng-container matColumnDef="nro_desde">
+                    <mat-header-cell *matHeaderCellDef> Nro. Desde </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.nro_desde }} </mat-cell>
+                </ng-container>
+
+                <!-- Nro. Hasta Column -->
+                <ng-container matColumnDef="nro_hasta">
+                    <mat-header-cell *matHeaderCellDef> Nro. Hasta </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.nro_hasta }} </mat-cell>
+                </ng-container>
+
+                <!-- Secuencial actual Column -->
+                <ng-container matColumnDef="nro_secuencial">
+                    <mat-header-cell *matHeaderCellDef> Secuencial actual factura </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.nro_secuencial }} </mat-cell>
+                </ng-container>
+
+                <!-- Estado Column -->
+                <ng-container matColumnDef="activo">
+                    <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <div *ngIf="element.activo">
+                            <mat-icon mat-list-avatar class="material-icons verde">check_circle</mat-icon>
+                        </div>
+                        <div *ngIf="!element.activo">
+                            <mat-icon mat-list-avatar class="material-icons rojo">cancel</mat-icon>
+                        </div>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+    </mat-card-content>
+</mat-card>

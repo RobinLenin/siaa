@@ -1,0 +1,37 @@
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Codigo
+            <th>Descripcion</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for objetivo_operativo in objetivos_operativos %}
+            <tr>
+                <td>{{ objetivo_operativo.codigo }}
+                <td><a href="{% url 'planificacion:objetivo_operativo_detalle' objetivo_operativo.id %}">{{ objetivo_operativo }}</a>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-danger eliminar-oo"
+                                data-id="{{ objetivo_operativo.id }}">
+                                <i class="fa fa-trash-o"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!--Modal para Agregar resultado -->
+
+
+
+
+
+
+

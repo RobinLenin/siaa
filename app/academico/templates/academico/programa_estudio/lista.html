@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Programas de estudio
+{% endblock %}
+
+{% block estilos %}
+    {% load staticfiles %}
+    <link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.ProgramaEstudio'|verbose_name_plural }}</header>
+            <div class="tools">
+                <div class="pull-right">
+                    <button class="btn btn-info btn-xs"
+                            data-toggle="modal" data-target="#modal-programa-estudio-editar"
+                            {% if not perms.academico.add_programaestudio %} disabled {% endif %}>
+                        <i class="fa fa-plus-circle"></i>Nuevo
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="table-responsive">
+                <table class="table table-hover" id="programas_estudio">
+                    <thead>
+                    <tr>
+                        <th>{{ 'academico.Facultad'|verbose_name|capfirst  }}</th>
+                        <th>Nombre</th>
+                        <th>Modalidad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include 'academico/programa_estudio/modal_editar.html' %}
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/academico/programa_estudio_lista.js' %}"></script>
+    <script src="{% static 'js/academico/programa_estudio_editar.js' %}"></script>
+{% endblock %}

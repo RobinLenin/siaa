@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Perfil de Usuario
+{% endblock %}
+
+{% block migas %}
+    <ol class="breadcrumb">
+        <li>
+            <a href="{% url 'index' %}">Inicio</a>
+        </li>
+        <li>
+            <a href="{% url 'talento_humano:funcionarios.funcionario.usuario' %}">Funcionario</a>
+        </li>
+        <li>
+            <a href="{% url 'seguridad:usuario_perfil' %}">{{ usuario.persona }}</a>
+        </li>
+        <li class="active">Ausentismos</li>
+    </ol>
+
+    <div class="page-header">
+        <h1> {{ usuario.persona.get_nombres_completos }}</h1>
+    </div>
+
+{% endblock %}
+
+{% block contenido %}
+
+    {% if usuario.es_funcionario %}
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                <tbody>
+                <tr>
+                    <th>Funcionario</th>
+                    <td>{{ usuario.funcionario }}</td>
+                </tr>
+                <tr>
+                    <th>Puesto</th>
+                    <td>{{ usuario.funcionario.get_asignacion_puesto_vigente.uaa_puesto }}</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+
+
+    <div class="row">
+        <h3>Ausentismos</h3>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Descripcion</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                    <th>Registro</th>
+                    <th>Dias</th>
+                    <th>Observación</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ausentismo in usuario.funcionario.ausentismofuncionario_set.all %}
+                    <tr>
+                        <td>{{ ausentismo.ausentismo.tipo_ausentismo }}</td>
+                        <td>{{ ausentismo.ausentismo.nombre }}</td>
+                        <td>{{ ausentismo.fecha_inicio }}</td>
+                        <td>{{ ausentismo.fecha_fin }}</td>
+                        <td>{{ ausentismo.fecha_registro }}</td>
+                        <td>{{ ausentismo.get_numero_dias }}</td>
+                        <td>{{ ausentismo.observacion }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% endif %}
+
+{% endblock contenido %}

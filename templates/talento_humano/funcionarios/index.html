@@ -1,0 +1,115 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Funcionarios
+{% endblock %}
+
+{% block estilos %}
+    {% load staticfiles %}
+    <!-- data tables -->
+    <link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de talento humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a> <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Funcionarios</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Gestión de Funcionarios</header>
+        <div class="tools">
+            <a class="btn btn-info" href="{% url 'talento_humano:funcionarios.funcionario.agregar' %}">
+                <i class="fa fa-plus-circle "></i> Nuevo
+            </a>
+            {% if user.is_admin %}
+            <a href="{% url 'talento_humano:funcionarios.fotografias' %}" class="btn btn-danger">
+                Cargar fotografías
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+            <form action="{% url 'talento_humano:funcionarios.busqueda' %}" method="get">
+                {% with total_items=paginator.count numero_items=paginator.per_page filtro=filtro %}
+                {% include 'tabla_encabezado.html' %}
+                {% endwith %}
+            </form>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Cédula</th>
+                                <th>Fotografía</th>
+                                <th>Apellidos</th>
+                                <th>Nombres</th>
+                                <th class="text-center">Estado</th>
+                                <th class="text-center">Función</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for funcionario in funcionarios %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'talento_humano:funcionarios.funcionario' funcionario.id %}">{{ funcionario.usuario.persona.numero_documento }}</a>
+                                </td>
+                                <td>
+                                    {% if funcionario.usuario.foto_url %}
+                                    <img src="{{ funcionario.usuario.foto_url }}" alt="{{ funcionario }}" class="img-thumbnail img-thumbnail-list">
+                                    {% endif %}
+                                </td>
+                                <td>{{ funcionario.usuario.persona.get_apellidos }}</td>
+                                <td>{{ funcionario.usuario.persona.get_nombres }}</td>
+                                <td  class="text-center">
+                                    {% if funcionario.activo %}
+                                    <span class="label label-success">Activo</span>
+                                    {% else %}
+                                    <span class="label label-danger">Inactivo</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if funcionario.es_administrativo %}
+                                    <span class="label label-default">administrativo</span>
+                                    {% endif %}
+
+                                    {% if funcionario.es_docente %}
+                                    <span class="label label-default">docente</span>
+                                    {% endif %}
+
+                                    {% if funcionario.es_trabajador %}
+                                    <span class="label label-default">trabajador</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {% with lista=funcionarios filtro=filtro %}
+            {% include 'tabla_paginacion.html' %}
+            {% endwith %}
+        </div>
+    </div>
+    {% endblock %}
+

@@ -1,0 +1,124 @@
+/*
+* Estilo para mejorar la apariencia del
+* dropdown que corresponde al menu izquierdo
+*/
+.sidebar-left
+    background menu_colorFondo
+
+.sidebar-top
+    background color_primary !important
+
+.sidebar-head
+    padding-bottom 0px !important
+
+
+.sidebar-body .sidebar-nav li a
+  position relative
+  cursor pointer
+  user-select none
+  display block
+  height 48px
+  line-height 48px
+  padding 0
+  padding-left 16px
+  padding-right 56px
+  text-decoration none
+  clear both
+  font-weight 300
+  overflow hidden
+  -o-text-overflow ellipsis
+  text-overflow ellipsis
+  white-space nowrap
+  -webkit-transition all 0.2s ease-in-out
+  -o-transition all 0.2s ease-in-out
+  transition all 0.2s ease-in-out
+
+.sidebar-body .sidebar-nav li a .caret
+  position absolute
+  right 24px
+  top 24px
+
+.sidebar-body .sidebar-nav md-icon
+  display inline-block
+  min-width 40px
+  width 40px
+  text-align left
+  font-size 20px
+  vertical-align middle
+
+.sidebar-body .sidebar-nav .dropdown-menu
+  position relative
+  width 100%
+  margin 0
+  padding 0
+  border none
+  border-radius 0
+  -webkit-box-shadow none
+  box-shadow none
+
+.sidebar-body .sidebar-text
+  color menu_colorText
+
+.sidebar-body .sidebar-nav li > a
+  color menu_colorText
+  background-color transparent
+
+.sidebar-body .sidebar-nav li > a i
+  color menu_colorSeleccionPadre
+
+.sidebar-body .sidebar-nav li:hover > a,
+.sidebar-body .sidebar-nav li > a:hover
+  color menu_colorText
+  background-color menu_colorHoverPadre
+
+.sidebar-body .sidebar-nav li:hover > a i,
+.sidebar-body .sidebar-nav li > a:hover i
+  color menu_colorSeleccionPadre
+
+.sidebar-body .sidebar-nav li:focus > a,
+.sidebar-body .sidebar-nav li > a:focus
+  color menu_colorText
+  background-color transparent
+
+.sidebar-body .sidebar-nav li:focus > a i,
+.sidebar-body .sidebar-nav li > a:focus i
+  color menu_colorSeleccionPadre
+
+.sidebar-body .sidebar-nav > .open > a,
+.sidebar-body .sidebar-nav > .open > a:hover,
+.sidebar-body .sidebar-nav > .open > a:focus
+  color menu_colorText
+  background-color menu_colorHoverPadre
+
+.sidebar-body .sidebar-nav > .active > a,
+.sidebar-body .sidebar-nav > .active > a:hover,
+.sidebar-body .sidebar-nav > .active > a:focus
+  color menu_colorText
+  background-color menu_colorHoverPadre
+
+.sidebar-body .sidebar-nav > .disabled > a,
+.sidebar-body .sidebar-nav > .disabled > a:hover,
+.sidebar-body .sidebar-nav > .disabled > a:focus
+  color menu_colorHoverPadre
+  background-color transparent
+
+.sidebar-body .sidebar-nav > .dropdown > .dropdown-menu > li > a:focus
+  background-color menu_colorHoverPadre
+  color menu_colorText
+
+.sidebar-body .sidebar-nav > .dropdown > .dropdown-menu > .active > a,
+.sidebar-body .sidebar-nav > .dropdown > .dropdown-menu > .active > a:hover,
+.sidebar-body .sidebar-nav > .dropdown > .dropdown-menu > .active > a:focus
+  color menu_colorText
+  background-color menu_colorHoverPadre
+
+.sidebar-body .sidebar-nav > .dropdown > .dropdown-menu
+  background-color menu_colorSeleccionHijo
+
+.sidebar-body .sidebar-nav > .dropdown > .dropdown-menu > li > a:hover
+  background-color menu_colorHoverHijo
+  color menu_colorText
+
+
+
+

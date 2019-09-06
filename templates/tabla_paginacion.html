@@ -1,0 +1,61 @@
+{% comment %}
+Estilos a importar en html
+{% block estilos %}
+    {% load staticfiles %}
+    <link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+{% endblock %}
+{% endcomment %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-5">
+        <div class="dataTables_info" id="usuarios_info" role="status" aria-live="polite">
+            Mostrando {{ lista.start_index }} a {{ lista.end_index }} de {{ lista.paginator.count }} registros
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-7">
+        <div class="dataTables_paginate paging_simple_numbers" id="usuarios_paginate">
+            <ul class="pagination">
+                <li class="paginate_button page-item previous {% if lista.number == 1 %} disabled {% endif %}"
+                    id="usuarios_previous">
+                    <a href="{% if lista.has_previous %}?pagina={{ lista.previous_page_number }}{% if filtro %}&filtro={{ filtro }}{% endif %}&numero_items={{ lista.paginator.per_page }}{% endif %}"
+                       aria-controls="usuarios" data-dt-idx="0" tabindex="0" class="page-link">Anterior
+                    </a>
+                </li>
+                {% load tabla_paginacion %}
+                {% paginacion lista as paginas %}
+                {% for i in paginas %}
+                    {% if i == lista.number %}
+                        <li class="paginate_button page-item active">
+                            <a aria-controls="usuarios" data-dt-idx="{{ i }}" tabindex="0"
+                               class="page-link">{{ i }}
+                            </a>
+                        </li>
+
+                    {% elif i == -1 %}
+                        <li class="paginate_button page-item ">
+                            <a aria-controls="usuarios" data-dt-idx="{{ i }}" tabindex="0"
+                               class="page-link">...
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="paginate_button page-item ">
+                            <a href="?pagina={{ i }}{% if filtro %}&filtro={{ filtro }}{% endif %}&numero_items={{ lista.paginator.per_page }}"
+                               aria-controls="usuarios" data-dt-idx="{{ i }}" tabindex="0"
+                               class="page-link">{{ i }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                <li class="paginate_button page-item next {% if lista.number == lista.paginator.num_pages %} disabled {% endif %} "
+                    id="usuarios_next">
+                    <a href="{% if lista.has_next %}?pagina={{ lista.next_page_number }}{% if filtro %}&filtro={{ filtro }}{% endif %}&numero_items={{ lista.paginator.per_page }}{% endif %}"
+                       aria-controls="usuarios"
+                       data-dt-idx="{{ i }}" tabindex="0"
+                       class="page-link">Siguiente
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

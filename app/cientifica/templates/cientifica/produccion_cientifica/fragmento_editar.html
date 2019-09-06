@@ -1,0 +1,70 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    {% if not persona.expediente or not persona.expediente.produccioncientifica %}
+        <p>
+            <a href="{% url 'cientifica:produccion_cientifica_crear' persona.id %}?next={{ request.path }}"
+               class="btn btn-info">
+                Agregar producción científica
+            </a>
+        </p>
+    {% else %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Artículo de Revista
+                    <a href="{% url 'cientifica:articulo_revista_crear' persona.expediente.produccioncientifica.id %}?next={{ request.path }}"
+                       class="btn btn-info btn-circle btn-xs pull-right"
+                       role="button">
+                        <i class="fa fa-plus-circle"></i> Nuevo
+                    </a>
+                </h3>
+            </div>
+            <div class="panel-body">
+                {% include 'cientifica/articulo_revista/fragmento_lista.html' with articulos_revista=persona.expediente.produccioncientifica.articulorevista_set.all %}
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Ponencia
+                    <a href="{% url 'cientifica:ponencia_crear' persona.expediente.produccioncientifica.id %}?next={{ request.path }}"
+                       class="btn btn-info btn-circle btn-xs pull-right"
+                       role="button">
+                        <i class="fa fa-plus-circle"></i> Nuevo
+                    </a>
+                </h3>
+            </div>
+            <div class="panel-body">
+                {% include 'cientifica/ponencia/fragmento_lista.html' with ponencias=persona.expediente.produccioncientifica.ponencia_set.all %}
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Libro
+                    <a href="{% url 'cientifica:libro_crear' persona.expediente.produccioncientifica.id %}?next={{ request.path }}"
+                       class="btn btn-info btn-circle btn-xs pull-right"
+                       role="button">
+                        <i class="fa fa-plus-circle"></i> Nuevo
+                    </a>
+                </h3>
+            </div>
+            <div class="panel-body">
+                {% include 'cientifica/libro/fragmento_lista.html' with libros=persona.expediente.produccioncientifica.libro_set.all %}
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Capítulo de libro
+                    <a href="{% url 'cientifica:capitulo_libro_crear' persona.expediente.produccioncientifica.id %}?next={{ request.path }}"
+                       class="btn btn-info btn-circle btn-xs pull-right"
+                       role="button">
+                        <i class="fa fa-plus-circle"></i> Nuevo
+                    </a>
+                </h3>
+            </div>
+            <div class="panel-body">
+                {% include 'cientifica/capitulo_libro/fragmento_lista.html' with capitulos_libros=persona.expediente.produccioncientifica.capitulolibro_set.all %}
+            </div>
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,8 @@
+<mat-select class="full-ancho padding-top"
+			[(ngModel)]="selectedValue"
+			placeholder="{{ placeholder }}"
+			(ngModelChange)="selectCarrera($event)"
+			[disabled]="isDisable">
+	<mat-option [value]="null" selected>[Seleccione]</mat-option>
+	<mat-option *ngFor="let item  of carreras" [value]="item.id">{{ item.nombre }}</mat-option>
+</mat-select>

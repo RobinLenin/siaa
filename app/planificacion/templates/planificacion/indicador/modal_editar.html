@@ -1,0 +1,77 @@
+<div class="modal fade" id="modal-indicador">
+    <div class="modal-dialog">
+        <form action="{% url 'planificacion:indicador_guardar' %}" method="POST" role="form" class="auto-validate">
+            {% csrf_token %}
+            <input type="hidden" name="resultado" value="{{ resultado.id }}">
+            {% if indicador %}
+                <input type="hidden" name="id" value="{{ indicador.id }}">
+            {% endif %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Indicador</h4>
+                </div>
+                <div class="modal-body was-validated">
+                    <div class="form-group">
+                        <label for="nombre">Indicador:</label>
+                        <textarea type="text" class="form-control" id="nombre" placeholder="Descripcion del indicador.."
+                                  name="nombre"
+                                  required>{{ indicador.nombre }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="meta-nombre">Meta:</label>
+                        <textarea type="text" class="form-control" id="meta-nombre"
+                                  placeholder="Descripcion de la meta.." name="meta_nombre"
+                                  required>{{ indicador.meta_nombre }}</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <div class="form-check">
+                                <input id="meta-medible" class="form-check-input" type="checkbox" name="medible"
+                                       {% if indicador.medible %} checked="True" {% endif %}>
+                                <label  for="meta-medible">Es Medible?</label>
+                            </div>
+                        </div>
+                        <div class="form-group meta-porcentaje col-md-4">
+                            <div class="form-check">
+                                <input id="meta-porcentaje" class="form-check-input" type="checkbox" name="porcentaje"
+                                       {% if indicador.porcentaje %} checked="True" {% endif %}>
+                                <label for="meta-porcentaje">Es porcentaje</label>
+                            </div>
+                        </div>
+                        <div class="meta-valor col-md-4">
+                            <label for="meta-valor">Valor:</label>
+                            <div class="input-group">
+                                <input type="number" min="0" class="form-control" id="meta-valor"
+                                       placeholder="Ingrese el valor de la meta"
+                                       name="meta_valor" value="{{ indicador.meta_valor|default:0 }}">
+                                <div class="input-group-append porcentaje-tag">
+                                  <span class="input-group-text">%</span>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {% load l10n %}
+                    {% localize off %}
+                        <div class="form-group">
+                            <label for="presupuesto">Presupuesto:</label>
+                            <input type="number" min="0" step="0.01" lang="ec" class="form-control" id="presupuesto"
+                                   placeholder="Presupuesto $..." name="presupuesto"
+                                   value="{{ indicador.presupuesto|default:0 }}" required>
+                        </div>
+
+                    {% endlocalize %}
+
+                </div>
+                <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

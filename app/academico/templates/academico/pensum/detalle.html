@@ -1,0 +1,141 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Programa de estudio
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    {% load guardian_tags %}
+    {% get_obj_perms request.user for pensum as "pensum_perms" %}
+    {% get_obj_perms request.user for pensum.programa_estudio as "programaestudio_perms" %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.Pensum'|verbose_name|capfirst  }}</header>
+            <div class="tools">
+                <button class="btn btn-info"
+                        data-toggle="modal" data-target="#modal-pensum-editar"
+                        {% if not perms.academico.change_pensum and not "change_pensum" in pensum_perms %} disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </button>
+                <a
+                        {% if perms.academico.delete_pensum or "delete_pensum" in pensum_perms %}
+                            class="btn btn-danger"
+                            onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                            href="{% url 'academico:pensum_eliminar' pensum.id %}"
+                        {% else %}
+                            class="btn btn-outline-danger disabled"
+                        {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="panel panel-default">
+                <div class="panel-heading row">
+                    <div class="text-center col-sm-8">
+                        <h4>{{ pensum.nombre }}</h4>
+                    </div>
+                    <div class="btn-group-vertical col-sm-4">
+
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-sm-2">Carrera:</span>
+                        <div class="col-sm-10">
+                            <h5 align="justify">
+                                <a {% if perms.academico.view_programaestudio or 'view_programaestudio' in programaestudio_perms %}
+                                    href="{% url 'academico:programa_estudio_detalle' pensum.programa_estudio.id %}"
+                                {% endif %}>{{ pensum.programa_estudio.nombre }}</a>
+                            </h5>
+                        </div>
+                        <span class="col-sm-2">Editable:</span>
+                        <div class="col-sm-10">
+                            <h5>{{ pensum.editable|yesno:"Si,No," }}</h5>
+                        </div>
+                        <span class="col-sm-2">Fecha de inicio:</span>
+                        <div class="col-sm-4">
+                            <h5>{{ pensum.fecha_inicio }}</h5>
+                        </div>
+                        <span class="col-sm-2">Organización:</span>
+                        <div class="col-sm-4">
+                            <h5>{{ pensum.organizacion }}</h5>
+                        </div>
+                        <span class="col-sm-2">Fecha de término:</span>
+                        <div class="col-sm-4">
+                            <h5>{{ pensum.fecha_fin|default:'' }}</h5>
+                        </div>
+                        <span class="col-sm-2">Duración de unidad:</span>
+                        <div class="col-sm-4">
+                            <h5>{{ pensum.duracion_unidad }}</h5>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{{ 'academico.Nivel'|verbose_name_plural|capfirst  }}
+                                <button class="btn btn-circle btn-info btn-sm pull-right"
+                                        data-toggle="modal" data-target="#modal-nivel-editar"
+                                        {% if not perms.academico.add_nivel and not 'add_nivel' in pensum_perms %} disabled {% endif %}>
+                                    <i class="fa fa-plus-circle"></i> Nuevo
+                                </button>
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            {% include 'academico/nivel/fragmento_lista.html' with niveles=pensum.niveles.all %}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{{ 'academico.Titulo'|verbose_name_plural|capfirst  }}
+                                <button class="btn btn-circle btn-info btn-sm pull-right"
+                                        data-toggle="modal" data-target="#modal-titulo-editar"
+                                        {% if not perms.academico.add_titulo %} disabled {% endif %}>
+                                    <i class="fa fa-plus-circle"></i> Nuevo
+                                </button>
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            {% include 'academico/titulo/fragmento_lista.html' with titulos=pensum.titulos.all %}
+                        </div>
+                    </div>
+                    {% if pensum.programa_estudio.tipo != TIPO_CURSO_APOYO %}
+
+                        <div class="card" id="card_complementarios">
+                            <div class="card-header">
+                                <h4>Pensums Complementarios
+                                    <button class="btn btn-circle btn-info btn-sm pull-right"
+                                            data-toggle="modal" data-target="#modal-pensum-pensumgrupo-editar"
+                                            {% if not perms.academico.change_pensum %} disabled {% endif %}>
+                                        <i class="fa fa-plus-circle"></i> Editar
+                                    </button>
+                                </h4>
+                            </div>
+                             <div class="card-body">
+                                    <div class="list-group">
+                                        {% for pensum_grupo in pensum.pensums_grupo.all %}
+                                            <a class="list-group-item list-group-item-action"
+                                                    {% if perms.academico.view_pensumgrupo %}
+                                               href="{% url 'academico:pensum_grupo_detalle' pensum_grupo.id %}"
+                                                    {% endif %}>
+                                                {{ pensum_grupo.nombre }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'academico/nivel/modal_editar.html' %}
+    {% include 'academico/pensum/modal_editar.html' with programa_estudio=pensum.programa_estudio %}
+    {% include 'academico/pensum/modal_editar_pensum_grupo.html' %}
+    {% include 'academico/titulo/modal_editar.html' %}
+{% endblock contenido %}

@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Crear relación
+{% endblock %}
+
+{% block migas %}
+     {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Buscar persona</header>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <form action="{% url 'core:relacion_buscar' persona.id %}" class="form-inline" method="POST"
+                          name="form-buscar">
+                        {% csrf_token %}
+                        <div class=" m-r-20">
+                            Buscar por cédula:
+                        </div>
+                        <div class=" m-r-20">
+                            <input type="hidden" name="next" value="{{ next }}">
+                            {{ persona_buscar_form.criterio }}
+                        </div>
+                        <div>
+                            <button type='submit' class='btn btn-primary btn-sm'>
+                                <i class="fa fa-save"></i> Buscar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Datos de relacion familiar</header>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <form action="{% url 'core:relacion_guardar' persona.id %}" class="form-horizontal auto-validate" method="POST" name="form-crear">
+                        {% csrf_token %}
+                        <table class="table table-hover">
+                            <input type="hidden" name="next" value="{{ next }}">
+                            <input type="hidden" name="id" value="{{ relacion.id }}"/>
+                            {{ relacion_form }}
+                        </table>
+                        <div class="text-center">
+                            <button type='submit' class='btn btn-primary m-r-20'>
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                            <a class='btn btn-default' href="{{ next }}#tab_relacion">
+                                <i class="fa fa-ban"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}

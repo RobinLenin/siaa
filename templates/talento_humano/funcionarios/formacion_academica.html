@@ -1,0 +1,32 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Nivel de Instrucción</th>
+                <th>Número de registro</th>
+                <th>Institución educativa</th>
+                <th>Periodos aprobados</th>
+                <th>Área de conocimeinto</th>
+                <th>Título Obtenido</th>
+                <th>Egresado</th>
+                <th>Pais</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for formacion in funcionario.usuario.persona.formacionacademica_set.all %}
+                <tr>
+                    <td>{{ formacion.nivel_instruccion }}</td>
+                    <td>{{ formacion.numero_registro }}</td>
+                    <td>{{ formacion.institucion_educativo }}</td>
+                    <td>{{ formacion.periodos_aprobados }}</td>
+                    <td>{{ formacion.area_conocimiento }}</td>
+                    <td>{{ formacion.titulo_obtenido }}</td>
+                    <td>{{ formacion.egresado }}</td>
+                    <td>{{ formacion.pais }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

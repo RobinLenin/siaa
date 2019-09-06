@@ -1,0 +1,92 @@
+<div class="modal fade" id="modal-pensum-editar">
+    <form action="{% url 'academico:pensum_guardar' %}" method="POST" role="form" class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="programa_estudio" value="{{ programa_estudio.id }}">
+        <input type="hidden" name="id" value="{{ pensum.id }}"/>
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg">
+                <div class="modal-header">
+                    <h4 class="modal-title">Pensum</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input id="nombre" name="nombre" type="text" class="form-control mayuscula letras_numeros"
+                               required placeholder="Nombre del pensum"
+                               value="{{ pensum.nombre }}">
+                    </div>
+                    {% now "Y-m-d" as ahora %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="fecha_inicio">Fecha de inicio:</label>
+                            <input type="date"
+                                   class="form-control"
+                                   name="fecha_inicio"
+                                   id="fecha_inicio"
+                                   value="{{ pensum.fecha_inicio|date:"Y-m-d"|default:ahora }}"
+                                   required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="fecha_fin">Fecha de fin:</label>
+                            <input type="date"
+                                   class="form-control"
+                                   name="fecha_fin"
+                                   id="fecha_fin"
+                                   value="{{ pensum.fecha_fin|date:"Y-m-d" }}"
+                                   mayora="#fecha_inicio"
+                                   data-msg-mayora="Debe ser mayor a la fecha de inicio">
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label for="organizacion">Organización:</label>
+                        <select id="organizacion" name="organizacion" class="form-control" required>
+                            <option value="" selected="selected">-- Seleccione --</option>
+                            {% for key, value in CHOICE_ORGANIZACION %}
+                                <option value="{{ key }}"
+                                        {% if key == pensum.organizacion %}selected{% endif %}>
+                                    {{ value }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group ">
+                        <label for="duracion_unidad">Duración de unidad:</label>
+                        <select id="duracion_unidad" name="duracion_unidad" class="form-control" required>
+                            <option value="" selected="selected">-- Seleccione --</option>
+                            {% for key, value in CHOICE_DURACION_UNIDAD %}
+                                <option value="{{ key }}"
+                                        {% if key == pensum.duracion_unidad %}selected{% endif %}>
+                                    {{ value }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group ">
+                        <label for="tipo-pensum">Tipo del pensum:</label>
+                        <select id="tipo-pensum" name="tipo" class="form-control" required>
+                            <option value="" selected="selected">-- Seleccione --</option>
+                            {% for key, value in CHOICE_TIPO_PENSUM %}
+                                <option value="{{ key }}"
+                                        {% if key == pensum.tipo %}selected{% endif %}>
+                                    {{ value }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-check">
+                        <input id="editable" type="checkbox" class="form-check-input" name="editable"
+                                {% if pensum.editable %} checked {% endif %}>
+                        <label for="editable">¿Es editable?:</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

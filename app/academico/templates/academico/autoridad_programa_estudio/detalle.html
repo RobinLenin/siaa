@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Autoridad académica programa de estudio
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.AutoridadProgramaEstudio'|verbose_name }}</header>
+            <div class="tools">
+                <button class="btn btn-info"
+                        data-toggle="modal"
+                        data-target="#modal-autoridad-programa-estudio-editar"
+                        {% if not perms.academico.change_autoridadprogramaestudio %} disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </button>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="header">
+                <div class="text-center">
+                    <h4>{{ autoridad_programa_estudio.funcionario.usuario.persona.get_nombres_completos }}
+                        ({{ autoridad_programa_estudio.get_tipo_display }})
+                    </h4>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Programa de estudio:</span>
+                <div class="col-sm-10">
+                    <h5>
+                        <a {% if perms.academico.view_programaestudio %}
+                            href="{% url 'academico:programa_estudio_detalle' autoridad_programa_estudio.programa_estudio.id %}"
+                        {% endif %}>{{ autoridad_programa_estudio.programa_estudio.nombre }}
+                        </a>
+                    </h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Activo:</span>
+                <div class="col-sm-10">
+                    <h5>{{ autoridad_programa_estudio.activo|yesno:"Si,No," }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Tipo:</span>
+                <div class="col-sm-10">
+                    <h5>{{ autoridad_programa_estudio.get_tipo_display }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Funcionario:</span>
+                <div class="col-sm-10">
+                    <h5>{{ autoridad_programa_estudio.funcionario.usuario.persona.get_nombres_completos }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Abreviatura:</span>
+                <div class="col-sm-10">
+                    <h5>{{ autoridad_programa_estudio.abreviatura }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Fecha de inicio:</span>
+                <div class="col-sm-10">
+                    <h5>{{ autoridad_programa_estudio.fecha_inicio }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Fecha de fin:</span>
+                <div class="col-sm-10">
+                    <h5>{{ autoridad_programa_estudio.fecha_fin | default:'' }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Referencia de ingreso:</span>
+                <div class="col-sm-10">
+                    <h5>{{ autoridad_programa_estudio.referencia_ingreso }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Referencia de salida:</span>
+                <div class="col-sm-10">
+                    <h5>{{ autoridad_programa_estudio.referencia_salida | default:'' }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'academico/autoridad_programa_estudio/modal_editar.html' with programa_estudio=autoridad_programa_estudio.programa_estudio %}
+
+{% endblock contenido %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/academico/autoridad_editar.js' %}"></script>
+{% endblock %}

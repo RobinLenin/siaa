@@ -1,0 +1,42 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Activo</th>
+            <th>Nombre</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for titulo in titulos %}
+            <tr>
+                <td>{{ titulo.activo|yesno:"Si,No," }}
+                <td>
+                    <a {% if perms.academico.view_titulo %}
+                        href="{% url 'academico:titulo_detalle' titulo.id %}"
+                    {% endif %}>
+                        {{ titulo.nombre }}
+                    </a>
+                    {% if titulo.activo %}<span class="text-success"><i class="fa fa-check"></i></span>{% endif %}
+                <td>
+                    <div class="btn-group">
+                        <a title="Eliminar Titulo"
+                                {% if perms.academico.delete_titulo %}
+                           class="btn btn-outline-danger"
+                           onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                           h href="{% url 'academico:titulo_eliminar' titulo.id %}"
+                                {% else %}
+                           class="btn btn-outline-danger disabled"
+                                {% endif %}>
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+

@@ -1,0 +1,27 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Componente</th>
+            <th>Duración</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for asignatura_componente in asignaturas_componente %}
+            <tr data-id="{{ asignatura_componente.id }}">
+                <td>
+                    {{ asignatura_componente.componente_aprendizaje.nombre }}
+                </td>
+                <td class="duracion">{{ asignatura_componente.duracion }}
+                <td>
+                    <a class="add btn btn-outline-success btn-xs" title="Guardar" data-toggle="tooltip"><i
+                            class="fa fa-check"></i></a>
+                    <a class="edit btn btn-outline-info btn-xs" title="Editar" data-toggle="tooltip"><i
+                            class="fa fa-edit"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

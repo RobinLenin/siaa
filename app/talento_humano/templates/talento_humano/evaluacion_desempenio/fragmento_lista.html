@@ -1,0 +1,66 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="panel panel-primary">
+        {% if perms.talento_humano.add_evaluaciondesempenio %}
+            {% include 'info_mensaje.html' with title="Estimado Usuario" text="Por favor ingrese las evaluaciones de desempeño, de la trayectoria laboral en la Institución. (Al menos la última)." %}
+        {% else %}
+            {% include 'info_mensaje.html' with title="Estimado Usuario" text="Este componente es sólo para consulta. La institución es la responsable de actualizar este componente." %}
+        {% endif %}
+        <div class="panel-heading">
+            <h3 class="panel-title">Evaluaciones de desempeño
+                {% if perms.talento_humano.add_evaluaciondesempenio %}
+                    <a href="{% url 'talento_humano:evaluacion_desempenio_crear' funcionario.id %}?next={{ request.path }}"
+                       class="btn btn-info btn-circle btn-xs pull-right"><i class="fa fa-plus-circle"></i>Nuevo</a>
+                {% endif %}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Puesto Evaluado</th>
+                        <th>Fecha de Inicio de Evaluación</th>
+                        <th>Fecha de Fin de Evaluación</th>
+                        <th>Puntaje</th>
+                        <th>Calificación</th>
+                        {% if perms.talento_humano.change_evaluaciondesempenio or perms.talento_humano.delete_evaluaciondesempenio %}
+                            <th></th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for evaluacion_desempenio in funcionario.evaluaciones_desempenio.all %}
+                        <tr>
+                        <td>{{ evaluacion_desempenio.asignacion_puesto }}</td>
+                        <td>{{ evaluacion_desempenio.fecha_evaluacion_inicio }}</td>
+                        <td>{{ evaluacion_desempenio.fecha_evaluacion_fin }}</td>
+                        <td>{{ evaluacion_desempenio.puntaje }}</td>
+                        <td>{{ evaluacion_desempenio.calificacion }}</td>
+                        {% if perms.talento_humano.change_evaluaciondesempenio or perms.talento_humano.delete_evaluaciondesempenio %}
+                            <td>
+                                <div class="btn-group">
+                                    {% if perms.talento_humano.change_evaluaciondesempenio %}
+                                        <a href="{% url 'talento_humano:evaluacion_desempenio_editar' evaluacion_desempenio.id %}?next={{ request.path }}"
+                                           class="btn btn-outline-info" title="Editar"><i class="fa fa-edit"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.talento_humano.delete_evaluaciondesempenio %}
+                                        <a href="{% url 'talento_humano:evaluacion_desempenio_eliminar' evaluacion_desempenio.id %}?next={{ request.path }}"
+                                           class="btn btn-outline-danger" title="Eliminar" role="button"
+                                           onclick="return confirm('¿Está seguro de eliminar el registro?');">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+
+        </div>
+    </div>
+</div>

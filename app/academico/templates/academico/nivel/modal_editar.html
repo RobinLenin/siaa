@@ -1,0 +1,65 @@
+<div class="modal fade" id="modal-nivel-editar">
+    <div class="modal-dialog">
+        <form action="{% url 'academico:nivel_guardar' %}" method="POST" role="form" class="auto-validate">
+            {% csrf_token %}
+            <input type="hidden" name="pensum" value="{{ pensum.id }}"/>
+            <input type="hidden" name="id" value="{{ nivel.id }}"/>
+            <input type="hidden" name="next" value="{{ request.path }}"/>
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.Nivel'|verbose_name|capfirst  }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="numero">Número :</label>
+                        <div class="input-group">
+                            <input id="numero"
+                                   name="numero"
+                                   type="number"
+                                   min="1"
+                                   max="12"
+                                   class="form-control"
+                                   placeholder="Número del {{ pensum.get_organizacion_display }} (1,2,3....)"
+                                   value="{{ nivel.numero }}"
+                                   required>
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{ pensum.get_organizacion_display }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% if pensum.programa_estudio.tipo != pensum.programa_estudio.TIPO_CURSO_APOYO %}
+                        <div class="form-group">
+                            <label for="organizacion_curricular">Organización
+                                curricular {{ pensum.get_organizacion_display }}:</label>
+                            <select id="organizacion_curricular"
+                                    name="organizacion_curricular"
+                                    class="form-control"
+                                    required>
+                                <option value="" selected="selected">-- Seleccione --</option>
+                                {% for item in organizaciones_curricular.all %}
+                                    <option value="{{ item.id }}"
+                                            {% if nivel.organizacion_curricular.id == item.id %}selected{% endif %}>
+                                        {{ item.nivel_formacion.nombre }}({{ item.nivel_formacion.get_regimen_display }})-{{ item.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-default"
+                            data-dismiss="modal">
+                        <i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit"
+                            class="btn btn-primary">
+                        <i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

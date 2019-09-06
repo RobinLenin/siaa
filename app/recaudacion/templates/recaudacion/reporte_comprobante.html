@@ -1,0 +1,77 @@
+{% extends "weasyprint/pdf_base.html" %}
+{% block contenido %}
+    {% load  tags %}
+
+    <table class="ancho-100">
+        <tr>
+            <td><b>Razon Social / Nombres y Apellidos:</b>
+                {{ documento.persona.nombres_completos }}
+            </td>
+        </tr>
+        <tr>
+            <td><b>CI/Ruc:</b>
+                {{ documento.persona.numero_documento }}
+            </td>
+        </tr>
+        <tr>
+            <td><b>Dirección:</b>
+                {{ documento.direccion.calle_principal }}
+                {% if documento.direccion.calle_secundaria %}
+                    {{ documento.direccion.calle_secundaria }}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><b>Fecha de emisión:</b>
+                {% get_fecha documento.fecha_emision %}
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>Cod. principal</th>
+            <th>Cant.</th>
+            <th>Descripción</th>
+            <th class="text-right">Valor Unitario</th>
+            <th class="text-right">Subtotal</th>
+            <th class="text-right">Impuesto</th>
+            <th class="text-right">Valor Imp.</th>
+            <th class="text-right">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for detalle in documento.documento_detalles %}
+            <tr>
+                <td>{{ detalle.codigo }}</td>
+                <td>{{ detalle.cantidad }}</td>
+                <td>{{ detalle.detalle }} {{ detalle.detalle_adicional }}</td>
+                <td class="text-right">{{ detalle.precio }}</td>
+                <td class="text-right">{{ detalle.subtotal }}</td>
+                <td class="text-right">{{ detalle.tipo_impuesto.nombre }}</td>
+                <td class="text-right">{{ detalle.impuesto }}</td>
+                <td class="text-right">{{ detalle.total }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot class="text-right">
+        {% for impuesto in documento.documento_impuestos %}
+            <tr>
+                <td colspan="7"> SUBTOTAL {{ impuesto.tipo_impuesto.nombre }}</td>
+                <td>{{ impuesto.subtotal }}</td>
+            </tr>
+        {% endfor %}
+        {% for impuesto in documento.documento_impuestos %}
+            <tr>
+                <td colspan="7">{{ impuesto.tipo_impuesto.nombre }}</td>
+                <td>{{ impuesto.impuesto }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="7"><strong>VALOR TOTAL A PAGAR</strong></td>
+            <td>{{ documento.total }}</td>
+        </tr>
+        </tfoot>
+    </table>
+{% endblock %}

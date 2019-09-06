@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    SIAAF - No encontrado
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>No encontrado</header>
+        </div>
+        <div class="card-body">
+            <p>Lo sentimos la pagina solicitada no fue encontrada, por favor
+                comuniquese con el administrador del sistema.</p>
+            <a class="btn btn-default" href="{{ request.META.HTTP_REFERER }}">Regresar atras</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<li class="nav-item start">
+    {% if funcionalidad.hijas %}
+        <a href="#" class="nav-link nav-toggle">
+            <i class="fa {{ funcionalidad.icon }}"></i>
+            <span class="title">{{ funcionalidad.nombre }}</span>
+            <span class="arrow open"></span>
+        </a>
+        <ul class="sub-menu">
+            {% for item in funcionalidad.hijas %}
+                {% include 'funcionalidad.html'  with funcionalidad=item %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <a href="{{ funcionalidad.formulario }}" class="nav-link ">
+            <i class="fa {{ funcionalidad.icon }}"></i>
+            <span class="title">{{ funcionalidad.nombre }} </span>
+        </a>
+    {% endif %}
+</li>

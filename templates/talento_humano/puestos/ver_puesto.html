@@ -1,0 +1,75 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <tbody>
+                <tr>
+                    <th>Denominción</th>
+                    <td>{{ puesto.denominacion }}</td>
+                </tr>
+                <tr>
+                    <th>Descripción</th>
+                    <td>{{ puesto.descripcion }}</td>
+                </tr>
+                <tr>
+                    <th>Es responsable de la UAA</th>
+                    <td>{{ puesto.responsable_uaa|yesno:"Si, No" }}</td>
+                </tr>
+                <tr>
+                    <th>Grupo Ocupacional</th>
+                    <td>{{ puesto.grupo_ocupacional }}</td>
+                </tr>
+                <tr>
+                    <th>Rol de puesto</th>
+                    <td>{{ puesto.rol_puesto }}</td>
+                </tr>
+                <tr>
+                    <th>Ámbito de ejecución</th>
+                    <td>{{ puesto.ambito_ejecucion }}</td>
+                </tr>
+                <tr>
+                    <th>Misión</th>
+                    <td>{{ puesto.mision }}</td>
+                </tr>
+                <tr>
+                    <th>Interfaz</th>
+                    <td>{{ puesto.interfaz }}</td>
+                </tr>
+                <tr>
+                    <th>Nivel de instrucción</th>
+                    <td>{{ puesto.nivel_instruccion }}</td>
+                </tr>
+                <tr>
+                    <th>Se requiere título</th>
+                    <td>
+                        {% if puesto.titulo_requerido %}
+                            <span class="fa fa-check" aria-hidden="true"></span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Área de conocimiento</th>
+                    <td>{{ puesto.area_conocimiento }}</td>
+                </tr>
+                <tr>
+                    <th>Tiempo de experiencia</th>
+                    <td>{{ puesto.tiempo_experiencia }}</td>
+                </tr>
+                <tr>
+                    <th>Especifidad de experiencia</th>
+                    <td>{{ puesto.especificidad_experiencia }}</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th></th>
+                    <td>
+                        <a class="btn btn-primary pull-right"
+                           href="{% url 'talento_humano:puestos.puesto.editar' puesto.id %}">Editar</a>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Hospital Veterinario
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo Hospital Veterinario</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <span class="parent-item">Hospital Veterinario</span> <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'hveterinario:paciente.lista_pacientes_por_propietario' id_propietario_seleccionado %}">Paciente</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Consulta</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Lista de consultas de <strong>{{paciente_seleccionado}}</strong> </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body ">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-9 col-sm-9 col-12">
+                    <form action="{% url 'hveterinario:consulta.lista_consulta_por_pacientes' id_paciente_seleccionado %}" method="get">
+                        {% with total_items=consultas|length numero_items=consultas.paginator.per_page filtro=filtro %}
+                        {% include 'tabla_encabezado.html' %}
+                        {% endwith %}
+                    </form>
+
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12 mb-2">
+                    <a href="{% url 'hveterinario:consulta' id_paciente_seleccionado%}" class="btn btn-success float-right" role="button" aria-disabled="true">
+                        &nbsp;&nbsp;<i class="fa fa-plus"></i>&nbsp;&nbsp;Agregar&nbsp;&nbsp;
+                    </a>
+                </div>
+            </div>
+           
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                        <th>N°</th>
+                        <th>Fecha de registro</th>
+                        <th>Médico responsable</th>
+                        <th>Estudiante interno</th>
+                        <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                        {% for consulta in consultas %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{consulta.created_at}}</td>
+                            <td>{{consulta.medico_responsable}}</td>
+                            <td>{{consulta.estudiante_interno}}</td>
+                            <td>
+                                <a href="{% url 'hveterinario:consulta.detalle' consulta.id %}" 
+                                   class="btn btn-info" role="button" aria-disabled="true">
+                                    <i class="fa fa-edit"></i>Detalle
+                                </a>
+                                <a href="#" 
+                                   class="btn btn-warning" role="button" aria-disabled="true">
+                                    <i class="fa fa-file-text"></i>Información
+                                </a>
+                                
+                                <button type="button" class="btn btn-danger">Eliminar</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            {% with lista=consultas filtro=filtro %}
+                {% include 'tabla_paginacion.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

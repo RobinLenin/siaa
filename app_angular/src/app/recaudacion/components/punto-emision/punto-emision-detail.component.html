@@ -1,0 +1,201 @@
+<div class="container">
+    <form *ngIf="punto_emision"
+          [formGroup]="formPuntoEmision"
+          (ngSubmit)="formPuntoEmision.valid && guardar()">
+        <mat-card>
+            <mat-card-title>Crear/Editar Establecimiento</mat-card-title>
+            <mat-card-content>
+                <div class="grid-column">
+                    <mat-form-field class="full-ancho">
+                        <input matInput
+                               placeholder="Código del establecimiento (dígitos con 3 caracteres)*"
+                               [(ngModel)]="punto_emision.codigo_establecimiento"
+                               formControlName="codigo_establecimiento"
+                               type="text">
+                    </mat-form-field>
+                    <mat-checkbox [(ngModel)]="punto_emision.activo"
+                                  formControlName="activo"
+                                  aria-label="Facturable">Activo
+                    </mat-checkbox>
+                </div>
+                <control-errores [control]="formPuntoEmision.controls.codigo_establecimiento"></control-errores>
+
+                <mat-form-field class="full-ancho">
+                    <input matInput
+                           placeholder="Código del Punto de Emisión (dígitos con 3 caracteres)*"
+                           [(ngModel)]="punto_emision.codigo_facturero"
+                           formControlName="codigo_facturero"
+                           type="text">
+                </mat-form-field>
+                <control-errores [control]="formPuntoEmision.controls.codigo_facturero"></control-errores>
+
+                <mat-form-field class="full-ancho">
+                    <input matInput
+                           placeholder="Descripción *"
+                           [(ngModel)]="punto_emision.descripcion"
+                           formControlName="descripcion"
+                           type="text">
+                </mat-form-field>
+                <control-errores [control]="formPuntoEmision.controls.descripcion"></control-errores>
+
+                <mat-card formGroupName="fechas">
+                    <mat-form-field class="full-ancho">
+                        <input matInput
+                               placeholder="Secuencial inicio de la factura (dígitos con 6 caracteres)*"
+                               [(ngModel)]="punto_emision.nro_desde"
+                               formControlName="nro_desde"
+                               type="text">
+                    </mat-form-field>
+                    <control-errores [control]="formPuntoEmision.controls.fechas.controls.nro_desde"></control-errores>
+
+                    <mat-form-field class="full-ancho">
+                        <input matInput
+                               placeholder="Secuencial fin de la factura (dígitos con 6 caracteres)*"
+                               [(ngModel)]="punto_emision.nro_hasta"
+                               formControlName="nro_hasta"
+                               type="text">
+                    </mat-form-field>
+                    <control-errores [control]="formPuntoEmision.controls.fechas.controls.nro_hasta"></control-errores>
+                </mat-card>
+                <control-errores [control]="formPuntoEmision.controls.fechas"></control-errores>
+
+            </mat-card-content>
+            <mat-card-content>
+                <button mat-raised-button
+                        color="primary"
+                        type="submit">Guardar
+                </button>
+                &nbsp;
+                <button mat-raised-button
+                        (click)="regresar()"
+                        color="warn"
+                        type="button">Cancelar
+                </button>
+            </mat-card-content>
+        </mat-card>
+    </form>
+
+    <mat-card *ngIf="punto_emision && punto_emision.id">
+
+        <toolbar-acciones [titulo]="'Asignar Funcionario'"
+                          [botones]="botones"
+                          [activarEliminar]="activarEliminar"
+                          [activarEditar]="activarEditar"
+                          (notificadorCrear)="mostrarFormularioFuncionario(1,$event)"
+                          (notificadorEditar)="mostrarFormularioFuncionario(2,$event)"
+                          (notificadorEliminar)="confirmarEliminarFuncionario($event)">
+        </toolbar-acciones>
+
+        <mat-card-content *ngIf="activarAgregar">
+            <form [formGroup]="formPuntoEmisionUaa"
+                  (ngSubmit)="formPuntoEmisionUaa.valid && guardarFuncionario()">
+
+                <mat-form-field class="full-ancho">
+                    <input matInput
+                           class="full-ancho"
+                           placeholder="Código (dígitos con 3 caracteres)*"
+                           [(ngModel)]="punto_emision_uaa_new.codigo"
+                           type="text"
+                           formControlName="codigo">
+                </mat-form-field>
+
+                <control-errores [control]="formPuntoEmisionUaa.controls.codigo"></control-errores>
+
+                <mat-form-field class="full-ancho">
+                    <input matInput
+                           class="full-ancho"
+                           placeholder="Descripción *"
+                           [(ngModel)]="punto_emision_uaa_new.descripcion"
+                           type="text"
+                           formControlName="descripcion">
+                </mat-form-field>
+                <control-errores [control]="formPuntoEmisionUaa.controls.descripcion"></control-errores>
+
+                <mat-form-field class="full-ancho">
+                    <input matInput
+                           class="full-ancho"
+                           placeholder="Secuencial (número con el que iniciará las ordenes de pago a emitir)*"
+                           [(ngModel)]="punto_emision_uaa_new.secuencial"
+                           formControlName="secuencial">
+                </mat-form-field>
+                <control-errores [control]="formPuntoEmisionUaa.controls.secuencial"></control-errores>
+
+                <mat-form-field class="full-ancho">
+                  <mat-select placeholder="Seleccione un Funcionario *"
+                              class="full-ancho padding-top"
+                              [(ngModel)]="punto_emision_uaa_new.funcionario"
+                              formControlName="funcionario">
+                      <mat-option [value]=""> [Seleccione]</mat-option>
+                      <mat-option *ngFor="let item of listFun"
+                                  [value]="item.id">{{ item.get_apellidos }} {{ item.get_nombres }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <control-errores [control]="formPuntoEmisionUaa.controls.funcionario"></control-errores>
+
+                <mat-form-field class="full-ancho">
+                  <mat-select placeholder="Configuración de la impresión para los Derechos *"
+                              class="full-ancho padding-top"
+                              [(ngModel)]="punto_emision_uaa_new.impresora"
+                              formControlName="impresora">
+                      <mat-option [value]="'default'">Seleccionar la impresora por defecto</mat-option>
+                      <mat-option [value]="'printers'">Mostrar la lista de impresoras disponibles</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <control-errores [control]="formPuntoEmisionUaa.controls.impresora"></control-errores>
+                <br><br>
+                <button mat-raised-button color="primary" type="submit">Agregar</button>
+                &nbsp;
+                <button mat-raised-button color="warn" type="button" (click)="activarAgregar=false">Cancelar</button>
+            </form>
+        </mat-card-content>
+
+        <mat-card-content>
+
+            <div class="example-container mat-elevation-z8">
+                <mat-table [dataSource]="punto_emision_uaa">
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="action">
+                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <mat-checkbox id="chkProducto{{element.codigo}}"
+                                          (change)="selectedItem(element)"></mat-checkbox>
+                        </mat-cell>
+                    </ng-container>
+
+                    <!-- Code Column -->
+                    <ng-container matColumnDef="code">
+                        <mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.codigo }} </mat-cell>
+                    </ng-container>
+
+                    <!-- Funcionary Column -->
+                    <ng-container matColumnDef="func">
+                        <mat-header-cell *matHeaderCellDef> Funcionario </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.funcionario.get_apellidos }} {{ element.funcionario.get_nombres }} </mat-cell>
+                    </ng-container>
+
+                    <!-- DEscription Column -->
+                    <ng-container matColumnDef="description">
+                        <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.descripcion }} </mat-cell>
+                    </ng-container>
+
+                    <!-- secuencial Column -->
+                    <ng-container matColumnDef="secuencial">
+                        <mat-header-cell *matHeaderCellDef> Secuencial actual </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.secuencial }} </mat-cell>
+                    </ng-container>
+
+                    <!-- impresora Column -->
+                    <ng-container matColumnDef="impresora">
+                        <mat-header-cell *matHeaderCellDef> Impresora </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.impresora.toUpperCase() }} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

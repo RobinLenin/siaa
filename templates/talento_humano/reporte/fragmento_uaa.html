@@ -1,0 +1,40 @@
+<tr>
+    <th colspan="2" class="titulo">Unidad Académica Administrativa</th>
+</tr>
+{% if uaa.nombre %}
+    <tr>
+        <th>Nombre</th>
+        <td>{{ uaa.nombre }}</td>
+    </tr>
+{% endif %}
+{% if uaa.get_uaa_padre_tipo %}
+    <tr>
+        <th>Depende de</th>
+        <td>{{ uaa.get_uaa_padre_tipo }}</td>
+    </tr>
+{% endif %}
+{% if uaa.tipo_uaa %}
+    <tr>
+        <th>Tipo</th>
+        <td>{{ uaa.tipo_uaa }}</td>
+    </tr>
+{% endif %}
+{% if uaa.correo %}
+    <tr>
+        <th>Correo</th>
+        <td>{{ uaa.correo }}</td>
+    </tr>
+{% endif %}
+{% if uaa.telefono %}
+    <tr>
+        <th>Teléfono</th>
+        <td>{{ uaa.telefono }}</td>
+    </tr>
+{% endif %}
+{% if uaa.extension %}
+    <tr>
+        <th>Extensión</th>
+        <td>{{ uaa.extension }}</td>
+    </tr>
+{% endif %}
+

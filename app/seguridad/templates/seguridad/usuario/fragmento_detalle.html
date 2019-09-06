@@ -1,0 +1,90 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <tbody>
+        <tr>
+
+            {% if usuario.foto_url %}
+                <th>Fotografía</th>
+                <td>
+                    <img class="img-thumbnail img-thumbnail-card"
+                         src="{{ usuario.foto_url }}"
+                         alt="{{ usuario.persona }}">
+                    {% if usuario == request.user %}
+                        <br/>
+                        <a href="{% url 'seguridad:usuario_actualizar_fotografia' usuario.id %}?next={{ request.path }}"
+                           title="Actualice su foto en su cuenta de correo y luego presioné aquí para actualizar">Actualizar</a>
+                    {% endif %}
+                </td>
+            {% elif usuario == request.user %}
+                <td colspan="2">
+                    <p class="alert alert-danger">Por favor suba una foto personal tamaño carnet en su cuenta de
+                        correo y,
+                        <a href="{% url 'seguridad:usuario_actualizar_fotografia' usuario.id %}?next={{ request.path }}">posterior
+                            hacer clic aquí para actualizarla</a>
+                    </p>
+                </td>
+            {% endif %}
+
+        </tr>
+        <tr>
+            <th>Nombre de usuario</th>
+            <td>{{ usuario.nombre_de_usuario }}</td>
+        </tr>
+        <tr>
+            <th>Correo electrónico institucional</th>
+            <td>
+                <a href="mailto:{{ usuario.correo_electronico_institucional }}">
+                    {% if usuario.google %}
+                        <span class="text-success">{{ usuario.correo_electronico_institucional }} <i
+                                class="fa fa-check"></i></span>
+                    {% else %}
+                        <span class="text-danger">{{ usuario.correo_electronico_institucional }} <i
+                                class="fa fa-close"></i></span>
+                    {% endif %}
+                </a>
+            </td>
+        </tr>
+        {% if usuario.is_admin %}
+            <tr>
+                <th>Administrador</th>
+                <td>
+                    <span class="fa fa-check" aria-hidden="true"></span>
+                </td>
+            </tr>
+        {% endif %}
+        {% if usuario.activo %}
+            <tr>
+                <th>Activo</th>
+                <td>
+                    <span class="fa fa-check" aria-hidden="true"></span>
+                </td>
+            </tr>
+        {% endif %}
+        {% if usuario.es_alumni %}
+            <tr>
+                <th>Alumni</th>
+                <td>
+                    <span class="fa fa-check" aria-hidden="true"></span>
+                </td>
+            </tr>
+        {% endif %}
+        {% if usuario.es_funcionario %}
+            <tr>
+                <th>Servidor</th>
+                <td>
+                    <span class="fa fa-check" aria-hidden="true"></span>
+                </td>
+            </tr>
+            {% if usuario.funcionario.es_docente %}
+                <tr>
+                    <th>Docente</th>
+                    <td>
+                        <span class="fa fa-check" aria-hidden="true"></span>
+                    </td>
+                </tr>
+
+            {% endif %}
+        {% endif %}
+        </tbody>
+    </table>
+</div>

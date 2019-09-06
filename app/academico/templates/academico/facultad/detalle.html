@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Facultad
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.Facultad'|verbose_name|capfirst  }}</header>
+            <div class="tools">
+                <button class="btn btn-info"
+                        data-toggle="modal" data-target="#modal-facultad-editar"
+                        {% if not perms.academico.change_facultad %} disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </button>
+                <a {% if perms.academico.delete_facultad %}
+                    class="btn btn-danger"
+                    href="{% url 'academico:facultad_eliminar' facultad.id %}"
+                    onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                {% else %}
+                    class="btn btn-danger disabled"
+                {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Nombre:</span>
+                <div class="col-sm-10">
+                    <h5>{{ facultad.nombre }}</h5>
+                </div>
+            </div>
+
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Siglas:</span>
+                <div class="col-sm-10">
+                    <h5>{{ facultad.siglas }}</h5>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'academico.AutoridadFacultad'|verbose_name_plural|capfirst  }}
+                        <button class="btn btn-circle btn-info btn-sm pull-right"
+                                data-toggle="modal" data-target="#modal-autoridad-facultad-editar"
+                                {% if not perms.academico.add_autoridadfacultad %} disabled {% endif %}>
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% include 'academico/autoridad_facultad/fragmento_lista.html' with autoridades_facultad=facultad.autoridades_facultad.all %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'academico/autoridad_facultad/modal_editar.html' %}
+    {% include 'academico/facultad/modal_editar.html' %}
+{% endblock contenido %}
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/academico/autoridad_editar.js' %}"></script>
+{% endblock %}

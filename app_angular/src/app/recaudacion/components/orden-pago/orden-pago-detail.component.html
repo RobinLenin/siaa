@@ -1,0 +1,437 @@
+<mat-card class="container">
+    <mat-card-title>
+        Orden de Pago
+        <button mat-raised-button color="warn" type="button" (click)="regresar()">Regresar</button>
+        <a *ngIf="showOrdenPago && !activarEdicion" mat-raised-button color="primary"
+           routerLink="../../recaudacion-orden-pago-detail/0">Nueva Orden de Pago</a>
+    </mat-card-title>
+</mat-card>
+
+
+<div *ngIf="puntoEmisionUaa">
+    <mat-card class="container">
+        <span><i>{{ puntoEmisionUaa.punto_emision.descripcion }} - {{ puntoEmisionUaa.descripcion }}</i></span>
+        <mat-card-content *ngIf="activarEdicion">
+            <buscar-persona class="full-ancho"
+                            [myStyles]="myStyles"
+                            [variosSeleccion]="false"
+                            (notificadorEnter)="enterInputPersona($event)"
+                            (notificadorSeleccion)="onChangePersona($event)"
+                            [placeholder]="'Ingrese el número de Cédula, Ruc o Pasaporte'">
+            </buscar-persona>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card *ngIf="showOrdenPago">
+        <mat-card-content class="container">
+
+            <form #formOrdenPago="ngForm">
+                <div fxLayout='row'>
+                    <div fxFlex="80%">
+                        <mat-chip-list>
+                            <mat-chip color="accent" selected="true">
+                                <b>{{ puntoEmisionUaa.codigo}}</b>
+                            </mat-chip>
+                            <mat-chip color="accent" selected="true">
+                                <b>{{ordenPago.estado }}</b>
+                            </mat-chip>
+                        </mat-chip-list>
+                    </div>
+                    <div fxFlex="20%" fxLayoutAlign="end" *ngIf="activarAccion">
+                        <button mat-raised-button
+                                color="primary"
+                                type="submit"
+                                [disabled]="!ordenPago.ordenes_pago_detalle.length"
+                                (click)="accionOrdenPago(formOrdenPago)">{{ msgOrdenPago }}
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="activarEdicion">
+                    <div fxLayout='row'>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Número de documento"
+                                   [(ngModel)]="ordenPago.persona.numero_documento"
+                                   name="numero_documento"
+                                   required
+                                   readonly
+                                   type="text">
+                        </mat-form-field>
+                        <div fxFlex="25%">
+                            <select-item class="full-ancho"
+                                         [placeholder]="'Tipo de documento'"
+                                         [codCatalogo]="'TIPO_DOCUMENTO'"
+                                         [isRequired]="true"
+                                         [selectedValue]="ordenPago.persona.tipo_documento"
+                                         (notificador)="ordenPago.persona.tipo_documento=$event">
+                            </select-item>
+                        </div>
+                        <div fxFlex="25%">
+                            <select-item class="full-ancho"
+                                         [placeholder]="'Sexo'"
+                                         [codCatalogo]="'TIPO_SEXO'"
+                                         [isRequired]="true"
+                                         [selectedValue]="ordenPago.persona.sexo"
+                                         (notificador)="ordenPago.persona.sexo=$event">
+                            </select-item>
+                        </div>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Correo electrónico"
+                                   [(ngModel)]="ordenPago.persona.correo_electronico"
+                                   name="correo_electronico"
+                                   id="correo_electronico"
+                                   type="email">
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout='row'>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Primer nombre"
+                                   [(ngModel)]="ordenPago.persona.primer_nombre"
+                                   name="primer_nombre"
+                                   required
+                                   type="text">
+                        </mat-form-field>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Segundo nombre"
+                                   [(ngModel)]="ordenPago.persona.segundo_nombre"
+                                   name="segundo_nombre"
+                                   type="text">
+                        </mat-form-field>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Primer apellido"
+                                   [(ngModel)]="ordenPago.persona.primer_apellido"
+                                   name="primer_apellido"
+                                   required
+                                   type="text">
+                        </mat-form-field>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Segundo apellido"
+                                   [(ngModel)]="ordenPago.persona.segundo_apellido"
+                                   name="segundo_apellido"
+                                   type="text">
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout='row'>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Telefono célular"
+                                   [(ngModel)]="ordenPago.direccion.celular"
+                                   name="celular"
+                                   type="text">
+                        </mat-form-field>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Calle principal"
+                                   [(ngModel)]="ordenPago.direccion.calle_principal"
+                                   name="calle_principal"
+                                   required
+                                   type="text">
+                        </mat-form-field>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Calle secundaria"
+                                   [(ngModel)]="ordenPago.direccion.calle_secundaria"
+                                   name="calle_secundaria"
+                                   type="text">
+                        </mat-form-field>
+                        <mat-form-field fxFlex="25%">
+                            <input matInput
+                                   placeholder="Número de casa"
+                                   [(ngModel)]="ordenPago.direccion.numero"
+                                   name="numero"
+                                   type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div *ngIf="!activarEdicion">
+                    <div>
+                        <b>Razon Social / Nombres y Apellidos: </b>
+                        {{ ordenPago.persona.nombres_completos|uppercase }}
+                    </div>
+                    <div>
+                        <b>CI/Ruc: </b>
+                        {{ ordenPago.persona.numero_documento }}
+                    </div>
+                    <div>
+                        <b>Email: </b>
+                        {{ ordenPago.persona.correo_electronico }}
+                    </div>
+                    <div>
+                        <b>Fecha de emisión: </b>
+                        {{ ordenPago.fecha_emision |date: 'yyyy-MM-dd HH:mm:ss a' }}
+                    </div>
+                    <div *ngIf="ordenPago.fecha_vencimiento">
+                        <b>Fecha de vencimiento: </b>
+                        {{ ordenPago.fecha_vencimiento |date: 'yyyy-MM-dd HH:mm:ss a' }}
+                    </div>
+                    <div *ngIf="ordenPago.descripcion">
+                        <b>Descipción:</b>
+                        {{ ordenPago.descripcion }}
+                    </div>
+                    <div *ngIf="ordenPago.referencia">
+                        <b>Referencia:</b>
+                        {{ ordenPago.referencia }}
+                    </div>
+                    <div *ngIf="ordenPago.referencia_externa">
+                        <b>Referencia externa:</b>
+                        {{ ordenPago.referencia_externa }}
+                    </div>
+                    <div fxLayout='row'>
+                        <div fxFlex="50%" *ngIf="ordenPago.pago">
+                            <mat-list>
+                                <h4 mat-subheader>Pago</h4>
+                                <mat-list-item>
+                                    <mat-icon mat-list-avatar>money_off</mat-icon>
+                                    <h4 mat-line>{{ ordenPago.pago.forma_pago }}</h4>
+                                    <p mat-line>Total: {{ ordenPago.pago.total }}</p>
+                                    <p mat-line>Fecha pago: {{ ordenPago.pago.fecha_pago |date: 'yyyy-MM-dd HH:mm:ss a' }}</p>
+                                    <p mat-line *ngIf="ordenPago.pago.fecha_reverso">Fecha reverso: {{ ordenPago.pago.fecha_reverso |date: 'yyyy-MM-dd HH:mm:ss a' }}</p>
+                                    <p mat-line>Referencia: {{ ordenPago.pago.referencia }}
+                                        <span *ngIf="ordenPago.pago.depositante">({{ ordenPago.pago.depositante }})</span>
+                                    </p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                        <div fxFlex="50%">
+                            <mat-list>
+                                <h4 mat-subheader>Dirección</h4>
+                                <mat-list-item>
+                                    <mat-icon mat-list-avatar>store_mall_directory</mat-icon>
+                                    <h4 mat-line>{{ ordenPago.direccion.tipo_direccion.nombre }}</h4>
+                                    <p mat-line> {{ ordenPago.direccion.calle_principal }} {{ ordenPago.direccion.calle_secundaria }}</p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </mat-card-content>
+
+        <mat-card-content class="container">
+            <toolbar-acciones [titulo]="'Detalle de productos'"
+                              [botones]="botones"
+                              [activarEliminar]="activarEdicion ? activarEliImp: false"
+                              [activarImprimirBlob]="activarEdicion ? false: activarEliImp"
+                              [activarEditar]="activarEdicion ? activarEditar: false"
+                              [masAcciones]="masAcciones"
+                              (notificadorCrear)="changeAgregar($event)"
+                              (notificadorEditar)="changeEditar($event)"
+                              (notificadorEliminar)="eliminarOrdenPagoDetalleInOrdenPago($event)"
+                              (notificadorImprimirBlob)="imprimirOrdenPagoDetalleWcp($event)"
+                              (notificadorEjecutarAccion)="ejecutarAccion($event)">
+            </toolbar-acciones>
+
+            <form *ngIf="activarAgregar"
+                  [formGroup]="formOrdenPagoDetalle"
+                  (ngSubmit)="crearOrdenPagoDetalleInOrdenPago()">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-subtitle>{{ editando ? 'Editar detalle' : 'Nuevo detalle' }}</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content class="container">
+
+                        <div class="grid-column">
+                            <mat-form-field class="full-ancho">
+                                <input matInput
+                                       formControlName="producto"
+                                       placeholder="Seleccione el Producto *"
+                                       [matAutocomplete]="tdAutoComplete"
+                                       [(ngModel)]="ordenPagoDetalle.producto"
+                                       (ngModelChange)="productosBuscados = filtrarProductos(ordenPagoDetalle.producto)">
+                                <mat-autocomplete #tdAutoComplete="matAutocomplete" [displayWith]="displayProducto">
+                                    <mat-option *ngFor="let item of productosBuscados" [value]="item">
+                                        <span>{{ item.codigo }} | {{ item.descripcion }} | {{ item.valor }}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            <button mat-raised-button color="primary" type="submit"
+                                    [disabled]="formOrdenPagoDetalle && !formOrdenPagoDetalle.valid">
+                                Agregar
+                            </button>
+                        </div>
+                        <control-errores [control]="formOrdenPagoDetalle.controls.producto"></control-errores>
+
+                        <mat-form-field class="full-ancho">
+                            <input matInput
+                                   class="full-ancho"
+                                   placeholder="Cantidad*"
+                                   [(ngModel)]="ordenPagoDetalle.cantidad"
+                                   type="text"
+                                   formControlName="cantidad">
+                        </mat-form-field>
+                        <control-errores [control]="formOrdenPagoDetalle.controls.cantidad"></control-errores>
+
+                        <mat-form-field class="full-ancho">
+                            <input matInput
+                                   class="full-ancho"
+                                   placeholder="Valor unitario*"
+                                   [(ngModel)]="ordenPagoDetalle.precio"
+                                   type="text"
+                                   formControlName="precio">
+                        </mat-form-field>
+                        <control-errores [control]="formOrdenPagoDetalle.controls.precio"></control-errores>
+
+                        <div fxLayout="row">
+                            <div fxFlex="80%">
+                                <mat-form-field class="full-ancho">
+                                    <textarea matInput
+                                              class="full-ancho"
+                                              placeholder="Observación"
+                                              [(ngModel)]="ordenPagoDetalle.observacion"
+                                              id="observacion"
+                                              type="text"
+                                              formControlName="observacion">
+                                    </textarea>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="20%" fxLayoutAlign="center center">
+                                <mat-checkbox id="desglosarDetalle" formControlName="desglosarDetalle"
+                                              [(ngModel)]="desglosarDetalle">
+                                    Desglosar
+                                </mat-checkbox>
+                            </div>
+                        </div>
+                    </mat-card-content>
+
+                    <mat-card-content class="container">
+                        <div fxLayout="row">
+                            <div fxFlex="80%">Facturable</div>
+                            <div fxFlex="20%" fxLayoutAlign="start">
+                                <div *ngIf="ordenPagoDetalle.producto && ordenPagoDetalle.producto.facturable">
+                                    <mat-icon mat-list-avatar class="material-icons verde">check_circle</mat-icon>
+                                </div>
+                                <div *ngIf="ordenPagoDetalle.producto && !ordenPagoDetalle.producto.facturable">
+                                    <mat-icon mat-list-avatar class="material-icons rojo">cancel</mat-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div fxLayout="row"
+                             *ngIf="ordenPagoDetalle.producto && ordenPagoDetalle.producto.facturable && ordenPagoDetalle.producto.tipo_factura.codigo_th=='CF'">
+                            <div fxFlex="80%">Consumidor Final</div>
+                            <div fxFlex="20%" fxLayoutAlign="start">
+                                <mat-icon mat-list-avatar class="material-icons verde">check_circle</mat-icon>
+                            </div>
+                        </div>
+                        <div fxLayout="row">
+                            <div fxFlex="80%" fxLayoutAlign="start">
+                                <span>Valor unitario:</span>
+                            </div>
+                            <div fxFlex="20%" fxLayoutAlign="start">
+                                {{ getPrecioUnitarioProducto(ordenPagoDetalle) }}
+                            </div>
+                        </div>
+                        <div fxLayout="row">
+                            <div fxFlex="80%" fxLayoutAlign="start">
+                                <span>Subtotal:</span>
+                            </div>
+                            <div fxFlex="20%" fxLayoutAlign="start">
+                                {{ getSubTotalProducto(ordenPagoDetalle) }}
+                            </div>
+                        </div>
+                        <div fxLayout="row">
+                            <div fxFlex="80%" fxLayoutAlign="start">
+                                <span>Impuesto:</span>
+                            </div>
+                            <div fxFlex="20%" fxLayoutAlign="start">
+                                {{ getTipoImpuestoProducto(ordenPagoDetalle) }}
+                            </div>
+                        </div>
+                        <div fxLayout="row">
+                            <div fxFlex="80%" fxLayoutAlign="start">
+                                <span>Subtotal Impuesto:</span>
+                            </div>
+                            <div fxFlex="20%" fxLayoutAlign="start">
+                                {{ getValorImpuestoProducto(ordenPagoDetalle) }}
+                            </div>
+                        </div>
+                        <div fxLayout="row">
+                            <div fxFlex="80%" fxLayoutAlign="start">
+                                <span>Total:</span>
+                            </div>
+                            <div fxFlex="20%" fxLayoutAlign="start">
+                                {{ getTotalProducto(ordenPagoDetalle) }}
+                            </div>
+                        </div>
+                        <div fxLayout="row">
+                            <div fxFlex="100%">
+                                <button type="button" mat-raised-button color="accent"
+                                        (click)="cerrarOrdenPagoDetalle()">Cerrar
+                                </button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </form>
+        </mat-card-content>
+
+        <mat-card-content class="container">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th><i aria-hidden="true">
+                            <mat-checkbox (change)="selectedItemAll()" [(ngModel)]="selecTodos"></mat-checkbox>
+                        </i></th>
+                        <th><i aria-hidden="true"></i>Secuencial</th>
+                        <th *ngIf="!activarEdicion"><i aria-hidden="true"></i>Estado</th>
+                        <th><i aria-hidden="true"></i>Cantidad</th>
+                        <th><i aria-hidden="true"></i>Código</th>
+                        <th><i aria-hidden="true"></i>Descripción</th>
+                        <th><i aria-hidden="true"></i>Valor Unitario</th>
+                        <th><i aria-hidden="true"></i>Subtotal</th>
+                        <th><i aria-hidden="true"></i>Tipo Impuesto</th>
+                        <th><i aria-hidden="true"></i>Impuesto</th>
+                        <th><i aria-hidden="true"></i>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of ordenPago.ordenes_pago_detalle">
+                        <td>
+                            <mat-checkbox (change)="selectedItem(item)"
+                                          [checked]="esItemSeleccionado(item)"></mat-checkbox>
+                        </td>
+                        <td>{{ puntoEmisionUaa.codigo }}-{{ item.secuencial ? item.secuencial : 'sn' }}</td>
+                        <td *ngIf="!activarEdicion">{{ item.estado }}</td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>{{ item.producto_codigo }}</td>
+                        <td>{{ item.producto_descripcion }}
+                            {{ item.observacion }}
+                        </td>
+                        <td>{{ item.precio }}</td>
+                        <td>{{ getSubTotalProducto(item) }}</td>
+                        <td>{{ item.tipo_impuesto.nombre }}</td>
+                        <td>{{ item.impuesto }}</td>
+                        <td class="text-right">{{ item.total| number : '1.2-2' }}</td>
+                        <td *ngIf="item.transferencia" class="text-right">
+                            <mat-icon class="material-icons">money_off</mat-icon>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr *ngFor="let item of ordenPagoDetalleSubtotales" class="text-right">
+                        <td [attr.colspan]="activarEdicion ? '9':'10'">SUBTOTAL {{ item.nombre }}</td>
+                        <td>{{ item.subtotal| number : '1.4-4' }}</td>
+                    </tr>
+                    <tr *ngFor="let item of ordenPagoDetalleImpuestos" class="text-right">
+                        <td [attr.colspan]="activarEdicion ? '9':'10'">{{ item.nombre }}</td>
+                        <td>{{ item.impuesto | number : '1.4-4' }}</td>
+                    </tr>
+                    <tr class="text-right">
+                        <td [attr.colspan]="activarEdicion ? '9':'10'"><strong>VALOR TOTAL A PAGAR</strong></td>
+                        <td>{{ getTotalAllCuadreShow()|currency:'USD':true }}</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+</div>
+

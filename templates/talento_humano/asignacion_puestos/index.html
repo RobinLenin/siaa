@@ -1,0 +1,234 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Funcionarios - asignación de peuestos
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a> <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:asignacion_puestos.lista' %}">Asignación de
+                    puestos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">{{ funcionario }}</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="panel">
+    <header class="panel-heading">
+        <h1>Asignación de puestos</h1>
+        <h3>
+            {{ funcionario }} <a href="{% url 'talento_humano:funcionarios.funcionario' funcionario.id %}">(Ver)</a>
+        </h3>
+    </header>
+    <div class="panel-body ">
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>Unidad Academica / Administrativa</th>
+                        <th>Periodo</th>
+                        <th>Puesto</th>
+                        <th>RMU</th>
+                        <th>Tipo relacion Laboral</th>
+                        <th>Caracteristicas</th>
+                        <th>Observación</th>
+                        <th>Opciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for apuesto in lista_puestos %}
+                    <tr
+                            {% if apuesto.vigente %}
+                            class="label-success"
+                            {% endif %}
+                            {% if apuesto.termino %}
+                            class="label-danger"
+                            {% endif %}
+                            {% if apuesto.activo and not apuesto.vigente %}
+                            class="label-warning"
+                            {% endif %}
+                    >
+                        <td>
+                            {{ apuesto.uaa.get_uaa_padre_tipo|default:"" }}
+                            <i class="fa fa-arrow-right"></i>
+                            {{ apuesto.uaa }}
+                        </td>
+
+                        <td>
+                             <dl>
+                                 <dt>Inicio: </dt>
+                                 <dd>{{ apuesto.fecha_inicio }}</dd>
+
+                                 {% if apuesto.fecha_reconocimiento %}
+                                    <dt>Reconocimiento</dt>
+                                    <dd>{{ apuesto.fecha_reconocimiento }}</dd>
+                                {% endif %}
+
+                                 {% if apuesto.fecha_fin %}
+                                 <dt>Fin: </dt>
+                                 <dd>{{ apuesto.fecha_fin|default:"" }}</dd>
+                                 {% endif %}
+
+                                 {% if apuesto.fecha_termino %}
+                                 <dt>Termino: </dt>
+                                 <dd>{{ apuesto.fecha_termino|default:"" }}</dd>
+                                 {% endif%}
+
+                                 <dt>Duración: </dt>
+                                 <dd>{{ apuesto.get_duracion_info|default:"" }}</dd>
+                            </dl>
+                        </td>
+                        <td>{{ apuesto.puesto }}</td>
+                        <td>{{ apuesto.get_sueldo }}</td>
+                        <td>{{ apuesto.tipo_relacion_laboral }}</td>
+                        <td>
+                            Vigente: {{ apuesto.vigente|yesno:"Si, No" }} <br>
+                            Encargado:{{ apuesto.encargado|yesno:"Si, " }}<br>
+                            Activo: {{ apuesto.activo|yesno:"Si, No" }}<br>
+                            Término: {{ apuesto.termino|yesno:"Si, No" }}
+                        </td>
+                        <td>{{ apuesto.get_observaciones_extendidas|default:"" }}</td>
+                        <td>
+                            <a href="{% url 'talento_humano:asignacion_puestos.funcionario.editar' apuesto.id %}">
+                                Editar
+                            </a>
+                            <hr>
+                            <a href="{% url 'talento_humano:asignacion_puestos.funcionario.eliminar'  apuesto.id %}"
+                               onClick="javascript: return confirm('¿Estas seguro?');">
+                                eliminar
+                            </a>
+                            <hr>
+                            <a href="{% url 'talento_humano:asignacion_puestos.funcionario.validar' apuesto.id %}">
+                                validar vigencia
+                            </a>
+                            <hr>
+                            <a href="{% url 'talento_humano:asignacion_puestos.funcionario.fijar_vigente' apuesto.id %}">
+                                Fijar como vigente
+                            </a>
+                            <hr>
+                            <a data-toggle="modal" href="#modal-id{{ apuesto.id }}">
+                                Terminación
+                            </a>
+                            <div class="modal fade" id="modal-id{{ apuesto.id }}">
+                                <div class="modal-dialog">
+                                    <form action="{% url 'talento_humano:asignacion_puestos.funcionario.terminacion' apuesto.id %}"
+                                          method="post">
+                                        {% csrf_token %}
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Terminación</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                Observación anterior: {{ apuesto.observacion }}
+                                                {{ terminacion_form.as_p }}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                    Cerrar
+                                                </button>
+                                                <input type='submit' class='btn btn-primary ' value='Registrar'/>
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </form>
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                            <hr>
+                            <a data-toggle="modal" href="#renovacion-{{ apuesto.id }}">
+                                Renovación
+                            </a>
+                            <div class="modal fade" id="renovacion-{{ apuesto.id }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{% url 'talento_humano:asignacion_puestos.funcionario.renovacion' apuesto.id %}"
+                                              method="post">
+                                            {% csrf_token %}
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Renovación</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+
+                                                        <tbody>
+                                                        {{ renovacion_form.as_table }}
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                    Cerrar
+                                                </button>
+                                                <input type='submit' class='btn btn-primary ' value='Registrar'/>
+                                            </div>
+                                        </form>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                            <hr>
+                            <a href="{% url 'talento_humano:asignacion_puestos.funcionario.cambio' apuesto.id %}">
+                                Cambio
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <ul class="pagination">
+                {% if puestos.has_previous %}
+                <li>
+                    <a href="?pagina={{ puestos.previous_page_number }}">Anterior</a>
+                </li>
+                {% endif %}
+                <li class="active">
+                    <a href="">
+                        Página {{ puestos.number }} de {{ puestos.paginator.num_pages }}.
+                    </a>
+                </li>
+
+                {% if puestos.has_next %}
+                <li>
+                    <a href="?pagina={{ puestos.next_page_number }}">Siguiente</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+        $(function () {
+            $.datepicker.regional['es'] = {
+                minDate: -3650,
+                maxDate: 1000
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+
+
+</script>
+{% endblock %}

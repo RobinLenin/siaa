@@ -1,0 +1,67 @@
+<form [formGroup]="pagoForm"
+      (ngSubmit)="pagoForm.valid && guardar()">
+    <h5 mat-dialog-title>{{ ordenPago.persona.nombres_completos }} ({{ ordenPago.persona.numero_documento }})</h5>
+    <div mat-dialog-content>
+        <mat-card>
+            <mat-card-content>
+                <div fxLayout='row'>
+                    <div fxFlex="40%">
+                        <b>Valor a pagar:</b>
+                    </div>
+                    <div fxFlex="60%">
+                        {{  ordenPago.pago.total| currency:'USD':true}}
+                    </div>
+                </div>
+            </mat-card-content>
+            <mat-card-content>
+                <div fxLayout='row'>
+                    <div fxFlex="100%">
+                        <mat-form-field class="full-ancho">
+                            <mat-select placeholder="Forma de pago *"
+                                        formControlName="forma_pago"
+                                        [(ngModel)]="ordenPago.pago.forma_pago"
+                                        (ngModelChange)="ordenPago.pago.referencia=null;ordenPago.pago.depositante=null">
+                                <mat-option *ngFor="let item of choiceFormaPago"
+                                            [value]="item.value">{{ item.nombre }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <control-errores [control]="pagoForm.controls.forma_pago"></control-errores>
+                    </div>
+                </div>
+
+
+                <div *ngIf="ordenPago.pago.forma_pago!='EFECTIVO'">
+                    <div fxLayout='row'>
+                        <div fxFlex="100%">
+                            <mat-form-field class="full-ancho">
+                                <input matInput
+                                       placeholder="Referencia *"
+                                       [(ngModel)]="ordenPago.pago.referencia"
+                                       formControlName="referencia"
+                                       type="text">
+                            </mat-form-field>
+                            <control-errores [control]="pagoForm.controls.referencia"></control-errores>
+                        </div>
+                    </div>
+                    <div fxLayout='row'>
+                        <div fxFlex="100%">
+                            <mat-form-field class="full-ancho">
+                                <input matInput
+                                       placeholder="Nombre/Apellidos del depositante"
+                                       [(ngModel)]="ordenPago.pago.depositante"
+                                       formControlName="depositante"
+                                       type="text">
+                            </mat-form-field>
+                            <control-errores [control]="pagoForm.controls.depositante"></control-errores>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+
+            <mat-card-content>
+                <button mat-raised-button color="warn" type="button" (click)="cerrar()">Cerrar</button>&nbsp;
+                <button mat-raised-button color="primary" type="submit">Registrar</button>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</form>

@@ -1,0 +1,144 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Reporte vacaciones pendientes
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de talento humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Reporte</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Reportes de vacaciones pendientes</header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body ">
+        <form id="frmFiltro" action="" method="get">
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form.as_table }}
+                    <button type='submit' class='btn btn-primary' value='Buscar'>
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
+                    <button type="submit" value="Exportar Csv" name="exportar_csv" class='exportar btn btn-success'>
+                        <i class="fa fa-file-excel-o"></i> Exportar Csv
+                    </button>
+                    <button type="submit" value="Exportar Pdf" name="exportar_pdf" class='exportar btn btn-danger'>
+                        <i class="fa fa-file-pdf-o"></i> Exportar Pdf
+                    </button>
+                </div>
+                <div class="col-md-12">Se encontraton {{ total }} de registros</div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th rowspan="2">Identificación</th>
+                                <th rowspan="2">Apellidos</th>
+                                <th rowspan="2">Nombres</th>
+                                <th class="text-right">Días</th>
+                                <th class="text-right">Horas</th>
+                                <th class="text-right">Minutos</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for registro in registros %}
+                            <tr>
+                                <td>
+                                    {{ registro.funcionario.usuario.persona.numero_documento }}
+                                </td>
+                                <td>
+                                    {{ registro.funcionario.usuario.persona.primer_apellido }}
+                                    {{ registro.funcionario.usuario.persona.segundo_apellido }}
+                                </td>
+                                <td>
+                                    {{ registro.funcionario.usuario.persona.primer_nombre }}
+                                    {{ registro.funcionario.usuario.persona.segundo_nombre }}
+                                </td>
+                                <td class="text-right">
+                                    {{ registro.dias_pendientes }}
+                                </td>
+                                <td class="text-right">
+                                    {{ registro.horas_pendientes }}
+                                </td>
+                                <td class="text-right">
+                                    {{ registro.minutos_pendientes }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    {% if registros.has_previous %}
+                    <input type="hidden" value="{{ registros.previous_page_number }}" name="anterior">
+                    <input type="submit" value="Anterior" name="pagina_anterior" class='btn btn-primary'>
+                    {% endif %}
+
+                    <a href="" class="btn btn-link" role="button">
+                        Página {{ registros.number }} de {{ registros.paginator.num_pages }}.
+                    </a>
+                    <input type="number" value="{{ registros.number }}" name="numero_pagina" min="1"
+                           max="{{ registros.paginator.num_pages }}">
+                    <input type="submit" value="Ir" name="pagina" class='btn btn-primary'>
+
+                    {% if registros.has_next %}
+                    <input type="hidden" value="{{ registros.next_page_number }}" name="siguiente">
+                    <input type="submit" value="Siguiente" name="pagina_siguiente" class='btn btn-primary'>
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+        $(function () {
+            $.datepicker.regional['es'] = {
+                minDate: -3650,
+                maxDate: 1000
+            };
+
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+
+            $('#frmFiltro').validate();
+        });
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}

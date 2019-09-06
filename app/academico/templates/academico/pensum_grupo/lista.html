@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Pensums
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.PensumGrupo'|verbose_name_plural }}</header>
+            <div class="tools">
+                <div class="pull-right">
+                    <button class="btn btn-info btn-xs"
+                            data-toggle="modal" data-target="#modal-pensum-grupo-editar"
+                            {% if not perms.academico.add_pensumgrupo %} disabled {% endif %}>
+                        <i class="fa fa-plus-circle"></i>Nuevo
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for grupo in pensums_grupo %}
+                        <tr>
+                            <td>
+                                <a {% if perms.academico.view_pensumgrupo %}
+                                    href="{% url 'academico:pensum_grupo_detalle' grupo.id %}"
+                                {% endif %}>
+                                    {{ grupo.nombre }}
+                                </a>
+                            </td>
+                            <td>
+                                <a title="Eliminar"
+                                        {% if perms.academico.delete_pensumgrupo %}
+                                   class="btn btn-outline-danger"
+                                   onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                                   href="{% url 'academico:pensum_grupo_eliminar' grupo.id %}"
+                                        {% else %}
+                                   class="btn btn-outline-danger disabled"
+                                        {% endif %}>
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% include 'academico/pensum_grupo/modal_editar.html' %}
+{% endblock %}
+
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/datatable.js' %}"></script>
+{% endblock %}

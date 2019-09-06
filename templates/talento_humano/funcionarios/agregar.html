@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Agregar Funcionario
+{% endblock %}
+
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de talento humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'talento_humano:funcionarios.index' %}" class="parent-item">Funcionarios</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Agregar funcionario</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<form action="{% url 'talento_humano:funcionarios.funcionario.agregar' %}" method="get">
+    <div class="input-group">
+        {{ form2.numero_documento }}
+        <span class="input-group-btn">
+        <input type='submit' class='btn btn-primary' value='Agregar'/>
+        </span>
+    </div>
+</form>
+{% endblock %}

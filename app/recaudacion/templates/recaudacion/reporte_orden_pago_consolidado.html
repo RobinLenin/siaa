@@ -1,0 +1,147 @@
+{% extends "weasyprint/pdf_base.html" %}
+{% block contenido %}
+    {% load  tags %}
+
+    {% for punto_emision_uaa in puntos_emision_uaas %}
+
+        {% if punto_emision_uaa.ordenes_pago_emitidas or punto_emision_uaa.ordenes_pago_anuladas %}
+            <h4 class="text-center lineas-en-bordes">
+                {{ punto_emision_uaa.descripcion }} - {{ punto_emision_uaa.codigo }}
+            </h4>
+        {% endif %}
+
+        {% get_punto_emision_total totales punto_emision_uaa as total %}
+
+        {% if punto_emision_uaa.ordenes_pago_emitidas %}
+            <h5 class="text-center"><u>EMITIDAS</u></h5>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Secuencial</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th colspan="2">Rubro</th>
+                    <th class="text-right">Cantidad</th>
+                    <th class="text-right">Precio Unit</th>
+                    <th class="text-right">Subtotal</th>
+                    <th class="text-right">Impuesto</th>
+                    <th class="text-right">Valor Imp.</th>
+                    <th class="text-right">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for detalle in punto_emision_uaa.ordenes_pago_emitidas %}
+                    <tr>
+                        <td>{% get_formato_secuencial_orden_pago_detalle detalle.secuencial %}</td>
+                        <td>{{ detalle.fecha_emision }}</td>
+                        <td>{{ detalle.nombres_completos | upper }}</td>
+                        <td>{{ detalle.producto_codigo }}</td>
+                        <td>{{ detalle.producto_descripcion }} {{ detalle.observacion | default:'' }}</td>
+                        <td class="text-right">{{ detalle.cantidad }}</td>
+                        <td class="text-right">{{ detalle.precio }}</td>
+                        <td class="text-right">{% get_detalle_subtotal detalle %} </td>
+                        <td class="text-right">{{ detalle.tipo_impuesto.nombre }}</td>
+                        <td class="text-right">{{ detalle.impuesto }}</td>
+                        <td class="text-right">{{ detalle.total }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="10" class="text-center"><b>SUB-TOTAL</b></td>
+                    <td class="text-right"><b>{{ total.total_emitidas }}</b></td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+
+        {% if punto_emision_uaa.ordenes_pago_anuladas %}
+            <h5 class="text-center"><u>ANULADAS</u></h5>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Secuencial</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th colspan="2">Rubro</th>
+                    <th class="text-right">Cantidad</th>
+                    <th class="text-right">Precio Unit</th>
+                    <th class="text-right">Subtotal</th>
+                    <th class="text-right">Impuesto</th>
+                    <th class="text-right">Valor Imp.</th>
+                    <th class="text-right">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for detalle in punto_emision_uaa.ordenes_pago_anuladas %}
+                    <tr>
+                        <td>{% get_formato_secuencial_orden_pago_detalle detalle.secuencial %}</td>
+                        <td>{{ detalle.fecha_emision }}</td>
+                        <td>{{ detalle.nombres_completos | upper }}</td>
+                        <td>{{ detalle.producto_codigo }}</td>
+                        <td>{{ detalle.producto_descripcion }} {{ detalle.observacion }}</td>
+                        <td class="text-right">{{ detalle.cantidad }}</td>
+                        <td class="text-right">{{ detalle.precio }}</td>
+                        <td class="text-right">{% get_detalle_subtotal detalle %} </td>
+                        <td class="text-right">{{ detalle.producto.tipo_impuesto.nombre }}</td>
+                        <td class="text-right">{{ detalle.impuesto }}</td>
+                        <td class="text-right">{{ detalle.total }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="10" class="text-center"><b>SUB-TOTAL</b></td>
+                    <td class="text-right"><b>{{ total.total_anuladas }}</b></td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    {% endfor %}
+
+
+    <div class="padding-0-15">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th><u>Punto Emisión UAA</u></th>
+                {% for key, value in CHOICE_FORMA_PAGO %}
+                    <th class="text-center">{{ value }}</th>
+                {% endfor %}
+                <th class="text-center"><u>Subtotal</u></th>
+                <th class="text-center"><u>Anuladas</u></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for total in totales %}
+                <tr>
+                    <td>{{ total.punto_emision_uaa|upper }}</td>
+                    {% for key, value in CHOICE_FORMA_PAGO %}
+                        <td class="text-center">{% get_valor_diccionario total.total_forma_pago key %}</td>
+                    {% endfor %}
+                    <td class="text-center">{{ total.total_emitidas }}</td>
+                    <td>{{ total.total_anuladas }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td><b>TOTAL GENERAL</b></td>
+                {% for key, value in CHOICE_FORMA_PAGO %}
+                    <td class="text-center">{% get_forma_pago_total totales key %}</td>
+                {% endfor %}
+                <td class="text-center"><b>{% get_puntos_emision_total totales 'total_emitidas' %}</b></td>
+                <td><b>{% get_puntos_emision_total totales 'total_anuladas' %}</b></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <table class="ancho-100">
+        <tr class="text-center">
+            <td>
+                <br><br><br>
+                ------------------------------------------<br>
+                {{ usuario.persona.numero_documento }}-{{ usuario.persona.get_nombres_completos }}
+            </td>
+        </tr>
+    </table>
+{% endblock %}
+
+
+
+

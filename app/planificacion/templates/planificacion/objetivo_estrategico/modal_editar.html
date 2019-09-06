@@ -1,0 +1,44 @@
+<div class="modal fade" id="modal-objetivo-estrategico">
+    <form action="{% url 'planificacion:objetivo_estrategico_guardar' %}" method="POST" role="form"
+          class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="plan_estrategico" value="{{ plan_estrategico.id }}">
+        <input type="hidden" id="objetivo_estrategico_id" name="id" value="{{ objetivo_estrategico.id }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Objetivo Estrategico</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group ">
+                        <label for="eje-estrategico">Eje estratégico</label>
+                        <select id="eje-estrategico" name="eje_estrategico" class="form-control">
+                            {% for key, value in EJES_ESTRATEGICOS %}
+                                <option value="{{ key }}"
+                                        {% if key == objetivo_estrategico.eje_estrategico %}selected{% endif %}>
+                                    {{ value }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="objetivo_codigo">Codigo:</label>
+                        <input id="objetivo_codigo" type="text" class="form-control" name="codigo"
+                               value="{{ objetivo_estrategico.codigo }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="objetivo_nombre">Descripcion:</label>
+                        <textarea id="objetivo_nombre" type="text" class="form-control" name="nombre"
+                                  required>{{ objetivo_estrategico.nombre }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

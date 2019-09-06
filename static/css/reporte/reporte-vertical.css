@@ -1,0 +1,79 @@
+* {
+  font-family: "Times New Roman", Times, serif;
+}
+table {
+  border-collapse: collapse;
+  display: table;
+  font-size: xx-small;
+  vertical-align: middle;
+  width: 100%;
+}
+table,
+th,
+td {
+  border: 1px solid #000;
+  text-align: left;
+}
+td {
+  padding: 0.5em;
+  text-align: left;
+  width: 70%;
+}
+th {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.actividad {
+  width: 20%;
+}
+.derecha {
+  text-align: right;
+}
+.detalle {
+  width: 65%;
+}
+.detalle-encabezado {
+  text-align: justify;
+}
+.page-break {
+  page-break-before: always;
+}
+.titulo {
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+}
+.sin-borde {
+  border: none;
+}
+@page {
+  border-bottom: 1px solid #000;
+  border-top: 1px solid #000;
+  counter-increment: page;
+  margin: 20mm 15mm 20mm 20mm;
+  size: A4 portrait;
+  @top-center {
+    background: url("../../img/logo.png") no-repeat 0 0;
+    background-size: 10%;
+    background-position: 0px 150px;
+    content: "SIAAF";
+    font-size: 1.5em;
+    width: 100%;
+  }
+  @top-left {
+    padding-left: 80px;
+    content: "Universidad Nacional de Loja";
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+  @bottom-left {
+    content: "Sistema de Información Académica, Administrativo y Financiero";
+    font-size: 0.75em;
+    padding-bottom: 6mm;
+  }
+  @bottom-right {
+    content: "Página " counter(page) " de " counter(pages);
+    font-size: 0.75em;
+    padding-bottom: 6mm;
+  }
+}

@@ -1,0 +1,42 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Plan</th>
+            <th>Periodos</th>
+            <th>Accion</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for plan in planes_estrategicos %}
+            <tr >
+                <td>
+                    <a {% if plan.activo or request.user.is_superuser%}
+                        href="{% url 'planificacion:plan_estrategico_detalle' plan.id %}"
+                        {% endif %}
+                        class="list-group-item {% if not plan.activo%} disabled {% endif %}">
+                        {{ plan.nombre }}
+                    </a>
+                </td>
+                <td>
+                    {% for periodo in plan.periodos.all %}
+                        <span class="badge" data-id="{{ periodo.id }}">{{ periodo.nombre }}</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    <div class="btn-group">
+
+                        <button data-id="{{ plan.id }}" title="Eliminar Plan Estrategico"
+                                class="eliminar btn btn-outline-danger"
+                                {% if not perms.planificacion.delete_plan_estrategico %} disabled {% endif %}>
+                                <i class="fa fa-trash-o"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+

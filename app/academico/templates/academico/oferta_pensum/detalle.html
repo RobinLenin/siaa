@@ -1,0 +1,141 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Programa de estudio
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    {% load guardian_tags %}
+    {% get_obj_perms request.user for oferta_pensum as "ofertapensum_perms" %}
+    {% get_obj_perms request.user for oferta_pensum.pensum as "pensum_perms" %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.OfertaPensum'|verbose_name }}</header>
+            <div class="tools">
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="panel panel-default">
+                <div class="panel-heading row">
+                    <span class="col-sm-2">Oferta:</span>
+                    <div class="col-sm-4">
+                        <h5 align="justify">
+                            <a {% if perms.academico.view_ofertaacademica %}
+                                href="{% url 'academico:oferta_academica_detalle' oferta_pensum.oferta_academica.id %}"
+                            {% endif %}>{{ oferta_pensum.oferta_academica.nombre }}</a>
+                        </h5>
+                    </div>
+                    <span class="col-sm-2">Pensum:</span>
+                    <div class="col-sm-4">
+                        <h5 align="justify">
+                            <a {% if perms.academico.view_pensum or 'view_pensum' in pensum_perms %}
+                                href="{% url 'academico:pensum_detalle' oferta_pensum.pensum.id %}"
+                            {% endif %}>{{ oferta_pensum.pensum.nombre }}</a>
+                        </h5>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Asignaturas del Pensum
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                {% for nivel in oferta_pensum.pensum.niveles.all %}
+                                    <li class="list-group-item list-group-item-secondary">
+                                        {{ nivel.pensum.get_organizacion_display }} {{ nivel.numero }}</li>
+                                    {% for asignatura_nivel in nivel.asignaturas.all %}
+                                        <a id="asignatura-nivel-{{ asignatura_nivel.id }}"
+                                           data-oferta-pensum-id="{{ oferta_pensum.id }}"
+                                           data-asignatura-nivel-id="{{ asignatura_nivel.id }}"
+                                           data-asignatura-nombre="{{ asignatura_nivel.asignatura.nombre }}"
+                                           data-nivel-nombre=" {{ nivel.pensum.get_organizacion_display }} {{ nivel.numero }}"
+                                                {% if asignatura_nivel.id in asignaturas_ofertadas_ids %}
+                                           class="list-group-item disabled agregar-oferta-asignatura"
+
+                                                {% else %}
+                                           class="list-group-item agregar-oferta-asignatura"
+                                                {% endif %}
+                                           href="#tabla-ofertadas"> {{ asignatura_nivel.asignatura.nombre }}
+
+                                            <span class="badge badge-primary badge-pill"></span>
+                                        </a>
+
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="card card-box">
+                        <div class="card-head">
+                            <h4>Asignaturas ofertadas</h4>
+                        </div>
+                        <div class="card-body" id="line-parent">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="tabla-ofertadas">
+                                        <thead>
+                                        <tr>
+                                            <th>Asignatura</th>
+                                            <th>Nivel</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for ofe_asg_niv in oferta_pensum.ofertas_asignatura_nivel.all %}
+                                            {% get_obj_perms request.user for ofe_asg_niv as "ofertaasignatura_perms" %}
+
+                                                <tr>
+                                                    <td>
+                                                        <a>
+                                                            {% comment %}
+                                                                {% if perms.academico.view_ofertaasignaturanivel or 'view_ofertaasignaturanivel' in ofertaasignatura_perms %}
+                                                                {% endif %}
+                                                            {% endcomment %}
+                                                            {{ ofe_asg_niv.asignatura_nivel.asignatura.nombre }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ ofe_asg_niv.asignatura_nivel.nivel.pensum.get_organizacion_display }} {{ ofe_asg_niv.asignatura_nivel.nivel.numero }}
+                                                    <td>
+                                                        <button data-oferta-asignatura-nivel-id="{{ ofe_asg_niv.id }}"
+                                                                data-asignatura-nivel-id="{{ ofe_asg_niv.asignatura_nivel.id }}"
+                                                                title="Eliminar"
+                                                                {% if perms.academico.delete_ofertaasignaturanivel  or 'delete_ofertaasignaturanivel' in ofertaasignatura_perms %}
+                                                                class="btn btn-outline-danger eliminar-oferta-asignatura"
+                                                                onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                                                                {% else %}
+                                                                class="btn btn-outline-danger disabled"
+                                                                {% endif %}>
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/academico/oferta_pensum_detalle.js' %}"></script>
+{% endblock %}

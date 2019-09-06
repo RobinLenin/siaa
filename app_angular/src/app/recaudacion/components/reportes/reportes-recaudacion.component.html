@@ -1,0 +1,64 @@
+<toolbar-acciones [titulo]="'Reportes Consolidados'"
+                  [botones]="botones"
+                  (notificadorInit)="ngOnInit()">
+</toolbar-acciones>
+
+<mat-card>
+    <mat-card-content>
+        <mat-select placeholder="Punto de Emisión *"
+                    class="full-ancho padding-top"
+                    [(ngModel)]="puntoEmision">
+            <mat-option *ngFor="let item of puntosEmision" [value]="item">
+                {{ item.descripcion }}
+                <small>({{ item.codigo_establecimiento }}-{{ item.codigo_facturero }})</small>
+            </mat-option>
+        </mat-select>
+
+        <mat-select placeholder="Tipo de reporte *"
+                    class="full-ancho padding-top"
+                    [(ngModel)]="tipoReporte"
+                    (selectionChange)="tipoReporte && tipoReporte.id==4 && seleccionTipoReporte($event)">
+            <mat-option *ngFor="let item of listaTipoReporte" [value]="item">{{ item.nombre }}</mat-option>
+        </mat-select>
+
+        <mat-form-field class="full-ancho" *ngIf="tipoReporte && tipoReporte.id==4">
+            <input matInput
+                   placeholder="Seleccione el Producto *"
+                   [matAutocomplete]="tdAutoComplete"
+                   [(ngModel)]="producto"
+                   (ngModelChange)="productosBuscados = filtrarProductos(producto)">
+        </mat-form-field>
+        <mat-autocomplete #tdAutoComplete="matAutocomplete" [displayWith]="displayProducto">
+            <mat-option *ngFor="let item of productosBuscados" [value]="item">
+                <span>{{ item.codigo }} | {{ item.descripcion }} | {{ item.valor }}</span>
+            </mat-option>
+        </mat-autocomplete>
+
+        <form #formFechas="ngForm" (ngSubmit)="generarReporte()">
+            <mat-grid-list cols="5" rowHeight="100px">
+                <mat-grid-tile [colspan]="3">
+                    <fecha-min-max class="full-ancho"
+                                   [start_dt]="fechaDesde"
+                                   [end_dt]="fechaHasta"
+                                   [placeholder_desde] = '"(Mes/Día/Año)"'
+                                   [placeholder_hasta] = '"(Mes/Día/Año)"'
+                                   (fechaDesde)="fechaDesde=$event"
+                                   (fechaHasta)="fechaHasta=$event">
+                    </fecha-min-max>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1">
+                   <mat-radio-group [(ngModel)]="tipoFormato" name="tipoFormato">
+                      <mat-radio-button value="pdf">PDF</mat-radio-button>
+                      <mat-radio-button value="excel">EXCEL</mat-radio-button>
+                    </mat-radio-group>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1">
+                    <button mat-raised-button
+                            type="submit"
+                            color="primary"
+                            [disabled]="!(tipoReporte && puntoEmision)">Generar Reporte</button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
+    </mat-card-content>
+</mat-card>

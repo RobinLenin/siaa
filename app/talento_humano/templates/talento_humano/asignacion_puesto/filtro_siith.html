@@ -1,0 +1,146 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    SIITH
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Exportación de datos para SIITH</header>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <form action="" class="form-horizontal auto-validate" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label>Activo en asignación de puestos:</label>
+                                    <select name="estado" class="form-control" required>
+                                        <option value="0">Todos</option>
+                                        <option value="1">Si</option>
+                                        <option value="2">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label>Regimen laboral:</label>
+                                    <select name="regimen_laboral" class="form-control" required>
+                                        <option value="0">Todos</option>
+                                        {% for regimen_laboral in regimenes_laborales%}
+                                            <option value="{{ regimen_laboral.id }}">{{ regimen_laboral.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label>Fecha inicio desde:</label>
+                                    <input type="date" class="form-control" name="fecha_inicio_desde">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label>Fecha inicio hasta:</label>
+                                    <input type="date" class="form-control" name="fecha_inicio_hasta">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label>Fecha fin desde:</label>
+                                    <input type="date" class="form-control" name="fecha_fin_desde">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label>Fecha fin hasta:</label>
+                                    <input type="date" class="form-control" name="fecha_fin_hasta">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label>Fecha termino desde:</label>
+                                    <input type="date" class="form-control" name="fecha_termino_desde">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label>Fecha termino hasta:</label>
+                                    <input type="date" class="form-control" name="fecha_termino_hasta">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class='btn btn-primary'><i class="fa fa-file-pdf-o"></i> Exportar</button>
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-angle-down"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button type="submit" formtarget="_blank" name="reporte_info_personal"
+                                                class="btn btn-link">
+                                            <i class="fa fa-file-excel-o text-success"></i> Información personal
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="submit" formtarget="_blank" name="reporte_info_bancaria"
+                                                class="btn btn-link">
+                                            <i class="fa fa-file-excel-o text-success"></i>Información bancaria
+                                        </button>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <button type="submit" formtarget="_blank" name="reporte_info_conyuge"
+                                                class="btn btn-link">
+                                            <i class="fa fa-file-excel-o text-success"></i> Información conyuge
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="submit" formtarget="_blank" name="reporte_cargas_familiares"
+                                                class="btn btn-link">
+                                            <i class="fa fa-file-excel-o text-success"></i>Cargas familiares
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="submit" formtarget="_blank" name="reporte_info_academica"
+                                                class="btn btn-link">
+                                            <i class="fa fa-file-excel-o text-success"></i> Información académica
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="submit" formtarget="_blank" name="reporte_capacitaciones"
+                                                class="btn btn-link">
+                                            <i class="fa fa-file-excel-o text-success"></i> Capacitación
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="submit" formtarget="_blank" name="reporte_trayectoria_laboral"
+                                                class="btn btn-link">
+                                            <i class="fa fa-file-excel-o text-success"></i> Trayectoria laboral externa
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="submit" formtarget="_blank" name="reporte_fotografias"
+                                                class="btn btn-link">
+                                            <i class="fa fa-file-excel-o text-success"></i> Fotografias
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock contenido %}

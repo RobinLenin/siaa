@@ -1,0 +1,60 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte de Ausentismos</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<h2>Reporte de Ausentismos</h2>
+<p class="derecha">
+    <strong>Desde:</strong> {{ desde }} | <strong>Hasta:</strong> {{ hasta }}
+</p>
+<p class="derecha">
+    Fecha de Impresión: {% now "Y-m-d H:i" %}
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>Funcionario</th>
+        <th>Tipo</th>
+        <th>Descripcion</th>
+        <th>Permiso</th>
+        <th>Desde</th>
+        <th>Hasta</th>
+        <th>Dias</th>
+        <th>Horas</th>
+        <th>Minutos</th>
+        <th>Registro</th>
+        <th>Observación</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for ausentismo in ausentismos_funcionarios %}
+            <tr>
+                <td>{{ ausentismo.funcionario }} </td>
+                <td>{{ ausentismo.ausentismo.tipo_ausentismo }}</td>
+                <td>{{ ausentismo.ausentismo.nombre }}</td>
+                <td>{{ ausentismo.tipo_permiso }}</td>
+                <td>{{ ausentismo.fecha_inicio }}</td>
+                <td>{{ ausentismo.fecha_fin }}</td>
+                <td>{{ ausentismo.dias }}</td>
+                <td>{{ ausentismo.horas }}</td>
+                <td>{{ ausentismo.minutos }}</td>
+                <td>{{ ausentismo.fecha_registro }}</td>
+                <td>{{ ausentismo.observacion }}</td>
+            </tr>
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<p class="derecha">
+    Generado por {{ generado }}
+</p>
+
+</body>

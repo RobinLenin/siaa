@@ -1,0 +1,245 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Organico estructural
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'talento_humano:uaa-puesto.index' %}" class="parent-item">UAA por puesto</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">{{ uaa }}
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            {{ uaa }}
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>Estructura organizacional</th>
+                            <td>{{ uaa.estructura_organizacional }}</td>
+                        </tr>
+                        <tr>
+                            <th>Estructura orgánica</th>
+                            <td>{{ uaa.estructura_organica }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre</th>
+                            <td>{{ uaa.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Siglas</th>
+                            <td>{{ uaa.siglas }}</td>
+                        </tr>
+                        <tr>
+                            <th>Campus</th>
+                            <td>{{ uaa.campus }}</td>
+                        </tr>
+                        <tr>
+                            <th>Unidad Académica</th>
+                            <td>
+                                {% if uaa.academico %}
+                                <span class="fa fa-check" aria-hidden="true"></span>
+                                {% else %}
+                                <span class="fa fa-remove" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Unidad Administrativa</th>
+                            <td>
+                                {% if uaa.administrativo %}
+                                <span class="fa fa-check" aria-hidden="true"></span>
+                                {% else %}
+                                <span class="fa fa-remove" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if uaa.tipo_uaa %}
+                        <tr>
+                            <th>Tipo de UAA</th>
+                            <td>{{ uaa.tipo_uaa }}</td>
+                        </tr>
+
+                        {% endif %}
+                        {% if uaa.uaa %}
+                        <tr>
+                            <th>Depende de</th>
+                            <td><a href="{% url 'talento_humano:uaa-puesto.ver_uaa' uaa.uaa.id %}">{{ uaa.uaa }}</a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% if uaa.telefono %}
+                        <tr>
+                            <th>Teléfono</th>
+                            <td>{{ uaa.telefono }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if uaa.extension %}
+
+                        <tr>
+                            <th>Extensión</th>
+                            <td>{{ uaa.extension }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th></th>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'organico:uaa_editar' uaa.id %}">Editar</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="page-header">
+                        <h1>Dependencias a Cargo:</h1>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Unidades Académicas Administrativas</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for ua in uaa.serie.all %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'talento_humano:uaa-puesto.ver_uaa' ua.id %}">{{ ua }}</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="page-header">
+                        <h1>Puestos:</h1>
+                        <a class="btn btn-primary" data-toggle="modal" href="#uaa-puesto">Agregar puestos</a>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Denominación</th>
+                                    <th>Grupo Ocupacional</th>
+                                    <th>Funcionario</th>
+                                    <th>Responsable</th>
+                                </tr>
+                                </thead>
+                                {% for uaa_puesto in uaa_puestos %}
+                                <tr>
+                                    <td>
+                                        <p>{{ uaa_puesto.puesto }}</p>
+                                        <a href="{% url 'talento_humano:uaa-puesto.mover_uaa' uaa_puesto.id %}">mover</a>
+                                        |
+                                        <a href="{% url 'talento_humano:uaa-puesto.agregar.funcionario.uaa_puesto' uaa_puesto.id %}">
+                                            Agregar funcionario
+                                        </a>
+                                        |
+                                        <a href="{% url 'talento_humano:uaa-puesto.inactivar' uaa_puesto.id %}"
+                                           onClick="javascript: return confirm('¿Estas seguro de inactivar este puesto, los funcionarios asociados a este puesto se inactivaran tambien?');">
+                                            Inactivar Puesto
+                                        </a>
+                                    </td>
+                                    <td>{{ uaa_puesto.puesto.grupo_ocupacional }}</td>
+                                    <td>
+                                        <ul>
+                                            {% for asignacion_puesto in uaa_puesto.asignacionpuesto_set.all %}
+                                            {% if asignacion_puesto.vigente %}
+                                            <li>
+                                                <a href="{% url 'talento_humano:asignacion_puestos.funcionario' asignacion_puesto.funcionario.id %}">
+                                                    {% if asignacion_puesto.funcionario.usuario.foto_url %}
+                                                    <img src="{{ asignacion_puesto.funcionario.usuario.foto_url }}"
+                                                         alt="..." class="img-circle">
+                                                    {% endif %}
+                                                    {{ asignacion_puesto.funcionario }}
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        {% if uaa_puesto.puesto.responsable_uaa %}
+                                        <span class="fa fa-check" aria-hidden="true"></span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="uaa-puesto">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;
+                    </button>
+                    <h4 class="modal-title">Agregar Puestos</h4>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar
+                    </button>
+                    <input type='submit' class='btn btn-primary' value='Agregar'/>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% endblock %}

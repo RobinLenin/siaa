@@ -1,0 +1,201 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Organico estructural
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>
+                Unidad Académica Administrativa
+            </header>
+            <div class="tools">
+                <a class="btn btn-info" href="{% url 'organico:uaa_editar' uaa.id %}">
+                    <i class="fa fa-edit "></i> Editar
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <th>Estructura organizacional</th>
+                                <td>{{ uaa.estructura_organizacional }}</td>
+                            </tr>
+                            <tr>
+                                <th>Estructura orgánica</th>
+                                <td>{{ uaa.estructura_organica }}</td>
+                            </tr>
+                            {% if uaa.codigo %}
+                                <tr>
+                                    <th>Código</th>
+                                    <td>{{ uaa.codigo }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <th>Nombre</th>
+                                <td>{{ uaa.nombre }}</td>
+                            </tr>
+                            <tr>
+                                <th>Siglas</th>
+                                <td>{{ uaa.siglas }}</td>
+                            </tr>
+                            <tr>
+                                <th>Campus</th>
+                                <td>{{ uaa.campus }}</td>
+                            </tr>
+                            <tr>
+                                <th>Unidad Académica</th>
+                                <td>
+                                    {% if uaa.academico %}
+                                        <span class="fa fa-check" aria-hidden="true"></span>
+                                    {% else %}
+                                        <span class="fa fa-remove" aria-hidden="true"></span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Unidad Administrativa</th>
+                                <td>
+                                    {% if uaa.administrativo %}
+                                        <span class="fa fa-check" aria-hidden="true"></span>
+                                    {% else %}
+                                        <span class="fa fa-remove" aria-hidden="true"></span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if uaa.uaa %}
+                                <tr>
+                                    <th>Depende de</th>
+                                    <td><a href="{% url 'organico:uaa_detalle' uaa.uaa.id %}">{{ uaa.uaa }}</a></td>
+                                </tr>
+                            {% endif %}
+                            {% if uaa.telefono %}
+                                <tr>
+                                    <th>Teléfono</th>
+                                    <td>{{ uaa.telefono }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if uaa.tipo_uaa %}
+                                <tr>
+                                    <th>Tipo de Unidad</th>
+                                    <td>{{ uaa.tipo_uaa }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if uaa.extension %}
+
+                                <tr>
+                                    <th>Extensión</th>
+                                    <td>{{ uaa.extension }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if uaa.correo %}
+
+                                <tr>
+                                    <th>Extensión</th>
+                                    <td>{{ uaa.correo }}</td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="page-header">
+                            <h3 class="panel-title">Dependencias a Cargo
+                                <a href="{% url 'organico:uaa_crear' uaa.id %}"
+                                   class="btn btn-info btn-sm pull-right"
+                                   role="button">
+                                    <i class="fa fa-plus-circle"></i>Nuevo
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <tbody>
+                                    {% for ua in uaa.serie.all %}
+                                        <tr>
+                                            <td>
+                                                <a href="{% url 'organico:uaa_detalle' ua.id %}">{{ ua }}</a>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-outline-danger"
+                                                   title="Eliminar"
+                                                   onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                                                   href="{% url 'organico:uaa_eliminar' ua.id %}">
+                                                    <i class="fa fa-trash-o"></i>
+                                                </a>
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="page-header">
+                            <h1>Puestos:</h1>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Denomincacion</th>
+                                        <th>Grupo Ocupacional</th>
+                                        <th>Funcionario</th>
+                                        <th>Responsable</th>
+                                    </tr>
+                                    </thead>
+                                    {% for uaa_puesto in uaa.uaapuesto_set.all %}
+                                        <tr>
+                                            <td>{{ uaa_puesto.puesto }}</td>
+                                            <td>{{ uaa_puesto.puesto.grupo_ocupacional }}</td>
+                                            <td>
+                                                <ul>
+                                                    {% for asignacion_puesto in uaa_puesto.asignacionpuesto_set.all %}
+                                                        {% if asignacion_puesto.activo %}
+                                                            <li>
+                                                                {% if asignacion_puesto.funcionario.usuario.foto_url %}
+                                                                    <img src="{{ asignacion_puesto.funcionario.usuario.foto_url }}"
+                                                                         alt="..."
+                                                                         class="img-circle">
+                                                                {% endif %}
+                                                                {{ asignacion_puesto.funcionario }}
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                {% if uaa_puesto.puesto.responsable_uaa %}
+                                                    <span class="fa fa-check" aria-hidden="true"></span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

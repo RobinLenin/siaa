@@ -1,0 +1,63 @@
+<div class="panel panel-default">
+    <div class="panel-heading row">
+        <div class="text-center col-sm-10">
+            <h4>{{ meta_anual.nombre }}</h4>
+        </div>
+        <div class="btn-group-vertical col-sm-2">
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Indicador:</span>
+            <div class="col-sm-10">
+                <h5 align="justify"><a {% if perms.planificacion.change_indicador%}
+                    href="{% url 'planificacion:indicador_detalle' meta_anual.indicador.id%}"
+                {% endif %}>{{ meta_anual.indicador }}</a></h5>
+            </div>
+        </div>
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Meta Plurianual:</span>
+            <div class="col-sm-10">
+                <h5 align="justify">{{ meta_anual.indicador.meta_nombre}}</h5>
+            </div>
+        </div>
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Periodo:</span>
+            <div class="col-sm-10">
+                <h5 align="justify">{{ meta_anual.periodo }}</h5>
+            </div>
+        </div>
+        <div class="form-group form-inline text-left">
+            {% if  meta_anual.indicador.medible %}
+                <span class="col-sm-2">Alcance proyectado:</span>
+                <div class="col-sm-4">
+                    <h5 align="justify">{{ meta_anual.valor }}{% if meta_anual.indicador.porcentaje %} %{% endif %}</h5>
+                </div>
+            {% endif %}
+            <span class="col-sm-2">Avance de la meta:</span>
+            <div class="col-sm-4">
+                <h5 align="justify">{{ meta_anual.get_porcentaje_avance }}%</h5>
+            </div>
+        </div>
+
+        <hr>
+        <div class="card">
+            <div class="card-header">
+                <h4>Actividades
+                     {% if perms.planificacion.add_actividad %}
+                    <button class="btn btn-info pull-right btn-circle btn-xs" data-toggle="modal"
+                            data-target="#modal-actividad">
+                        <i class="fa fa-plus-circle"></i>
+                        Nuevo
+                    </button>
+                     {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+
+                {% include 'planificacion/actividad/fragmento_lista.html' with actividades=meta_anual.actividades.all %}
+            </div>
+        </div>
+
+    </div>
+</div>

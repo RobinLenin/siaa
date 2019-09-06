@@ -1,0 +1,207 @@
+<div class="modal fade" id="modal-programa-estudio-editar">
+    <form action="{% url 'academico:programa_estudio_guardar' %}" method="POST" role="form" id="form-programa-estudio">
+        {% csrf_token %}
+        <input type="hidden" id="id" name="id" value="{{ programa_estudio.id }}">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.ProgramaEstudio'|verbose_name }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text"
+                               class="form-control letras_man_min"
+                               placeholder="Nombre.."
+                               id="nombre"
+                               name="nombre"
+                               minlength="3"
+                               maxlength="255"
+                               value="{{ programa_estudio.nombre }}"
+                               required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="estado">Estado:</label>
+                                <select id="estado" name="estado" class="form-control" required>
+                                    <option value="" selected="selected">-- Seleccione --</option>
+                                    {% for key, value in CHOICE_ESTADO %}
+                                        <option value="{{ key }}"
+                                                {% if programa_estudio.estado == key %}selected{% endif %}>
+                                            {{ value }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="codigo_institucional">Código institucional:</label>
+                                <input type="text"
+                                       class="form-control letras_numeros"
+                                       placeholder="Codigo institucional.."
+                                       id="codigo_institucional"
+                                       name="codigo_institucional"
+                                       value="{{ programa_estudio.codigo_institucional }}"
+                                       minlength="3"
+                                       maxlength="25"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="codigo_senescyt">Código SENESCYT:</label>
+                                <input type="text"
+                                       class="form-control letras_numeros"
+                                       placeholder="Codigo senescyt.."
+                                       id="codigo_senescyt"
+                                       name="codigo_senescyt"
+                                       value="{{ programa_estudio.codigo_senescyt }}"
+                                       minlength="3"
+                                       maxlength="25"
+                                       required>
+                            </div>
+                        </div>
+
+                        {% now "Y-m-d" as ahora %}
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="fecha_creacion">Fecha de creación:</label>
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Fecha de creación.."
+                                       name="fecha_creacion"
+                                       id="fecha_creacion"
+                                       value="{{ programa_estudio.fecha_creacion|date:"Y-m-d"|default:ahora }}"
+                                       required
+                                       menora="#fecha_aprobacion"
+                                       data-msg-menora="Debe ser menor a la fecha de aprobacion">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="fecha_aprobacion">Fecha de aprobación:</label>
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Fecha de creación.."
+                                       name="fecha_aprobacion"
+                                       id="fecha_aprobacion"
+                                       value="{{ programa_estudio.fecha_aprobacion|date:"Y-m-d"|default:ahora }}"
+                                       required
+                                       mayora="#fecha_creacion"
+                                       data-msg-mayora="Debe ser mayor a la fecha de creacion">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="fecha_culminacion">Fecha de culminación:</label>
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Fecha de culminación.."
+                                       name="fecha_culminacion"
+                                       id="fecha_culminacion"
+                                       value="{{ programa_estudio.fecha_culminacion|date:"Y-m-d" }}"
+                                       mayora="#fecha_aprobacion"
+                                       data-msg-mayora="Debe ser mayor a la fecha de aprobación">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="facultad">Facultad:</label>
+                                <select id="facultad" name="facultad" class="form-control" required>
+                                    <option value="" selected="selected">-- Seleccione --</option>
+                                    {% for item in facultades %}
+                                        <option value="{{ item.id }}"
+                                                {% if programa_estudio.facultad.id == item.id %}selected{% endif %}
+                                        >{{ item.siglas }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="modalidad">Modalidad:</label>
+                                <select id="modalidad" name="modalidad" class="form-control" required>
+                                    <option value="" selected="selected">-- Seleccione --</option>
+                                    {% for key, value in CHOICE_MODALIDAD %}
+                                        <option value="{{ key }}"
+                                                {% if programa_estudio.modalidad == key %}selected{% endif %}>
+                                            {{ value }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="tipo-programa">Tipo de programa de estudio:</label>
+                                <select id="tipo-programa" name="tipo" class="form-control"
+                                        data-tipo-apoyo="{{ TIPO_CURSO_APOYO }}" required>
+                                    <option value="" selected="selected">-- Seleccione --</option>
+                                    {% for key, value in CHOICE_TIPO %}
+                                        <option value="{{ key }}"
+                                                {% if programa_estudio.tipo == key %}selected{% endif %}>
+                                            {{ value }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="regimen">Régimen:</label>
+                                <select id="regimen" name="regimen" class="form-control" required>
+                                    <option value="" selected="selected">-- Seleccione --</option>
+                                    {% for key, value in CHOICE_REGIMEN %}
+                                        <option value="{{ key }}"
+                                                {% if programa_estudio.regimen == key %}selected{% endif %}>
+                                            {{ value }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo_formacion">Tipo de formación:</label>
+                        <select id="tipo_formacion" name="tipo_formacion" class="form-control" data-tipo-formacion-id="{{ programa_estudio.tipo_formacion.id }}" required>
+                            <option value="" selected="selected">-- Seleccione --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="campo_detallado">Campo de formación:</label>
+                        <select id="campo_detallado" name="campo_detallado" class="form-control select2" required>
+                            <option value="" selected="selected">-- Seleccione --</option>
+                            {% for item in campos_detallado %}
+                                <option value="{{ item.id }}"
+                                        {% if programa_estudio.campo_detallado.id == item.id %}selected{% endif %}>
+                                    {{ item.campo_especifico.campo_amplio.nombre }} -
+                                    {{ item.campo_especifico.nombre }} -
+                                    {{ item.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

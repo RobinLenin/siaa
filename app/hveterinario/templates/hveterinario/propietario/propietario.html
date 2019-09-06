@@ -1,0 +1,90 @@
+{% extends 'layout.html' %}
+
+
+{% block titulo %}
+    Propietario
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo Hospital Veterinario</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <span class="parent-item">Hospital Veterinario</span> <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Propietarios</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Gestión de Propietarios</header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body ">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-9 col-sm-9 col-12">
+                    <form action="{% url 'hveterinario:propietario.propietarios' %}" method="get">
+                        {% with total_items=propietarios|length numero_items=propietarios.paginator.per_page filtro=filtro %}
+                        {% include 'tabla_encabezado.html' %}
+                        {% endwith %}
+                    </form>
+
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12 mb-2">
+                    <a href="#" class="btn btn-success float-right" role="button" aria-disabled="true">
+                        &nbsp;&nbsp;<i class="fa fa-plus"></i>&nbsp;&nbsp;Agregar&nbsp;&nbsp;
+                    </a>
+                </div>
+            </div>
+           
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                        <th>N° documento</th>
+                        <th>Nombre completo</th>
+                        <th>N° mascotas</th>
+                        <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                        {% for persona in propietarios %}
+                        <tr>
+                            <td>{{persona.numero_de_documento}}</td>
+                            <td>{{persona}}</td>
+                            <td>{{persona.paciente_set.all| length}}</td>
+                            <td>
+                                <a href="{% url 'hveterinario:paciente_agregar.paciente' persona.id %}" class="btn btn-warning" role="button" aria-disabled="true">
+                                    <i class="fa fa-paw fa-5x"></i>Mascota 
+                                </a>
+                               
+                                <button type="button" class="btn btn-info">
+                                    <i class="fa fa-pencil-square-o fa-5x"></i> Editar
+                                </button>
+                                <!--<button type="button" class="btn btn-warning">Warning</button>-->
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            {% with lista=propietarios filtro=filtro %}
+                {% include 'tabla_paginacion.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

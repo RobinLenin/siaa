@@ -1,0 +1,47 @@
+<div class="table-responsive-lg">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th>Indicador
+            <th>Meta
+            <th>Medible
+            <th>Porcentaje
+            <th>Valor Meta
+            <th>Presupuesto
+            <th>Accion
+        </tr>
+        </thead>
+        <tbody>
+        {% for indicador in indicadores %}
+            <tr>
+                <td><a href="{% url 'planificacion:indicador_detalle' indicador.id %}">{{ indicador.nombre }}</a>
+                <td>{{ indicador.meta_nombre }}
+                <td>{{ indicador.medible|yesno:"Si,No," }}
+                <td>{{ indicador.porcentaje|yesno:"Si,No," }}
+                <td>{{ indicador.meta_valor }}
+                <td>{{ indicador.presupuesto }}
+
+
+
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-danger btn-xs indicador-eliminar" data-id="{{ indicador.id }}"><i
+                                title="Eliminar" class="fa fa-trash-o"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!--Modal para Agregar resultado -->
+
+
+
+
+
+
+

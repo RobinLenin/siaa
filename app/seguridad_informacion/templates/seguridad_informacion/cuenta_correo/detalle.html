@@ -1,0 +1,120 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Cuenta de correo
+{% endblock %}
+
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Cuenta de correo: {{ cuenta_correo }}</header>
+            <div class="tools">
+                <a class="btn btn-default btn-xs" href="{% url 'seguridad_informacion:cuenta_correo_vincular' cuenta_correo.id %}">
+                    <i class="fa fa fa-refresh"></i>Vincular
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="row form-horizontal">
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Datos personales</legend>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Numero identificación:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.numero_documento }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Nombres:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.nombres }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Apellidos:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.apellidos }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Teléfono:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.telefono }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Celular:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.celular }}</p>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Cuenta correo</legend>
+                        <div class="form-group">
+                            <label class="control-label  col-md-4">Email institucional:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.email_institucional }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Email alternativo:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.email_alternativo }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Tipo:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.tipo }}</p>
+                        </div>
+
+                         <div class="form-group">
+                            <label class="control-label col-md-4">LDAP:</label>
+                            <p class="form-control-static col-md-7">{{ ldap }}</p>
+                        </div>
+                     </fieldset>
+                </div>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Datos en Google: {{ cuenta_correo.g_conectado }}</legend>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Nombres:</label>
+                            {% if cuenta_correo.is_email_name_valid %}
+                                <p class="form-control-static col-md-7 text-success"
+                                   title="Coniciden correctamente los nombres en google"><i
+                                        class="fa fa-check"></i> {{ cuenta_correo.email_name }}</p>
+                            {% else %}
+                                <p class="form-control-static col-md-7 text-danger"
+                                   title="No coinciden los nombres en google"><i
+                                        class="fa fa-warning"></i> {{ cuenta_correo.email_name }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Suspendida:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.g_suspendida }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Cambiar clave:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.g_cambiar_clave }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Último acceso:</label>
+                            <p class="form-control-static col-md-7">{{ cuenta_correo.g_ultimo_acceso }}</p>
+                        </div>
+                    </fieldset>
+                </div>
+                {% if user_siaaf %}
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>Datos siaaf</legend>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Usuario:</label>
+                            {% if cuenta_correo.email_institucional == user_siaaf.correo_electronico_institucional %}
+                                <p class="form-control-static col-md-7 text-success" title="Ok"><i class="fa fa-check"></i> {{ user_siaaf.correo_electronico_institucional }}</p>
+                            {% else %}
+                                <p class="form-control-static col-md-7 text-danger" title="No"><i class="fa fa-warning"></i>  {{ user_siaaf.correo_electronico_institucional }}</p>
+                            {% endif %}
+                        </div>
+
+                    </fieldset>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}
+

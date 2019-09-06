@@ -1,0 +1,22 @@
+{% include 'talento_humano/reporte/fragmento_regimen_laboral.html' with regimen=grupo.regimen_laboral %}
+<tr>
+    <th colspan="2" class="titulo">Grupo ocupacional</th>
+</tr>
+{% if grupo.nombre %}
+    <tr>
+        <th>Nombre</th>
+        <td>{{ grupo.nombre }}</td>
+    </tr>
+{% endif %}
+{% if grupo.nivel %}
+    <tr>
+        <th>Nivel</th>
+        <td>{{ grupo.nivel }}</td>
+    </tr>
+{% endif %}
+{% if grupo.grado %}
+    <tr>
+        <th>Grado</th>
+        <td>{{ grupo.grado }}</td>
+    </tr>
+{% endif %}

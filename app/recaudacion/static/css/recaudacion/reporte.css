@@ -1,0 +1,24 @@
+body {
+  font-family: Helvetica, Arial, Sans !important;
+  font-size: 12px !important;
+}
+.saltar-pagina-siguiente {
+  page-break-before: always;
+}
+.lineas-en-bordes {
+  border: 1px solid #5e5e5e;
+}
+.padding-0-15 {
+  padding: 0% 15%;
+}
+.ancho-100 {
+  width: 100%;
+}
+.derecho-height {
+  height: 310px;
+  min-height:310px;
+}
+.derecho-border {
+  border-bottom: 2px  dotted;
+}
+

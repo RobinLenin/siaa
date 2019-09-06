@@ -1,0 +1,80 @@
+<mat-toolbar color="warn">
+  <span>{{ titulo }}</span>
+  <span class="fill-remaining-space"></span>
+  <span>
+        <button mat-icon-button
+                *ngIf="botones['showIniciar']"
+                (click)="init()"
+                title="Actualizar">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <button mat-icon-button
+                *ngIf="botones['showBuscador']"
+                [disabled]="resultado==0"
+                (click)="buscar()"
+                title="Buscar">
+            <mat-icon>search</mat-icon>
+        </button>
+        <button mat-icon-button
+                *ngIf="botones['showCrear']"
+                (click)="crear()"
+                title="Nuevo">
+            <mat-icon>playlist_add</mat-icon>
+        </button>
+        <button mat-icon-button
+                *ngIf="botones['showEditar']"
+                (click)="editar()"
+                title="Editar"
+                [disabled]="!activarEditar">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button
+                *ngIf="botones['showEliminar']"
+                (click)="eliminar()"
+                title="Eliminar"
+                [disabled]="!activarEliminar">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button
+                *ngIf="botones['showImprimirBlob']"
+                (click)="imprimir()"
+                title="Imprimir"
+                [disabled]="!activarImprimirBlob">
+        <mat-icon>print</mat-icon>
+        </button>
+        <plantilla-imprimir id="imprimir"
+                            *ngIf="botones['showImprimir']"
+                            title="Imprimir"
+                            [activarImprimir]="activarImprimir"
+                            [titulo]="titulo"
+                            [funcionalidad]="funcionPDF"
+                            [departamento]="departamentoPDF"
+                            [reporte]="titulo"
+                            [(data)]="dataPDF"
+                            [(typeTable)]="tipoPDF"
+                            [columns]="columnsPDF">
+        </plantilla-imprimir>
+        <button mat-icon-button
+                *ngIf="botones['showRegresar']"
+                (click)="regresar()"
+                title="Regresar">
+            <mat-icon>undo</mat-icon>
+        </button>
+
+        <button mat-icon-button
+                title="Mas opciónes"
+                *ngIf="botones['showMasAcciones']"
+                [mat-menu-trigger-for]="menuAcciones">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menuAcciones="matMenu">
+            <button *ngFor="let item of masAcciones"
+                    mat-menu-item
+                    [disabled]="item.desabilitar"
+                    (click)="ejecutarAccion(item)">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span>{{ item.nombre }}</span>
+            </button>
+        </mat-menu>
+    </span>
+</mat-toolbar>

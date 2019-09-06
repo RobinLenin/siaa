@@ -1,0 +1,144 @@
+<base-toolbar [titulo]="'ADMINISTRADOR DE PRESTACIONES'"
+			  [codToolbar]="'TOOLBAR_ADMIN'"
+			  [url_retorno]="'home/prestaciones'"
+			  [urlImprimir]="'home/prestacion'"
+			  (notificaGuardado)='onAccion()'>
+</base-toolbar>
+
+<mat-toolbar *ngIf="esVisible">
+	<div class="col-sm-10">
+		<buscar-persona (notificadorSeleccion)="onChangePersona($event)"
+						[placeholder]="'Buscar Solicitantes'">
+		</buscar-persona>
+	</div>
+	<div class="col-sm-2">
+		<select-item [codCatalogo]=" 'TIPO_PRESTACION'" (notificador)="onTipoPrestacion($event)"
+					 [selectedValue]="tipoPrestacion_id"></select-item>
+	</div>
+</mat-toolbar>
+
+<mat-card layout="column">
+	<mat-card-content>
+		<div class="panel panel-info" *ngIf="esVisible">
+			<div class="panel-heading">
+				<h2 class="panel-title"> <span>Usted está creando Prestación de Tipo <a *ngIf="isGrupal">Grupal</a><a *ngIf="!isGrupal">Individual</a>
+					</span></h2>
+				<div class="row" *ngIf="isGrupal">
+					<div class="col-md-2">
+						<label class="control-label" for="txtRazonVisita"><span>*</span><strong>Razon Visita:</strong></label>
+					</div>
+					<div class="col-md-4">
+						<select-item [codCatalogo]=" 'RAZON_PRESTACION' " (notificador)="razonGrupal_id=$event" [selectedValue]="razonGrupal_id"></select-item>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="text-center" highlight="whitesmoke" class="panel-body">
+			<mat-grid-list style="overflow: hiden" cols="2" rowHeight="950px">
+				<div class="row" *ngFor="let item of prestacion.detalles; let i = index">
+					<br><br>
+					<mat-grid-tile>
+						<div class="panel panel-primary shadowCard col-md-10 col-sm-12">
+							<div class="panel-heading">
+								<div class="row">
+									<div class="col-sm-4">
+										<label class="control-label" for="txNroEquipo"><strong>Nro. Equipo:</strong></label>
+									</div>
+									<div class="col-sm-4">
+										<input id="txtNumero" matInput type="number" [(ngModel)]="item.numero" name="numero" #codigo="ngModel" required [disabled]="esEditable" min="0" style="font-size: 18px; font-weight: bold">
+									</div>
+								</div>
+								<div class="clearfix"></div><br>
+							</div>
+							<div highlight="whitesmoke" class="panel-body">
+								<div class="">
+									<div class="col-md-4 col-sm-6">
+										<div *ngIf="item.persona.foto_url==null">
+											<img src="assets/img/avatar/avatar_01.png"
+												 class="img-avatar img-avatar-radius" alt=""
+												 *ngIf="item.persona.sexo.codigo_th=='0'">
+											<img src="assets/img/avatar/avatar_02.png"
+												 class="img-avatar img-avatar-radius" alt=""
+												 *ngIf="item.persona.sexo.codigo_th=='1'">
+										</div>
+										<img src="{{ item.persona.foto_url }}" class="img-avatar img-avatar-radius" alt=""
+											 *ngIf="item.persona.foto_url!=null">
+									</div>
+									<br>
+									<div class="caption">
+										<p>
+											<label class="control-label" for="txtDni"><strong>Tipo de
+												Doc: </strong></label> {{ item.persona.tipo_documento.nombre }}
+										</p>
+										<p>
+											<label class="control-label"
+												   for="txtDni"><strong>DNI: </strong></label> {{ item.persona.numero_documento }}
+										</p>
+										<p>
+											<label class="control-label" for="txtNombres"><strong>Nombres: </strong></label>
+											{{ item.persona.primer_nombre
+											|uppercase}} {{ item.persona.segundo_nombre |uppercase }}
+										</p>
+										<p>
+											<label class="control-label" for="txtApellidos"><strong>Apellidos: </strong></label>
+											{{ item.persona.primer_apellido
+											|uppercase}} {{ item.persona.segundo_apellido |uppercase }}
+										</p>
+										<p>
+											<label class="control-label"
+												   for="txtFechaRegistro"><strong>Registro: </strong></label> {{ item.fecha_registro }}
+										</p>
+										<br>
+										<div class="row">
+											<div class="col-md-6"><label class="control-label" for="txtHoraIngreso"><strong>Hora Ingreso: </strong></label> {{ item.hora_entrada }}</div>
+											<div class="col-md-6"><label class="control-label" for="txtHoraSalida"><strong>Hora Salida: </strong></label> {{ item.hora_salida }}</div>
+										</div>
+										<br>
+										<p>
+											<label class="control-label " for="txtEstado "><strong>Estado: </strong></label>
+											<select-item [codCatalogo]=" 'ESTADO_PRESTACION' "
+														 (notificador)="item.estado_id=$event" [selectedValue]="item.estado_id"
+														 [isDisabled]="true"></select-item>
+										</p>
+										<p *ngIf="isGrupal" hidden>
+											<label class="control-label " for="txtFuncion"><span>*</span> <strong>Funcion: </strong></label>
+											<select-item [codCatalogo]=" 'FUNCION_PRESTACION' "
+														 (notificador)="item.funcion_id=$event"
+														 [selectedValue]="item.funcion_id"
+														 [isDisabled]="esEditable"></select-item>
+										</p>
+										<p>
+											<label class="control-label " for="txtTipoEnte"><span>*</span><strong>Tipo: </strong></label>
+											<select-item [codCatalogo]=" 'TIPO_ENTE' " (notificador)="item.tipo_ente_id=$event"
+														 [selectedValue]="item.tipo_ente_id"
+														 [isDisabled]="esEditable"></select-item>
+										</p>
+										<p>
+											<label class="control-label " for="txtCarrera "><strong>Carrera: </strong></label>
+											<select-carrera (notificador)="item.carrera_id=$event"
+															[selectedValue]="item.carrera_id" [name]="item.carrera_id"
+															[isDisable]="esEditable"></select-carrera>
+										</p>
+										<p *ngIf="!isGrupal">
+											<label class="control-label" for="txtRazonVisita"><span>*</span><strong>Razón Visita: </strong></label>
+											<select-item [codCatalogo]=" 'RAZON_PRESTACION' "
+														 (notificador)="item.razon_id=$event" [selectedValue]="item.razon_id"
+														 [isDisabled]="esEditable"></select-item>
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="panel-footer ">
+								<button class="btn btn-danger btn-xs " (click)="onRemove(i)">
+									<i class="fa fa-times " aria-hidden="true "></i>Descartar
+								</button>
+								<br><br>
+							</div>
+						</div>
+					</mat-grid-tile>
+				</div>
+			</mat-grid-list>
+		</div>
+	</mat-card-content>
+</mat-card>

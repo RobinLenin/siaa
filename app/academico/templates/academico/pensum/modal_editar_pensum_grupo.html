@@ -1,0 +1,38 @@
+<div class="modal fade" id="modal-pensum-pensumgrupo-editar">
+    <form action="{% url 'academico:pensum_guardar_pensums_grupo' %}" method="POST" role="form"
+          class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ pensum.id }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Grupo de Pensums Complementarios</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Pensum:<h5>{{ pensum.nombre }}</h5></label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Seleccione los grupos de pensums complementarios
+                        </label>
+                        <select name="pensums_grupo" id="select-pensums-grupo" class="form-control select2" multiple>
+                            {% with pensums=pensum.get_pensums_grupo_ids %}
+                                {% for pensum_grupo in pensums_grupo %}
+                                    <option value="{{ pensum_grupo.id }}"
+                                            {% if pensum_grupo.id in pensums %} selected {% endif %}>
+                                        {{ pensum_grupo.nombre }}
+                                    </option>
+                                {% endfor %}
+                            {% endwith %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,61 @@
+{%  comment %}
+variables necesarias para llenar la tabla
+items ([] cada item debe tener el atributo nombre), titulo, tipo, link
+uso :
+<div class="padre-item" data-padre-id="{{ plan.id }}" data-padre-tipo="plan_estrategico_id"
+                    data-guardar-url="{% url 'planificacion:estrategia_guardar'  %}"
+                    data-eliminar-url='/planificacion/estrategia/eliminar/'>
+    {% with items=plan.estrategias.all titulo='' tipo='Estrategia' item_link='' %}
+        {% include 'pedi/tabla_dinamica.html' %}
+    {% endwith %}
+</div>
+{%  endcomment %}
+<div class="table-responsive">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">{{ titulo }}
+                <button type="button" class="btn btn-info btn-circle btn-sm add-new pull-right" data-tipo="{{ tipo }}">
+                    <i
+                            class="fa fa-plus"></i>Nuevo
+
+                </button>
+            </h5>
+
+        </div>
+        <div class="card-body">
+            <table class="table {{ tipo }} table-bordered {% if item_link %} linked {% endif %}"
+                    {% if item_link %} data-item_link="{{ item_link }}" {% endif %}>
+                <thead>
+                <tr>
+                    <th>Descripcion</th>
+                    <th>Accion</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in  items %}
+                    <tr data-tipo="{{ tipo }}" data-id="{{ item.id }}">
+                        <td>
+                            {% if item_link %}
+                                <a href="{{ item_link }}{{ item.id }}">{{ item.nombre }}</a>
+                            {% else %}
+                                {{ item.nombre }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="add btn btn-outline-success btn-xs" title="Guardar" data-toggle="tooltip"><i
+                                        class="fa fa-check"></i></a>
+                                <a class="edit btn btn-outline-info btn-xs" title="Editar" data-toggle="tooltip"><i
+                                        class="fa fa-edit"></i></a>
+                                <a class="delete btn btn-outline-danger btn-xs" title="Eliminar"
+                                   data-toggle="tooltip"><i
+                                        class="fa fa-trash-o"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

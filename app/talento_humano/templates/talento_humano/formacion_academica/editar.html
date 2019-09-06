@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Formación Académica
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Datos de la formación académica</header>
+    </div>
+    <div class="card-body ">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <table class="table table-hover">
+                    <tdoby>
+                        <tr>
+                            <td>Nivel de Instrucción</td>
+                            <td>{{ formacion_academica.nivel_instruccion|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Número de registro</td>
+                            <td>{{ formacion_academica.numero_registro|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Institución educativa</td>
+                            <td>{% if formacion_academica.institucion_educativa %}
+                                {{ formacion_academica.institucion_educativa|default:"" }}
+                                {% else %}
+                                {{ formacion_academica.institucion_educativo_otro|default:"" }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Área de conocimiento</td>
+                            <td>{{ formacion_academica.area_conocimiento|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Título Obtenido</td>
+                            <td>{{ formacion_academica.titulo_obtenido|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Nivel de instrucción</td>
+                            <td>{{ formacion_academica.nivel_instruccion|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tipo título</td>
+                            <td>{{ formacion_academica.tipo_titulo|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Egresado</td>
+                            <td>{% if formacion_academica.egresado %}
+                                <span class="fa fa-check" aria-hidden="true"></span>
+                                {% else %}
+                                <span class="fa fa-remove" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tdoby>
+                </table>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <form id="frmFormacionAcademica" action="{% url 'talento_humano:formacion_academica_guardar' %}" class="form-horizontal auto-validate" method="POST" name="form">
+                    {% csrf_token %}
+                    <table class="table table-hover">
+                        {{ formacion_academica_form }}
+                        <input type="hidden" name="next" value="{{ next }}">
+                        <input type="hidden" name="id" value="{{ formacion_academica.id }}"/>
+                    </table>
+                    <div class="text-center">
+                        <button type='submit' class='btn btn-primary m-r-20'>
+                            <i class="fa fa-save"></i> Guardar
+                        </button>
+                        <a class='btn btn-default' href="{{ next }}#tab_formacion_academica">
+                            <i class="fa fa-ban"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

@@ -1,0 +1,38 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Asignación de puestos</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<h2>Ficha: {{ asignacion.funcionario.usuario.persona.get_nombres_completos_inverso }}</h2>
+<p class="derecha">
+    Fecha de Impresión: {% now "Y-m-d H:i" %} <br>
+</p>
+
+<table>
+    <tbody>
+    {% include 'talento_humano/reporte/fragmento_persona.html' with persona=asignacion.funcionario.usuario.persona %}
+    </tbody>
+</table>
+<br>
+<table>
+    <tbody>
+    {% include 'talento_humano/reporte/fragmento_formacion_academica.html' with formaciones=asignacion.get_formacion_academica_persona %}
+    </tbody>
+</table>
+<br>
+<table>
+    <tbody>
+    {% include 'talento_humano/reporte/fragmento_asignacion_puesto.html' with asignacion=asignacion %}
+    </tbody>
+</table>
+
+<p class="derecha">
+    Generado por {{ generado }}
+</p>
+
+</body>

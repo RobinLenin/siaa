@@ -1,0 +1,43 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Funcionario</th>
+            <th>Tipo</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for autoridad_programa_estudio in autoridades_programa_estudio %}
+            <tr>
+                <td>
+                    <a {% if perms.academico.view_autoridadprogramaestudio %}
+                        href="{% url 'academico:autoridad_programa_estudio_detalle' autoridad_programa_estudio.id %}?next={{ request.path }}"
+                    {% endif %}>
+                        {{ autoridad_programa_estudio.funcionario.usuario.persona.get_nombres_completos }}
+                    </a>
+                    {% if autoridad_programa_estudio.activo %}
+                        <span class="text-success"><i class="fa fa-check"></i></span>
+                    {% endif %}
+                <td>{{ autoridad_programa_estudio.get_tipo_display }}</td>
+                <td>{{ autoridad_programa_estudio.fecha_inicio }}</td>
+                <td>{{ autoridad_programa_estudio.fecha_fin|default:""}}</td>
+                <td>
+                    <a title="Eliminar"
+                            {% if perms.academico.delete_autoridadprogramaestudio %}
+                       class="btn btn-outline-danger"
+                       onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                       href="{% url 'academico:autoridad_programa_estudio_eliminar' autoridad_programa_estudio.id %}"
+                            {% else %}
+                       class="btn btn-outline-danger disabled"
+                            {% endif %}>
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

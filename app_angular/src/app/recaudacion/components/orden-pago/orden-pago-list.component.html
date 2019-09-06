@@ -1,0 +1,115 @@
+<mat-card>
+  <mat-card-content class="container">
+        <mat-select placeholder="Seleccione un Punto de Emisión UAA *"
+              class="full-ancho padding-top"
+              [(ngModel)]="puntoEmisionUaa"
+              (ngModelChange)="getOrdenesPago()">
+          <mat-option *ngFor="let item of puntosEmisionUaa"
+                [value]="item">
+            {{ item.punto_emision.descripcion }}
+            <small>
+                ({{ item.punto_emision.codigo_establecimiento }}-{{ item.punto_emision.codigo_facturero }})
+            </small>
+            - {{ item.descripcion }}
+          </mat-option>
+        </mat-select>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+	<mat-card-content>
+		<form *ngIf="puntoEmisionUaa">
+			<toolbar-acciones [titulo]="'Ordenes de Pago'"
+							  [botones]="botones"
+							  [resultado]="ordenesPago.length"
+							  [activarEditar]="activarEditar"
+							  [activarBuscador]="activarBuscador"
+							  (notificadorInit)="getOrdenesPago($event)"
+							  (notificadorCrear)="crear($event)"
+							  (notificadorEditar)="editar($event)"
+							  (notificadorBuscador)="changeBuscador($event)">
+			</toolbar-acciones>
+
+			<paginador-buscar *ngIf="activarBuscador"
+							  class="full-ancho"
+							  [servicioUrl]="servicio"
+							  [itemsPorPagina]="itemsPorPagina"
+							  [filtro]="filtro"
+							  (notificadorFiltro)="filtro=$event"
+							  (notificadorDatos)="ordenesPago=$event">
+			</paginador-buscar>
+
+			<mat-table [dataSource]="ordenesPago">
+				<!-- Accion Column -->
+				<ng-container matColumnDef="accion">
+					<mat-header-cell *matHeaderCellDef></mat-header-cell>
+					<mat-cell *matCellDef="let element">
+						<mat-checkbox id="chkOrdenPago{{element.id}}" [checked]="esItemSeleccionado(element)" (change)="selectedItem(element)"></mat-checkbox>
+					</mat-cell>
+				</ng-container>
+
+				<!-- Código Column -->
+				<ng-container matColumnDef="codigo">
+					<mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{ puntoEmisionUaa.codigo }} </mat-cell>
+				</ng-container>
+
+				<!-- Secuenciales Column -->
+				<ng-container matColumnDef="secuencial">
+					<mat-header-cell *matHeaderCellDef> Secuenciales </mat-header-cell>
+					<mat-cell *matCellDef="let element">
+						<span *ngFor="let detalle of element.ordenes_pago_detalle; let i = index; let last = last">
+							<span class="label label-default">{{ detalle.secuencial }}</span>
+							<span *ngIf="!last">-</span>
+						</span>
+					</mat-cell>
+				</ng-container>
+
+				<!-- Fecha de Emisión Column -->
+				<ng-container matColumnDef="fecha_emision">
+					<mat-header-cell *matHeaderCellDef> Fecha de Emisión </mat-header-cell>
+					<mat-cell *matCellDef="let element">
+                        {{element.fecha_emision | date: 'yyyy-MM-dd'}}
+                    </mat-cell>
+				</ng-container>
+
+				<!-- Estado Column -->
+				<ng-container matColumnDef="estado">
+					<mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{ element.estado }} </mat-cell>
+				</ng-container>
+
+				<!-- Cliente Column -->
+				<ng-container matColumnDef="cliente">
+					<mat-header-cell *matHeaderCellDef> Cliente </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.persona.nombres_completos}} </mat-cell>
+				</ng-container>
+
+				<!-- Nro. Identificación Column -->
+				<ng-container matColumnDef="identificacion">
+					<mat-header-cell *matHeaderCellDef> Nro. Identificación </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.persona.numero_documento}} </mat-cell>
+				</ng-container>
+
+                <ng-container matColumnDef="referencia">
+					<mat-header-cell *matHeaderCellDef> Fecha de pago </mat-header-cell>
+					<mat-cell *matCellDef="let element">
+                        <span *ngIf="element.pago">{{element.pago.fecha_pago | date: 'yyyy-MM-dd' }}</span>
+                    </mat-cell>
+				</ng-container>
+
+				<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+				<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+			</mat-table>
+
+			<paginador-scroll [servicioUrl]="servicio"
+							  [itemsPorPagina]="itemsPorPagina"
+							  [filtro]="filtro"
+							  [pagina]="pagina"
+							  [datos]="ordenesPago"
+							  (notificadorPagina)="pagina=$event"
+							  (notificadorDatos)="ordenesPago=$event">
+			</paginador-scroll>
+		</form>
+	</mat-card-content>
+</mat-card>

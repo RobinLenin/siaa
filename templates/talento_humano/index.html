@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Talento Humano
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de talento humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'index' %}">Inicio</a> <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Talento humano</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Bienvenido</header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body ">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h4>Por favor ingrese a las funcionalidades de Talento Humano por el menu izquierdo</h4>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

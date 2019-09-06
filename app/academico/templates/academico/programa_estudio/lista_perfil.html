@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Programas de estudio
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.ProgramaEstudio'|verbose_name_plural }}</header>
+            <div class="tools">
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="card-group">
+                {% for programa_estudio in programas_estudio %}
+                    <div class="col-xl-3 col-md-4 col-sm-6">
+                        {% include 'academico/programa_estudio/fragmento_oferta_card.html' %}
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,152 @@
+{
+  "MENSAJES": {
+    "GLOBAL": {
+      "CAMPOS_OBLIGATORIOS": "Campos Obligatorio Vacíos",
+      "CONFIRMAR_ELIMINAR": "¿Desea realmente eliminar lo seleccionado?"
+    },
+    "SIPEDI": {
+      "CODIGO_REQUERIDO": "Código requerido",
+      "PLAN_ESTRATEGICO_GUARDADO": "El plan estratégico institucional ha sido guardado exitosamente.",
+      "PLAN_ESTRATEGICO_EDITADO": "El plan estratégico institucional ha sido actualizado exitosamente.",
+      "CONFIRMAR_PLAN_ESTRATEGICO_REMOVER": "¿Desea realmente remover el Plan Estratégico seleccionado.?",
+      "CONFIRMAR_INDICADOR_REMOVER": "¿Desea realmente remover el Indicador seleccionado.?",
+      "INDICADOR_GUARDADO": "Indicador guardado exitosamente.",
+      "ACCION_GUARDADA": "La acción se ha guardado satisfactoriamente.",
+      "PROGRAMA_GUARDADO": "El programa se ha guardado satisfactoriamente.",
+      "PROYECTO_GUARDADO": "El proyecto se ha guardado satisfactoriamente.",
+      "CONFIRMAR_META_REMOVER": "¿Desea realmente remover la meta seleccionada.?",
+      "CONFIRMAR_RESPONSABLE_REMOVER": "¿Desea realmente el responsable seleccionado?",
+      "CONFIRMAR_PROGRAMA_REMOVER": "¿Desea realmente el programa seleccionado?",
+      "CONFIRMAR_PROYECTO_REMOVER": "¿Desea realmente remover el proyecto seleccionado?",
+      "CONFIRMAR_SUBPROYECTO_REMOVER": "¿Desea realmente remover el subproyecto seleccionado?"
+    },
+    "PLANIFICACION": {
+      "POA_GUARDADO": "Plan Operativo Anual guardado satisfactoriamente"
+    },
+    "REGISTRO_SENESCYT": {
+      "ACTUALIZADO": "Estos datos ya han sido registrados anteriormente.",
+      "REGISTRADO": "Se ha registrado exitosamente sus datos",
+      "ALUMNO_NO_REGISTRADO": "No posee un titulo registrado en el SENESCYT otorgado por la Universidad Nacional de Loja."
+    },
+    "PADRON_ELECTORAL": {
+      "PLANIFICACON_CONSULTAR_LUGARVOTACION": "El período de consulta de lugar de votación ha finalizado."
+    }
+  },
+  "ALERTAS": {
+    "SIPEDI": {
+      "CODIGO_REQUERIDO": "Código requerido",
+      "INDICADOR_REQUERIDO": "Indicador requerido",
+      "META_REQUERIDA": "Meta requerida",
+      "NOMBRE_REQUERIDO": "Nombre es requerido",
+      "ORDEN_REQUERIDO": "Orden es requerido"
+    }
+  },
+  "ETIQUETAS": {
+    "GLOBAL": {
+      "SELECCIONAR_ITEM": "Select a item",
+      "DIRECCION": "Dirección",
+      "CANTON": "Cantón",
+      "LUGAR": "Lugar",
+      "PROVINCIA": "Provincia",
+      "NOMBRE": "Name",
+      "CORREO_ELECTRONICO": "Correo Electrónico",
+      "CODIGO": "Code",
+      "PAGINAS": "Pages",
+      "ACTUALIZAR": "Refresh",
+      "CONFIRMAR": "Confirm",
+      "EDITAR": "Edit",
+      "CREAR": "Create",
+      "BUSCAR": "Search",
+      "NUEVO": "New",
+      "ELIMINAR": "Delete",
+      "DESCRIPCION": "Descripción",
+      "NUMERO_IDENTIFICACION": "Número de Identificación",
+      "NOMBRES_COMPLETOS": "Nombres Completos",
+      "EXITO": "Exito",
+      "ERROR": "Error",
+      "QUITAR": "Remove"
+    },
+    "SISTEMA": {
+      "SIAAF": "SIAAF"
+    },
+    "PADRON_ELECTORAL": {
+      "DATOS_JUNTA_ELECTORAL": "Datos de Lugar de Votación",
+      "JUNTA_ELECTORAL": "Mesa",
+      "CONSULTAR_JUNTA_ELECTORAL": "Consultar Lugar de Votación de Estudiantes",
+      "REQUISITOS_ALUMNUS": "REQUISITOS",
+      "REGISTRO_SENESCYT": "Registro Senescyt"
+    },
+    "REGISTRO_SENESCYT": {
+      "DATOS_PERSONALES": "Datos Personales",
+      "AREA": "Area",
+      "SUBAREA": "SubArea",
+      "NUMERO_REGISTRO": "Número de Registro",
+      "FECHA_REGISTRO": "Fecha de Registro",
+      "FECHA_GRADO": "Fecha de Grado",
+      "TITULO": "Título",
+      "TITULOS_ACADEMICOS": "Títulos académicos registrados en la Institución",
+      "NIVEL_ACADEMICO": "NIVEL ACADÉMICO",
+      "TITULO_PADRON_ELECTORAL_ALUMNUS": "Empadronamiento de exalumnos de la Institución",
+      "REGLAMENTO_PADRON_ELECTORAL_ALUMNUS": "Ser graduado en la Universidad Nacional de Loja, que el título otorgado se encuentre registrado en el SENESCYT.",
+      "REGLAMENTO_PADRON_ELECTORAL_ALUMNUS_1": "No tener relación laboral de dependencia bajo ningún concepto con la Universidad Nacional de Loja.",
+      "REGLAMENTO_PADRON_ELECTORAL_ALUMNUS_2": "Para ejercer la representación el graduado deberá haber egresado por lo menos cinco años antes."
+    }
+  },
+  "SIPEDI": {
+    "PLAN_ESTRATEGICO": "Plan Estratégico",
+    "PLANES_ESTRATEGICOS": "Planes Estratégicos",
+    "OBJETIVOS_ESTRATEGICOS": "Objetivo Estratégicos",
+    "OBJETIVO_ESTRATEGICO": "Objetivo Estratégico",
+    "OBJETIVOS_OPERATIVOS": "Objetivos Operativos",
+    "OBJETIVO_OPERATIVO": "Objetivo Operativo",
+    "ACCIONES": "Acciones",
+    "ACCION": "Acción",
+    "INDICADORES": "Indicators",
+    "INDICADOR": "Indicator",
+    "RESPONSABLES": "Responsables",
+    "RESPONSABLE": "Responsable",
+    "PROYECTO_MACRO": "Proyecto Macro",
+    "METAS": "Metas",
+    "META": "Meta",
+    "DESGLOSES": "Desgloses",
+    "DENOMINACION": "Denominación",
+    "DESCRIPCION": "Descripcion",
+    "INTERFAZ": "Interfaz",
+    "TITULO_REQUERIDO": "Título Requerido",
+    "PROGRAMA": "Programa",
+    "PROGRAMAS": "Programas",
+    "PROYECTO": "Proyecto",
+    "PROYECTOS": "Proyectos",
+    "ACTIVIDADES": "Actividades",
+    "ACTIVIDAD": "Actividad",
+    "SUBPROYECTOS": "SubProyectos",
+    "SUBPROYECTO": "SubProyecto"
+  },
+  "PLANIFICACION": {
+    "OBJETIVOS_ESTRATEGICOS": "Objetivos Estratégicos",
+    "PERIODO_FISCAL": "Periodo Fiscal",
+    "POAUAA_LIST": "Operational Plans for Administrative Academic Units",
+    "SELECCIONAR_UAA": "Seleccione una Unidad Académica Administrativa",
+    "SELECCIONAR_POA": "Seleccione un Plan Operativo Anual.",
+    "COMPONENETES_POA": "Componentes de Plan Operativo Anual",
+    "EDITAR_POA": "Editar Plan Operativo Anual.",
+    "SELECCIONAR_OBJETIVOS_ESTRATEGICOS": "Seleccione un Objetivo Estrategico"
+  },
+  "BOTONES": {
+    "GLOBAL": {
+      "GUARDAR": "Save",
+      "ELIMINAR": "Delete",
+      "EDITAR": "Edit",
+      "CREAR": "Create",
+      "BUSCAR": "Search",
+      "NUEVO": "New",
+      "ACTUALIZAR": "Refresh",
+      "CANCELAR": "Cancel",
+      "REGRESAR": "Back",
+      "CONTINUAR": "Continue",
+      "AGREGAR": "Add",
+      "REGISTRAR": "Register",
+      "CONFIRMAR": "Confirmar"
+    }
+  }
+}

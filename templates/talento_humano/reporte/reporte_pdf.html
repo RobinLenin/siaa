@@ -1,0 +1,69 @@
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Asignación de puestos</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<h2>Reporte de Asignación de puestos</h2>
+<p class="derecha">
+
+    Fecha de Impresión: {% now "Y-m-d H:i" %} <br>
+    Total de {{ total }} registros
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>Nro.</th>
+        <th>Cédula</th>
+        <th>Apellidos</th>
+        <th>Nombres</th>
+        <th>Detalle</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for asignacion in asignaciones %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+                {{ asignacion.funcionario.usuario.persona.numero_documento }}
+                {% if asignacion.funcionario.usuario.foto_url %}
+                    <br><img src="{{ asignacion.funcionario.usuario.foto_url }}"
+                         alt="{{ asignacion.funcionario }}">
+                {% endif %}
+            </td>
+            <td>{{ asignacion.funcionario.usuario.persona.get_apellidos }}</td>
+            <td>{{ asignacion.funcionario.usuario.persona.get_nombres }}</td>
+            <td>
+                <strong>UAA: </strong>{{ asignacion.uaa_puesto.uaa }}<br>
+                <strong>Régimen
+                    laboral: </strong>{{ asignacion.uaa_puesto.puesto.grupo_ocupacional.regimen_laboral }}<br>
+                <strong>Grupo ocupacional: </strong>{{ asignacion.uaa_puesto.puesto.grupo_ocupacional }}<br>
+                <strong>Puesto: </strong>{{ asignacion.uaa_puesto.puesto }}<br>
+                <strong>Activo: </strong>{{ asignacion.activo|yesno:'Si, No' }}<br>
+                <strong>Vigente: </strong>{{ asignacion.vigente|yesno:'Si, No' }}<br>
+                <strong>Tipo de relación laboral: </strong>{{ asignacion.tipo_relacion_laboral }}<br>
+                <strong>Desde: </strong>{{ asignacion.fecha_inicio }}<br>
+                {% if asignacion.fecha_fin %}
+                    <strong>Hasta: </strong>{{ asignacion.fecha_fin|default:"" }}<br>
+                {% endif %}
+                {% if asignacion.fecha_termino %}
+                    <strong>Termino: </strong>{{ asignacion.fecha_termino|default:"" }}<br>
+                    <strong>Tipo de termino: </strong>{{ asignacion.tipo_terminacion|default:"" }}<br>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+Generado por {{ generado }}
+
+</body>

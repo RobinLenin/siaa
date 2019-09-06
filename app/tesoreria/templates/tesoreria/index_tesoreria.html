@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Académico curricular
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'tesoreria.CuentaCobrar'|verbose_name_plural|capfirst  }}</h3>
+                </div>
+                <div class="panel-body">
+                    Administración de {{ 'tesoreria.CuentaCobrar'|verbose_name_plural|lower }}
+                </div>
+                <div class="panel-footer">
+                    <a
+                            {% if perms.tesoreria.view_asignatura %}
+                                href="{% url 'tesoreria:cuenta_cobrar.listar' %}"
+                                class="btn btn-primary"
+                            {% else %}
+                                class="btn btn-primary disabled"
+                            {% endif %}>
+                        <i class="fa fa-arrow-circle-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'tesoreria.TasaInteres'|verbose_name_plural|capfirst  }}</h3>
+                </div>
+                <div class="panel-body">
+                    Administración de {{ 'tesoreria.TasaInteres'|verbose_name_plural|lower }}
+                </div>
+                <div class="panel-footer">
+                    <a
+                            {% if perms.academico.view_facultad %}
+                                href="{% url 'tesoreria:tasa_interes.listar' %}"
+                                class="btn btn-primary"
+                            {% else %}
+                                class="btn btn-primary disabled"
+                            {% endif %}>
+                        <i class="fa fa-arrow-circle-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Programa de estudio
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.ProgramaEstudio'|verbose_name }}</header>
+            <div class="tools">
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="header">
+                <div class="text-center">
+                    <h4>{{ programa_estudio.nombre }}
+                        {% if programa_estudio.codigo_institucional and programa_estudio.codigo_senescyt %}
+                            ({{ programa_estudio.codigo_institucional }}-{{ programa_estudio.codigo_senescyt }})
+                        {% endif %}
+                    </h4>
+                </div>
+            </div>
+
+            <div class="form-group form-inline text-left">
+                <span class="col-md-2">Modalidad:</span>
+                <div class="col-md-10">
+                    <h5>{{ programa_estudio.modalidad }}</h5>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'academico.OfertaAcademica'|verbose_name_plural }} </h4>
+                </div>
+                <div class="card-body">
+                <div class="list-group">
+                    {% for oferta_academica in ofertas_academicas %}
+                        <a class="list-group-item"
+                            {% if perms.academico.view_ofertaacademica %}
+                                href="{% url 'academico:oferta_academica_detalle' oferta_academica.id %}"
+                            {% endif %}>
+                            {{ oferta_academica.nombre }}
+                        </a>
+                    {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'academico.Pensum'|verbose_name_plural|capfirst  }}
+                        <button class="btn btn-circle btn-info btn-sm pull-right"
+                                data-toggle="modal" data-target="#modal-pensum-editar"
+                                {% if not perms.academico.add_pensum %} disabled {% endif %}>
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% include 'academico/pensum/fragmento_lista.html' with pensums=programa_estudio.pensums.all %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'academico/autoridad_programa_estudio/modal_editar.html' %}
+    {% include 'academico/programa_estudio/modal_editar.html' %}
+    {% include 'academico/pensum/modal_editar.html' %}
+
+{% endblock contenido %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/academico/autoridad_editar.js' %}"></script>
+    <script src="{% static 'js/academico/programa_estudio_editar.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,102 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <tbody>
+        <tr>
+            <th>{{ persona.tipo_documento|default:"" }}</th>
+            <td>{{ persona.numero_documento|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Nacionalidad</th>
+            <td>{{ persona.nacionalidad|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Primer nombre</th>
+            <td>{{ persona.primer_nombre|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Segundo nombre</th>
+            <td>{{ persona.segundo_nombre|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Primer apellido</th>
+            <td>{{ persona.primer_apellido|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Segundo apellido</th>
+            <td>{{ persona.segundo_apellido|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Fecha de nacimiento</th>
+            <td>{{ persona.fecha_nacimiento|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Edad</th>
+            <td>{{ persona.get_edad|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Sexo</th>
+            <td>{{ persona.sexo|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Tipo de sangre</th>
+            <td>{{ persona.tipo_sangre|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Estado civil</th>
+            <td>{{ persona.estado_civil|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Número de libreta militar</th>
+            <td>{{ persona.numero_libreta_militar|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Discapacidad</th>
+            <td>
+                {% if persona.discapacidad %}
+                <span class="fa fa-check" aria-hidden="true"></span>
+                {% endif %}
+            </td>
+        </tr>
+        {% if persona.discapacidad %}
+        <tr>
+            <th>Tipo de discapacidad</th>
+            <td>{{ persona.tipo_discapacidad|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Grado Discapacidad</th>
+            <td>{{ persona.grado_discapacidad|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Porcentaje de Discapacidad</th>
+            <td>{{ persona.porcentaje_discapacidad|default:"" }}%</td>
+        </tr>
+        <tr>
+            <th>Número de Carnet CONADIS</th>
+            <td>{{ persona.numero_carnet_conadis|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Fecha de registro CONADIS</th>
+            <td>{{ persona.fecha_registro_conadis|default:"" }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Tipo de etnia</th>
+            <td>{{ persona.tipo_etnia|default:"" }}</td>
+        </tr>
+        {% if persona.nacionalidad_indigena %}
+        <tr>
+            <th>Nacionalidad indígena</th>
+            <td>{{ persona.nacionalidad_indigena|default:"" }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Correo electrónico personal</th>
+            <td>{{ persona.correo_electronico|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Correo electrónico personal alternativo</th>
+            <td>{{ persona.correo_electronico_alternativo|default:"" }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

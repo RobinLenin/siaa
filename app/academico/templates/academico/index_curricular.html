@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Académico curricular
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'academico.Asignatura'|verbose_name_plural|capfirst  }}</h3>
+                </div>
+                <div class="panel-body">
+                    Administración de {{ 'academico.Asignatura'|verbose_name_plural|lower }}
+                </div>
+                <div class="panel-footer">
+                    <a
+                            {% if perms.academico.view_asignatura %}
+                                href="{% url 'academico:asignatura_lista' %}"
+                                class="btn btn-primary"
+                            {% else %}
+                                class="btn btn-primary disabled"
+                            {% endif %}>
+                        <i class="fa fa-arrow-circle-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'academico.Facultad'|verbose_name_plural|capfirst  }}</h3>
+                </div>
+                <div class="panel-body">
+                    Administración de {{ 'academico.Facultad'|verbose_name_plural|lower }}
+                </div>
+                <div class="panel-footer">
+                    <a
+                            {% if perms.academico.view_facultad %}
+                                href="{% url 'academico:facultad_lista' %}"
+                                class="btn btn-primary"
+                            {% else %}
+                                class="btn btn-primary disabled"
+                            {% endif %}>
+                        <i class="fa fa-arrow-circle-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'academico.ProgramaEstudio'|verbose_name_plural }}</h3>
+                </div>
+                <div class="panel-body">
+                    Administración de {{ 'academico.ProgramaEstudio'|verbose_name_plural|lower }}
+                </div>
+                <div class="panel-footer">
+                    <a
+                            {% if perms.academico.view_programaestudio %}
+                                href="{% url 'academico:programa_estudio_lista' %}"
+                                class="btn btn-primary"
+                            {% else %}
+                                class="btn btn-primary disabled"
+                            {% endif %}>
+                        <i class="fa fa-arrow-circle-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'academico.PensumGrupo'|verbose_name_plural }}</h3>
+                </div>
+                <div class="panel-body">
+                    Administración de pensums comunes
+                </div>
+                <div class="panel-footer">
+                    <a
+                            {% if perms.academico.view_pensumgrupo %}
+                                href="{% url 'academico:pensum_grupo_lista' %}"
+                                class="btn btn-primary"
+                            {% else %}
+                                class="btn btn-primary disabled"
+                            {% endif %}>
+                        <i class="fa fa-arrow-circle-right"></i> Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

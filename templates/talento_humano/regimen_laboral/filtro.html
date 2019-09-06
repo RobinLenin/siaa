@@ -1,0 +1,130 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Regimen Laboral
+{% endblock %}
+
+{% block estilos %}
+{% load staticfiles %}
+<!-- data tables -->
+<link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+      type="text/css"/>
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:regimen_laboral.index' %}">Régimen Laboral</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">{{ regimen }}
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            Funcionarios Vigentes
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group btn-group-circle">
+                    {% for regimen in regimenes %}
+                    <a class="btn btn-primary" role="button"
+                       href="{% url 'talento_humano:regimen_laboral.filtro' regimen.id %}">
+                        {{ regimen }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+            <form action="{% url 'talento_humano:regimen_laboral.filtro' regimen.id  %}" method="get">
+                {% with total_items=paginator.count numero_items=paginator.per_page filtro=filtro %}
+                {% include 'tabla_encabezado.html' %}
+                {% endwith %}
+            </form>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Cédula</th>
+                                <th>Fotografía</th>
+                                <th>Apellidos</th>
+                                <th>Nombres</th>
+                                <th>Puesto</th>
+                                <th>UAA</th>
+                                <th>Grupo ocupacional</th>
+                                <th>Trabajador</th>
+                                <th>Opciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for asignacion in asignaciones %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'talento_humano:funcionarios.funcionario' asignacion.funcionario.id %}">
+                                        {{ asignacion.funcionario.usuario.persona.numero_documento }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if asignacion.funcionario.usuario.foto_url %}
+                                    <img src="{{ asignacion.funcionario.usuario.foto_url }}"
+                                         alt="{{ asignacion.funcionario }}">
+                                    {% endif %}
+                                </td>
+                                <td>{{ asignacion.funcionario.usuario.persona.get_apellidos }}</td>
+                                <td>{{ asignacion.funcionario.usuario.persona.get_nombres }}</td>
+                                <td>
+                                    {{ asignacion.uaa_puesto.puesto }}
+                                </td>
+                                <td>
+                                    {{ asignacion.uaa_puesto.uaa }}
+                                </td>
+                                <td>
+                                    {{ asignacion.uaa_puesto.puesto.grupo_ocupacional.nombre }}
+                                </td>
+                                <td>
+                                    {{ asignacion.uaa_puesto.puesto.grupo_ocupacional.regimen_laboral }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {% with lista=asignaciones filtro=filtro %}
+            {% include 'tabla_paginacion.html' %}
+            {% endwith %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

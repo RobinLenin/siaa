@@ -1,0 +1,90 @@
+{% extends "weasyprint/pdf_base.html" %}
+
+
+{% block contenido %}
+    <table class="table table-bordered" style="height: 100px;">
+        {% for objetivo_estrategico in plan_estrategico.objetivos_estrategicos.all %}
+            <tr>
+                <th colspan="{{ plan_estrategico.periodos.count|default:1|add:5 }}">OBJETIVO
+                    ESTRATEGICO {{ objetivo_estrategico.codigo }}: {{ objetivo_estrategico.nombre }}</th>
+            </tr>
+            <tr>
+                <th rowspan="2">PROYECTOS
+                <th rowspan="2">RESULTADOS ESPERADOS
+                <th rowspan="2">INDICADOR
+                <th rowspan="2">METAL DEL INDICADOR
+                <th colspan="{{ plan_estrategico.periodos.count|add:0 }}">DESGLOSE DE LA META
+                <th rowspan="2">RESPONSABLES
+            </tr>
+            <tr>
+                {% for periodo in plan_estrategico.periodos.all %}
+                    <th>{{ periodo.nombre }}
+                        {% empty %}
+                    <td>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for objetivo_operativo in objetivo_estrategico.objetivos_operativos.all %}
+                    <td class="align-middle"
+                        rowspan="{{ objetivo_operativo.indicadores.count|default:1 }}">
+                        {{ objetivo_operativo.codigo }} {{ objetivo_operativo }}
+                        {% for resultado in objetivo_operativo.resultados.all %}
+                            {% if resultado.indicadores.count == 0 %}
+                                solo para presentacion, sin o hay indicadores corro un espacio al resultado,
+                                pero lo obligatorio de un resultado es que haya indicadores
+
+                                <td>
+                            {% endif %}
+                            <td class="align-middle"
+                                rowspan="{{ resultado.indicadores.count|default:1 }}">{{ resultado }}</td>
+                            {% for indicador in resultado.indicadores.all %}
+                                <td class="align-middle">{{ indicador.nombre }}</td>
+                                <td>{{ indicador.meta_nombre }}</td>
+                                {% for m in indicador.metas_anuales_srt %}
+                                    <td>{{ m.valor }} {% if m and indicador.porcentaje %}%{% endif %}
+                                        {% empty %}
+                                    <td>
+                                {% endfor %}
+                            {% if forloop.first %}
+                                <td rowspan="{{ resultado.indicadores.count|default:1 }}">
+                                    {% for responsable in resultado.responsables.all %}
+                                        {{ responsable }}
+                                    {% endfor %}
+                                </td>
+                            {% endif %}
+                                </tr>
+                                <tr>
+                                    {% empty %}
+                                    <td>
+                                    <td>
+                                    <td>
+                                        {% for periodo in plan_estrategico.periodos.all %}
+                                            <td>
+                                                {% empty %}
+                                            <td>
+                                        {% endfor %}
+                                </tr>
+                                <tr>
+                            {% endfor %}
+                        {% empty %}
+                        <td>
+                        <td>
+                        <td>
+                        <td>
+                            {% for periodo in plan_estrategico.periodos.all %}
+                                <td>
+                                    {% empty %}
+                                <td>
+                            {% endfor %}
+                        </tr>
+                            <tr>
+                        {% endfor %}
+                        </tr>
+                    <tr>
+
+                {% endfor %}
+                </tr>
+
+        {% endfor %}
+    </table>
+{% endblock %}

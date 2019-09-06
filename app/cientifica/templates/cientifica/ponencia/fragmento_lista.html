@@ -1,0 +1,58 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Código institucional</th>
+            <th>Nombre</th>
+            <th>Fecha de publicación</th>
+            <th>Campo detallado</th>
+            <th>Nombre del evento</th>
+            <th>País</th>
+            <th>Ciudad</th>
+            <th>Filiación</th>
+            <th>Observación</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ponencia in ponencias %}
+            <tr>
+                <td>{{ ponencia.codigo_institucional }}</td>
+                <td>{{ ponencia.nombre }}</td>
+                <td>{{ ponencia.fecha_publicacion }}</td>
+                <td>{{ ponencia.campo_detallado }}</td>
+                <td>{{ ponencia.nombre_evento }}</td>
+                <td>{{ ponencia.pais }}</td>
+                <td>{{ ponencia.ciudad }}</td>
+                <td>
+                    {% if ponencia.filiacion %}
+                        <span class="fa fa-check" aria-hidden="true"></span>
+                    {% else %}
+                        <span class="fa fa-remove" aria-hidden="true"></span>
+                    {% endif %}
+                </td>
+                <td>{{ ponencia.observacion|default:"" }}
+                    {% if ponencia.url %}
+                        <a href="{{ ponencia.url }}" target="_blank" rel="noreferrer nooponer nofollow">Link</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-info"
+                           title="Editar"
+                           href="{% url 'cientifica:ponencia_editar' ponencia.id %}?next={{ request.path }}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a class="btn btn-outline-danger"
+                           title="Eliminar"
+                           onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                           href="{% url 'cientifica:ponencia_eliminar' ponencia.id %}?next={{ request.path }}">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

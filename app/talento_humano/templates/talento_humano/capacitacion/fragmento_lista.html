@@ -1,0 +1,56 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="panel panel-primary">
+        {% include 'info_mensaje.html' with title="Estimado Usuario" text="Por favor ingrese toda la Capacitación que posea desde hace 5 años atrás. Obligatoria al menos una." %}
+        <div class="panel-heading">
+            <h3 class="panel-title">Capacitaciones
+                <a href="{% url 'talento_humano:capacitacion_crear' persona.id %}?next={{request.path}}" class="btn btn-info btn-circle btn-xs pull-right"><i class="fa fa-plus-circle"></i> Nuevo</a>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Evento</th>
+                        <th>Tipo de evento</th>
+                        <th>Auspiciante</th>
+                        <th>Horas</th>
+                        <th>Tipo de certificación</th>
+                        <th>Certificado por</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>País</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for capacitacion in persona.expediente.capacitacion_set.all %}
+                        <tr>
+                            <td>{{ capacitacion.evento }}</td>
+                            <td>{{ capacitacion.tipo_evento }}</td>
+                            <td>{{ capacitacion.auspiciante }}</td>
+                            <td>{{ capacitacion.horas }}</td>
+                            <td>{{ capacitacion.tipo_certificacion }}</td>
+                            <td>{{ capacitacion.certificado_por }}</td>
+                            <td>{{ capacitacion.fecha_inicio }}</td>
+                            <td>{{ capacitacion.fecha_fin }}</td>
+                            <td>{{ capacitacion.pais }}</td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'talento_humano:capacitacion_editar' capacitacion.id %}?next={{request.path}}"
+                                 class="btn btn-outline-info" title="Editar"><i class="fa fa-edit"></i></a>
+                                    <a href="{% url 'talento_humano:capacitacion_eliminar' capacitacion.id %}?next={{request.path}}"
+                                       class="btn btn-outline-danger" title="Eliminar" onclick="return confirm('¿Está seguro de eliminar el registro?');"><i class="fa fa-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

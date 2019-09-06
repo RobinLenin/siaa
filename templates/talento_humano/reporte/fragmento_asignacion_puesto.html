@@ -1,0 +1,102 @@
+{% include 'talento_humano/reporte/fragmento_uaa.html' with uaa=asignacion.uaa_puesto.uaa %}
+{% include 'talento_humano/reporte/fragmento_puesto.html' with puesto=asignacion.uaa_puesto.puesto %}
+<tr>
+    <th colspan="2" class="titulo">Datos de la asignación</th>
+</tr>
+{% if asignacion.activo %}
+    <tr>
+        <th>Activo</th>
+        <td>{{ asignacion.activo|yesno:'Si, No' }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.codigo %}
+    <tr>
+        <th>Codigo</th>
+        <td>{{ asignacion.codigo }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.encargado %}
+    <tr>
+        <th>Encargado</th>
+        <td>{{ asignacion.encargado|yesno:'Si, No' }}</td>
+    </tr>
+{% endif %}
+<tr>
+    <th>Sueldo</th>
+    <td>{{ asignacion.get_sueldo }}</td>
+</tr>
+{% if asignacion.fecha_inicio %}
+    <tr>
+        <th>Fecha de inicio</th>
+        <td>{{ asignacion.fecha_inicio }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.fecha_fin %}
+    <tr>
+        <th>Fecha de fin</th>
+        <td>{{ asignacion.fecha_fin }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.fecha_reconocimiento %}
+    <tr>
+        <th>Fecha de reconocimiento</th>
+        <td>{{ asignacion.fecha_reconocimiento }}</td>
+    </tr>
+{% endif %}
+
+<tr>
+    <th>Ingreso por concurso</th>
+    <td>{{ asignacion.ingreso_concurso|yesno:'Si, No' }}</td>
+</tr>
+{% if asignacion.partida_presupuestaria %}
+    <tr>
+        <th>Partida presupuestaria</th>
+        <td>{{ asignacion.partida_presupuestaria }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.partida_individual %}
+    <tr>
+        <th>Partida individual</th>
+        <td>{{ asignacion.partida_individual }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.partida_individual_th %}
+    <tr>
+        <th>Partida individual TH</th>
+        <td>{{ asignacion.partida_individual_th }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.termino %}
+    <tr>
+        <th>Termino</th>
+        <td>{{ asignacion.termino|yesno:'Si, No' }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.fecha_termino %}
+    <tr>
+        <th>Fecha de termino</th>
+        <td>{{ asignacion.fecha_termino }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.tipo_terminacion %}
+    <tr>
+        <th>Tipo de terminación</th>
+        <td>{{ asignacion.tipo_terminacion }}</td>
+    </tr>
+{% endif %}
+{% if asignacion.tipo_relacion_laboral %}
+    <tr>
+        <th>Tipo de relación laboral</th>
+        <td>{{ asignacion.tipo_relacion_laboral }}</td>
+    </tr>
+{% endif %}
+<tr>
+    <th>Vigente</th>
+    <td>{{ asignacion.vigente|yesno:'Si, No' }}</td>
+</tr>
+{% if asignacion.observacion %}
+    <tr>
+        <th>Observación</th>
+        <td>{{ asignacion.observacion }}</td>
+    </tr>
+{% endif %}

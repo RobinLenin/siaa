@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Funcionarios
+{% endblock %}
+
+{% block estilos %}
+{% load staticfiles %}
+<!-- data tables -->
+<link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+      type="text/css"/>
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a> <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Asignacion de Puestos
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            Administración de asignación de puestos
+            <div id="barraEspera"></div>
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{% url 'talento_humano:asignacion_puestos.lista.verficar_vigemcia' %}"
+                   onclick="return espera()"
+                   class="btn btn-primary">Verficiar vigencia</a>
+            </div>
+        </div>
+
+        <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+            <form action="{% url 'talento_humano:asignacion_puestos.lista.buscar' %}" method="get">
+                {% with total_items=paginator.count numero_items=paginator.per_page filtro=filtro %}
+                {% include 'tabla_encabezado.html' %}
+                {% endwith %}
+            </form>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Funcionario</th>
+                                <th>UAA Padre</th>
+                                <th>Unidad Academica/Administrativa</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Fecha Termino</th>
+                                <th>Puesto</th>
+                                <th>RMU</th>
+                                <th>Tipo de relacion Laboral</th>
+                                <th>Encargado</th>
+                                <th>Vigente</th>
+                                <th>Activo</th>
+                                <th>Meses</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for apuesto in asignacion_puestos %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'talento_humano:asignacion_puestos.funcionario' apuesto.funcionario.id %}">
+                                        {{ apuesto.funcionario }}
+                                    </a>
+                                </td>
+                                <td>{{ apuesto.uaa_puesto.uaa.get_uaa_padre_tipo|default:"" }}</td>
+                                <td>{{ apuesto.uaa_puesto.uaa }}</td>
+                                <td>{{ apuesto.fecha_inicio }}</td>
+                                <td>{{ apuesto.fecha_fin|default:"" }}</td>
+                                <td>{{ apuesto.fecha_termino|default:"" }}</td>
+                                <td>{{ apuesto.puesto }}</td>
+                                <td>{{ apuesto.get_sueldo }}</td>
+                                <td>{{ apuesto.tipo_relacion_laboral }}</td>
+                                <td>{{ apuesto.encargado|yesno:"Si, No" }}</td>
+                                <td>{{ apuesto.vigente|yesno:"Si, No" }}</td>
+                                <td>{{ apuesto.activo|yesno:"Si, No" }}</td>
+                                <td>{{ apuesto.get_meses_laborados }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {% with lista=asignacion_puestos filtro=filtro %}
+            {% include 'tabla_paginacion.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+        var barra = '<progress></progress>'
+        function espera(){
+            $('#barraEspera').html(barra)
+        }
+
+
+
+
+
+</script>
+{% endblock %}

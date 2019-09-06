@@ -1,0 +1,44 @@
+<div class="row">
+	<div class="col-md-2">
+		<label class="label14" for="cbmTipoReporte">Periodo:</label>
+	</div>
+
+	<div class="col-md-4">
+		<mat-form-field class="">
+			<input matInput
+				   #datepickerDesde="ngModel"
+				   placeholder="Fecha Desde {{placeholder_desde}}"
+				   [(ngModel)]="start_dt"
+				   [matDatepicker] ="datepickerDesde"
+				   (dateChange)="changeInputDesde($event)"
+				   required>
+			<!-- <button matSuffix
+[matDatepicker-toggle="datepickerDesde"]
+type="button">
+<			/button> -->
+			<mat-datepicker-toggle matSuffix [for]="datepickerDesde">
+			</mat-datepicker-toggle>
+			<mat-datepicker #datepickerDesde [touchUi]="true"></mat-datepicker>
+		</mat-form-field>
+	</div>
+
+	<div class="col-md-4">
+		<mat-form-field class="">
+			<input matInput
+				   #datepickerHasta="ngModel"
+				   placeholder="Fecha Hasta {{placeholder_hasta}}"
+				   [(ngModel)]="end_dt"
+				   [matDatepicker] ="datepickerHasta"
+				   (dateChange)="changeInputHasta($event)"
+				   required>
+			<!-- <button matSuffix
+[matDatepickerToggle="datepickerHasta"]
+type="button">
+</button> -->
+			<mat-datepicker-toggle matSuffix [for]="datepickerHasta">
+			</mat-datepicker-toggle>
+			<mat-datepicker #datepickerHasta [touchUi]="true"></mat-datepicker>
+		</mat-form-field>
+	</div>
+
+</div>

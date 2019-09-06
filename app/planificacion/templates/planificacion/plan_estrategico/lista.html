@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Planificacion
+{% endblock %}
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Módulo Planificacion</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li class="active">Planificacion y Desarrollo</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Planes Estrategicos</header>
+            <div class="tools">
+
+                <a type="button" class="btn btn-info" data-toggle="modal"
+                        {% if not perms.planificacion.add_plan_estrategico %} disabled {% endif %}
+                   data-target="#modal-plan-estrategico"><i class="fa fa-plus-circle"></i> Nuevo
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center"><h4>
+                    Gestion de Planes Estrategicos Institucionales</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="btn-group">
+                    </div>
+                    {% include 'planificacion/plan_estrategico/fragmento_lista.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %}
+        Modal para Agregar plan  necesita atributo con el nombre: plan_estrategico caso contrario se presenta vacio
+    {% endcomment %}
+    {% include 'planificacion/plan_estrategico/modal_editar.html' %}
+
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/planificacion/plan_estratetico_lista.js' %}"></script>
+    <script src="{% static 'js/planificacion/plan_estrategico_editar.js' %}"></script>
+    <!--csrf token js-->
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+{% endblock javascript %}

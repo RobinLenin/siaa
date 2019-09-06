@@ -1,0 +1,125 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Funcionarios
+{% endblock %}
+
+{% block estilos %}
+{% load staticfiles %}
+<!-- data tables -->
+<link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+      type="text/css"/>
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Puestos
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            Administración de puestos
+        </header>
+        <div class="tools">
+            <a class="btn btn-info" href="{% url 'talento_humano:puestos.puesto.agregar' %}">
+                <i class="fa fa-plus-circle "></i> Nuevo
+            </a>
+            <!--
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+            -->
+        </div>
+    </div>
+    <div class="card-body">
+        <!--
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-primary pull-left"
+                   href="{% url 'talento_humano:puestos.puesto.agregar' %}">
+                    Agregar
+                </a>
+            </div>
+        </div>
+        -->
+
+        <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+            <form action="{% url 'talento_humano:puestos.busqueda' %}" method="get">
+                {% with total_items=paginator.count numero_items=paginator.per_page filtro=filtro %}
+                {% include 'tabla_encabezado.html' %}
+                {% endwith %}
+            </form>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Denominación</th>
+                                <th>Descripción</th>
+                                <th>Es responsable</th>
+                                <th>Grupo Ocupacional</th>
+                                <th>Régimen laboral</th>
+                                <th>Rol de puesto</th>
+                                <th>Ámbito de ejecución</th>
+                                <th>Opciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for puesto in puestos %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'talento_humano:puestos.puesto' puesto.id %}">
+                                        {{ puesto.denominacion }}
+                                    </a>
+                                </td>
+                                <td>{{ puesto.descripcion }}</td>
+                                <td>{{ puesto.responsable_uaa|yesno:"Si, No" }}</td>
+                                <td>{{ puesto.grupo_ocupacional }}</td>
+                                <td>{{ puesto.grupo_ocupacional.regimen_laboral }}</td>
+                                <td>{{ puesto.rol_puesto }}</td>
+                                <td>{{ puesto.ambito_ejecucion }}</td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="{% url 'talento_humano:puestos.puesto' puesto.id %}">ver</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'talento_humano:puestos.puesto.editar' puesto.id %}">editar</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {% with lista=puestos filtro=filtro %}
+            {% include 'tabla_paginacion.html' %}
+            {% endwith %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

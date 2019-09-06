@@ -1,0 +1,39 @@
+{% load guardian_tags %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Nivel</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for nivel in niveles %}
+            {% get_obj_perms request.user for nivel as "nivel_perms" %}
+            <tr>
+                <td>
+                    <a {% if perms.academico.view_nivel or 'view_nivel' in nivel_perms %}
+                        href="{% url 'academico:nivel_detalle' nivel.id %}"
+                    {% endif %}>
+                        {{ nivel.pensum.get_organizacion_display }} {{ nivel.numero }}
+                    </a>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a title="Eliminar Nivel"
+                                {% if perms.academico.delete_nivel  or 'delete_nivel' in nivel_perms  %}
+                           class="btn btn-outline-danger"
+                           onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                           href="{% url 'academico:nivel_eliminar' nivel.id %}"
+                                {% else %}
+                           class="btn btn-outline-danger disabled"
+                                {% endif %}>
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

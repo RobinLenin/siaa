@@ -1,0 +1,104 @@
+{% for formacion in formaciones %}
+
+    <tr>
+        <th colspan="2" class="titulo">Formacion Académica</th>
+    </tr>
+    {% if formacion.titulo_obtenido %}
+        <tr>
+            <th>Título obtenido</th>
+            <td>{{ formacion.titulo_obtenido }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.area_conocimiento %}
+        <tr>
+            <th>Área de conocimiento</th>
+            <td>{{ formacion.area_conocimiento }}</td>
+        </tr>
+    {% endif %}
+
+
+    {% if formacion.campo_detallado %}
+        <tr>
+            <th>Campo detallado</th>
+            <td>{{ formacion.campo_detallado }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.clasificacion %}
+        <tr>
+            <th>Clasificación</th>
+            <td>{{ formacion.clasificacion }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.egresado %}
+        <tr>
+            <th>Egresadp</th>
+            <td>{{ formacion.egresado|yesno:'Si, No' }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.fecha_grado %}
+        <tr>
+            <th>Fecha de grado</th>
+            <td>{{ formacion.fecha_grado }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.fecha_registro %}
+        <tr>
+            <th>Fecha de registro</th>
+            <td>{{ formacion.fecha_registro }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.institucion_educativa %}
+        <tr>
+            <th>Institución educativa</th>
+            <td>{{ formacion.institucion_educativa }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.institucion_educativo_otro %}
+        <tr>
+            <th>Institución educativa otro</th>
+            <td>{{ formacion.institucion_educativo_otro }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.nivel_instruccion %}
+        <tr>
+            <th>Nivel de instrucción</th>
+            <td>{{ formacion.nivel_instruccion }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.numero_registro %}
+        <tr>
+            <th>Número de registro</th>
+            <td>{{ formacion.numero_registro }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.observacion %}
+        <tr>
+            <th>Observación</th>
+            <td>{{ formacion.observacion }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.pais %}
+        <tr>
+            <th>País</th>
+            <td>{{ formacion.pais }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.periodos_aprobados %}
+        <tr>
+            <th>Periodos aprobados</th>
+            <td>{{ formacion.periodos_aprobados }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.tipo_periodo_estudio %}
+        <tr>
+            <th>Periodo de estudio</th>
+            <td>{{ formacion.tipo_periodo_estudio }}</td>
+        </tr>
+    {% endif %}
+    {% if formacion.tipo_titulo %}
+        <tr>
+            <th>Tipo de título</th>
+            <td>{{ formacion.tipo_titulo }}</td>
+        </tr>
+    {% endif %}
+{% endfor %}

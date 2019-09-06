@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Sección Funcionarios
+{% endblock %}
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Funcionario</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a class="parent-item" href="{% url 'index' %}">Inicio</a> <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Funcionario</li>
+            </ol>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block contenido %}
+    {% if usuario.es_funcionario %}
+        <div class="row">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Detalle</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <th>Servidor</th>
+                                <td>
+                                    {{ usuario.funcionario }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Puesto</th>
+                                <td>
+                                    {{ usuario.funcionario.get_asignacion_puesto_vigente.uaa_puesto.puesto }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Unidad Académica/Administrativa</th>
+
+                                <td>
+                                    {{ usuario.funcionario.get_asignacion_puesto_vigente.uaa_puesto.uaa }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Fecha de inicio</th>
+                                <td>
+                                    {{ usuario.funcionario.get_asignacion_puesto_vigente.fecha_inicio }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Tipo de relación laboral</th>
+                                <td>
+                                    {{ usuario.funcionario.get_asignacion_puesto_vigente.tipo_relacion_laboral }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Horas de dedicación</th>
+                                <td>
+                                    {{ usuario.funcionario.get_asignacion_puesto_vigente.puesto.horas_dedicacion }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Grupo ocupacional</th>
+                                <td>
+                                    {{ usuario.funcionario.get_asignacion_puesto_vigente.puesto.grupo_ocupacional }}
+                                </td>
+                            </tr>
+                            {% if  usuario.funcionario.get_asignacion_puesto_vigente.fecha_fin %}
+                                <tr>
+                                    <th>Fecha de Fin</th>
+                                    <td>
+                                        {{ usuario.funcionario.get_asignacion_puesto_vigente.fecha_fin }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <a href="{% url 'talento_humano:vacacion_lista' %}" class="btn btn-primary">
+                        Vacación
+                    </a>
+                    <a href="{% url 'talento_humano:ausentismos_lista' %}" class="btn btn-primary">
+                        Permisos/Licencias
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

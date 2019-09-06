@@ -1,0 +1,106 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Período académico
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    {% load guardian_tags %}
+    {% get_obj_perms request.user for periodo_academico as "periodoacadeico_perms" %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.PeriodoAcademico'|verbose_name }}</header>
+            <div class="tools">
+                <button class="btn btn-info"
+                        data-toggle="modal"
+                        data-target="#modal-periodo-academico-editar"
+                        {% if not perms.academico.change_periodoacademico and not 'change_periodoacademico' in periodo_academico_perms %}
+                        disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </button>
+                <a
+                        {% if perms.academico.delete_periodoacademico or 'delete_periodoacademico' in periodo_academico_perms %}
+                            class="btn btn-danger"
+                            href="{% url 'academico:periodo_academico_eliminar' periodo_academico.id %}"
+                            onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                        {% else %}
+                            class="btn btn-danger disabled"
+                        {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="header">
+                <div class="text-center">
+                    <h4>{{ periodo_academico.nombre }}</h4>
+                </div>
+            </div>
+            <div class="card-body ">
+                <div class="form-group form-inline text-left">
+                    <span class="col-md-2">Nombre:</span>
+                    <div class="col-md-10">
+                        <h5>{{ periodo_academico.nombre }}</h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-inline text-left">
+                            <span class="col-md-4">Asistencia mínima:</span>
+                            <div class="col-md-8">
+                                <h5>{{ periodo_academico.asistencia_minima_aprobar }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-inline text-left">
+                            <span class="col-md-4">Nota mínima:</span>
+                            <div class="col-md-8">
+                                <h5>{{ periodo_academico.nota_minima_aprobar }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-inline text-left">
+                            <span class="col-md-4">Período lectivo:</span>
+                            <div class="col-md-8">
+                                <h5>{{ periodo_academico.periodo_lectivo.nombre }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'academico.OfertaAcademica'|verbose_name_plural }}
+                        <button class="btn btn-circle btn-info btn-sm pull-right"
+                                data-toggle="modal" data-target="#modal-oferta-academica-editar"
+                                {% if not perms.academico.add_ofertaacademica %} disabled {% endif %}>
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% include 'academico/oferta_academica/fragmento_lista.html' with ofertas_academicas=periodo_academico.ofertas_academicas.all %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'academico/periodo_academico/modal_editar.html' %}
+    {% include 'academico/oferta_academica/modal_editar.html' %}
+
+{% endblock contenido %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/academico/oferta_academica_editar.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Seleccionar puesto
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:funcionarios.index' %}">Funcionarios</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:funcionarios.funcionario'  funcionario.id %}">
+                    {{ funcionario }}</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Agregar asignación</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            Asignar puesto {{ funcionario.usuario.persona.get_nombres_completos }}
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Detalle puesto</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-bordered table-hover">
+
+                            <tbody>
+                            <tr>
+                                <th>Unidad Académico Administrativa</th>
+                                <td>{{ uaa_puesto.uaa }}</td>
+                            </tr>
+                            <tr>
+                                <th>Puesto</th>
+                                <td>{{ uaa_puesto.puesto }}</td>
+                            </tr>
+                            <tr>
+                                <th>Grupo ocupacional</th>
+                                <td>{{ uaa_puesto.puesto.grupo_ocupacional.nombre }}</td>
+                            </tr>
+                            <tr>
+                                <th>Régimen Laboral</th>
+                                <td>{{ uaa_puesto.puesto.grupo_ocupacional.regimen_laboral }}</td>
+                            </tr>
+                            <tr>
+                                <th>Remuneración</th>
+                                <td>{{ uaa_puesto.puesto.grupo_ocupacional.rmu }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Detalle asignación</h3>
+                    </div>
+                    <form action="" method="post" class="form-horizontal">
+                        {% csrf_token %}
+                        <div class="panel-body">
+                            <table class="table table-hover">
+                                <tbody>
+                                {{ form.as_table }}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer">
+                            <input type='submit' class='btn btn-primary btn-sm' value='Agregar'/>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+        $(function () {
+            $.datepicker.regional['es'] = {
+                minDate: -3650,
+                maxDate: 1000
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+
+
+</script>
+{% endblock %}

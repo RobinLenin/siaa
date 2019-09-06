@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Validar Usuario
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Validacion de usuario: {{ usuario.nombre_de_usuario }}</header>
+        </div>
+        <div class="card-body ">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tbody>
+                    {% if usuario.foto_url %}
+                        <tr>
+                            <th>Fotografía</th>
+                            <td>
+                                <img src="{{ usuario.foto_url }}" alt="{{ usuario.persona }}">
+                            </td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <th>{{ usuario.persona.tipo_documento }}</th>
+                        <td>{{ usuario.persona.numero_documento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombres completos</th>
+                        <td>{{ usuario.persona.get_nombres_completos }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de nacimiento</th>
+                        <td>{{ usuario.persona.fecha_nacimiento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Correo institucional</th>
+                        <td>
+                            {% if usuario.google %}
+                                <span class="text-success"><i
+                                        class="fa fa-check"></i> {{ usuario.correo_electronico_institucional }}</span>
+                            {% else %}
+                                <span class="text-danger"><i
+                                        class="fa fa-remove"></i> {{ usuario.correo_electronico_institucional }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if usuario.es_estudiante %}
+                        <tr>
+                            <th>Es Estudiante</th>
+                            <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                        </tr>
+                    {% endif %}
+                    {% if usuario.es_funcionario %}
+                        <tr>
+                            <th>Es funcionario</th>
+                            <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                        </tr>
+                        {% if usuario.funcionario.es_administrativo %}
+                            <tr>
+                                <th>Funcionario administrativo</th>
+                                <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                            </tr>
+                        {% endif %}
+                        {% if usuario.funcionario.es_docente %}
+                            <tr>
+                                <th>Docentevo</th>
+                                <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                            </tr>
+                        {% endif %}
+                        {% if usuario.funcionario.es_trabajado %}
+                            <tr>
+                                <th>Trabajador</th>
+                                <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                            </tr>
+                        {% endif %}
+                        {% for asignacion_de_puesto in usuario.funcionario.asignaciondepuesto_set.all %}
+                            {% if asignacion_de_puesto.vigente %}
+                                <tr>
+                                    <th>Puesto</th>
+                                    <td>
+                                        {{ asignacion_de_puesto.uaa_puesto.uaa }} <br>
+                                        {{ asignacion_de_puesto.uaa_puesto.puesto }} <br>
+                                        {{ asignacion_de_puesto.uaa_puesto.puesto.grupo_ocupacional }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+
+                    {% endif %}
+                    {% if usuario.ldap %}
+                        <tr>
+                            <th>LDAP</th>
+                            <td><span class="fa fa-check" aria-hidden="true"></span></td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+
+                <h3>Cambiar correo electrónico institucional</h3>
+                <form action="" method="post">
+                    <table class="table table-hover">
+                        {% csrf_token %}
+                        {{ usuario_validar_form.as_table }}
+                    </table>
+                    <div class="text-center">
+                        <button type='submit' class='btn btn-primary m-r-20'>
+                            <i class="fa fa-save"></i> Guardar
+                        </button>
+                        <a class='btn btn-default' href="{{ request.META.HTTP_REFERER }}">
+                            <i class="fa fa-ban"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}

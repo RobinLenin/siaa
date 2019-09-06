@@ -1,0 +1,120 @@
+<div class="modal fade" id="modal-cuenta_cobrar-guardar">
+    <form action="{% url 'tesoreria:cuenta_cobrar.guardar' %}" method="POST" role="form" id="formCuentaCobrar">
+        {% csrf_token %}
+        <input type="hidden" id="id" name="id" value="{{ CuentaCobrar.id }}"/>
+        <input type="hidden" name="next" value="{{ request.path }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'tesoreria.CuentaCobrar'|verbose_name|capfirst  }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="concepto">Concepto:</label>
+                            <input type="text"
+                                   class="form-control letras_man_min"
+                                   placeholder="Concepto.."
+                                   id="concepto"
+                                   name="concepto"
+                                   value="{{ cuenta_cobrar.concepto }}"
+                                   minlength="3"
+                                   maxlength="255"
+                                   required>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="cliente">Cliente:</label>
+                                <select id="cliente" name="cliente" class="form-control" required>
+                                    <option value="" selected="selected">-- Seleccione --</option>
+                                    {% for item in CHOICE_TIPO %}
+                                        <option value="{{ item.0 }}"
+                                                {% if asignatura.tipo == item.0 %}selected{% endif %}>
+                                            {{ item.1 }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% now "Y-m-d" as ahora %}
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="fecha_emision">Fecha de emisión:</label>
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Fecha de emisión.."
+                                       name="fecha_emision"
+                                       id="fecha_emision"
+                                       value="{{ cuenta_cobrar.fecha_emision|date:"Y-m-d"|default:ahora }}"
+                                       required
+                                       menora="#fecha_vencimiento"
+                                       data-msg-menora="Debe ser menor a la fecha de vencimiento">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="fecha_vencimiento">Fecha de vencimiento:</label>
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Fecha de vencimiento.."
+                                       name="fecha_vencimiento"
+                                       id="fecha_vencimiento"
+                                       value="{{ cuenta_cobrar.fecha_vencimiento|date:"Y-m-d"|default:ahora }}"
+                                       required
+                                       mayora="#fecha_emision"
+                                       data-msg-menora="Debe ser menor a la fecha de emision">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="monto">Monto:</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="monto"
+                                   name="monto"
+                                   value="{{ cuenta_cobrar.monto }}"
+                                   minlength="0"
+                                   maxlength="10"
+                                   required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="saldo">Saldo:</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="saldo"
+                                   name="saldo"
+                                   value="{{ cuenta_cobrar.saldo }}"
+                                   minlength="0"
+                                   maxlength="10"
+                                   required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="numero_titulo">N° Título:</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="numero_titulo"
+                                   name="saldo"
+                                   value="{{ cuenta_cobrar.numero_titulo }}"
+                                   minlength="0"
+                                   maxlength="10"
+                                   required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="titulo">Título:</label>
+                            <input type="file"
+                                   class="form-control"
+                                   id="titulo"
+                                   name="titulo"
+                                   value="{{ cuenta_cobrar.titulo }}"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button id="enviar" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

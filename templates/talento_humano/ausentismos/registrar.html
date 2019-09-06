@@ -1,0 +1,280 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Vacaciones Funcionarios
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de Talento Humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento Humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:ausentismos.index' %}">Ausentismos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a class="parent-item" href="{% url 'talento_humano:ausentismos.funcionario' funcionario.id %}">
+                    {{ funcionario }}</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">{{ ausentismo.nombre }}
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div onload="permiso()">
+</div>
+
+<div class="card card-box">
+    <div class="card-head">
+        <header>
+            Registrar Ausentismo
+        </header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>Funcionario</th>
+                            <td>{{ funcionario }}</td>
+                        </tr>
+                        <tr>
+                            <th>Puesto</th>
+                            <td>
+                                {% if funcionario.get_asignacion_puesto_vigente %}
+                                     {{ funcionario.get_asignacion_puesto_vigente.uaa_puesto }}
+                                {% else %}
+                                    No tiene asignado un puesto vigente
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Ausentismo</th>
+                            <td>{{ ausentismo.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tipo</th>
+                            <td>{{ ausentismo.tipo_ausentismo }}</td>
+                        </tr>
+                        <tr>
+                            <th>Con remuneracion</th>
+                            <td>
+                                {% if ausentismo.con_remuneracion %}
+                                <span class="fa fa-check" aria-hidden="true"></span>
+                                {% else %}
+                                <span class="fa fa-remove" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Descuento al sueldo</th>
+                            <td>
+                                {% if ausentismo.descuento_sueldo %}
+                                <span class="fa fa-check" aria-hidden="true"></span>
+                                {% else %}
+                                <span class="fa fa-remove" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Descripción</th>
+                            <td>{{ ausentismo.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Imputable a vacaciones</th>
+                            <td>
+                                {% if ausentismo.imputable_vacaciones %}
+                                <span class="fa fa-check" aria-hidden="true"></span>
+                                {% else %}
+                                <span class="fa fa-remove" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if ausentismo.imputable_vacaciones %}
+                        <tr>
+                            <th>Dias pendientes de vacaciones</th>
+                            <td>
+                                {{ funcionario.get_dias_vacacion }}
+                            </td>
+
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Limite de tiempo</th>
+                            <td>
+                                {% if ausentismo.limite_tiempo %}
+                                <span class="fa fa-check" aria-hidden="true"></span>
+                                {% else %}
+                                <span class="fa fa-remove" aria-hidden="true"></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if ausentismo.limite_anios %}
+                        <tr>
+                            <th>Tiempo máximo años</th>
+                            <td>{{ ausentismo.limite_anios }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if ausentismo.limite_meses %}
+                        <tr>
+                            <th>Tiempo máximo meses</th>
+                            <td>{{ ausentismo.limite_meses }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if ausentismo.limite_dias %}
+                        <tr>
+                            <th>Tiempo máximo días</th>
+                            <td>{{ ausentismo.limite_dias }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if ausentismo.limite_horas %}
+                        <tr>
+                            <th>Tiempo máximo horas</th>
+                            <td>{{ ausentismo.limite_horas }}</td>
+                        </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type='submit' class='btn btn-primary' value='Agregar'/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function permiso() {
+            var opciones = document.getElementById("id_tipo_permiso");
+            document.getElementById("id_dias").value=1;
+            document.getElementById("id_horas").value=0;
+            document.getElementById("id_minutos").value=0;
+            $( "#id_fecha_inicio" ).datepicker({dateFormat:"yy-mm-dd"}).datepicker("setDate",new Date());
+            $( "#id_fecha_fin" ).datepicker({dateFormat:"yy-mm-dd"}).datepicker("setDate",new Date());
+
+             /*CASO PERMISOS POR DIAS*/
+            if(opciones.selectedIndex==1 ||opciones.selectedIndex==0){
+                document.getElementById("id_tipo_permiso").selectedIndex = "1";
+                document.getElementById("id_fecha_fin").style.visibility="visible";
+                document.getElementById("id_dias").style.visibility="visible";
+                document.getElementById("id_dias").readOnly=true;
+                document.getElementById("id_horas").style.visibility="hidden";
+                document.getElementById("id_minutos").style.visibility="hidden";
+                $("label[for='id_dias']").show();
+                $("label[for='id_horas']").hide();
+                $("label[for='id_minutos']").hide();
+
+            }
+            /*CASO PERMISOS POR HORAS*/
+             if(opciones.selectedIndex==2){
+                document.getElementById("id_fecha_fin").style.visibility="hidden";
+                document.getElementById("id_dias").style.visibility="hidden";
+                document.getElementById("id_horas").style.visibility="visible";
+                document.getElementById("id_minutos").style.visibility="visible";
+                $("label[for='id_fecha_fin']").hide();
+                 $("label[for='id_dias']").hide();
+                $("label[for='id_horas']").show();
+                $("label[for='id_minutos']").show();
+                document.getElementById("id_dias").value=0;
+            }
+            /*CASO PERMISOS POR DIAS Y HORAS*/
+             if(opciones.selectedIndex==3){
+                document.getElementById("id_fecha_fin").style.visibility="visible";
+                document.getElementById("id_dias").style.visibility="visible";
+                document.getElementById("id_dias").readOnly=false;
+                document.getElementById("id_horas").style.visibility="visible";
+                document.getElementById("id_minutos").style.visibility="visible";
+                $("label[for='id_fecha_fin']").show();
+                $("label[for='id_dias']").show();
+                $("label[for='id_horas']").show();
+                $("label[for='id_minutos']").show();
+            }
+        }
+
+        function calculaDias() {
+        var opciones = document.getElementById("id_tipo_permiso");
+              if(opciones.selectedIndex==2){
+                 document.getElementById("id_fecha_fin").value=document.getElementById("id_fecha_inicio").value;
+                 document.getElementById("id_dias").value=0;
+
+              }else{
+                  var fechaInicio=document.getElementById("id_fecha_inicio").value;
+                 var fechaFin=document.getElementById("id_fecha_fin").value;
+                 var dias=daysBetween(fechaInicio,fechaFin)+1;
+                 document.getElementById("id_dias").value=dias;
+              }
+
+
+
+
+        }
+
+        function daysBetween(date1, date2){
+               if (date1.indexOf("-") != -1) { date1 = date1.split("-"); } else if (date1.indexOf("/") != -1) { date1 = date1.split("/"); } else { return 0; }
+               if (date2.indexOf("-") != -1) { date2 = date2.split("-"); } else if (date2.indexOf("/") != -1) { date2 = date2.split("/"); } else { return 0; }
+               if (parseInt(date1[0], 10) >= 1000) {
+                   var sDate = new Date(date1[0]+"/"+date1[1]+"/"+date1[2]);
+               } else if (parseInt(date1[2], 10) >= 1000) {
+                   var sDate = new Date(date1[2]+"/"+date1[0]+"/"+date1[1]);
+               } else {
+                   return 0;
+               }
+               if (parseInt(date2[0], 10) >= 1000) {
+                   var eDate = new Date(date2[0]+"/"+date2[1]+"/"+date2[2]);
+               } else if (parseInt(date2[2], 10) >= 1000) {
+                   var eDate = new Date(date2[2]+"/"+date2[0]+"/"+date2[1]);
+               } else {
+                   return 0;
+               }
+               var one_day = 1000*60*60*24;
+               var daysApart = Math.abs(Math.ceil((sDate.getTime()-eDate.getTime())/one_day));
+               return daysApart;
+        }
+
+
+
+        $(function () {
+            $.datepicker.regional['es'] = {
+                minDate: "{{ planificacion.fecha_desde|date:'Y-m-d' }}",
+                maxDate: "{{ planificacion.fecha_hasta|date:'Y-m-d'  }}"
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+            permiso();
+        });
+
+
+
+
+
+
+</script>
+{% endblock %}
+

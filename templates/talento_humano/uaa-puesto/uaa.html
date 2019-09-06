@@ -1,0 +1,8 @@
+<a href="{% url 'talento_humano:uaa-puesto.ver_uaa' uaa.id %}">{{ uaa }}</a>
+<ul>
+    {% for ua in uaa.serie.all %}
+        <li>
+            {% include 'talento_humano/uaa-puesto/uaa.html' with uaa=ua %}
+        </li>
+    {% endfor %}
+</ul>

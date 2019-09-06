@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Organico estructural
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>
+                {% if uaa.id %}
+                    Datos de la UAA {{ uaa }}
+                {% else %}
+                    Agregar UAA para {{ uaa_padre }}
+                {% endif %}
+            </header>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <form action="{% url 'organico:uaa_guardar' %}"
+                          class="form-horizontal auto-validate"
+                          method="POST">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                {% csrf_token %}
+                                <tbody>
+                                <input type="hidden" name="id" value="{{ uaa.id }}"/>
+                                {{ uaa_form }}
+                                </tbody>
+                            </table>
+                            <div class="text-center">
+                                <button type='submit' class='btn btn-primary m-r-20'>
+                                    <i class="fa fa-save"></i> Guardar
+                                </button>
+                                <a class='btn btn-default' href="{{ request.META.HTTP_REFERER }}">
+                                    <i class="fa fa-ban"></i> Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

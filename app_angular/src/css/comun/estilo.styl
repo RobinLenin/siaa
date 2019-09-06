@@ -1,0 +1,132 @@
+@import "./componentes/md_checkbox"
+@import "./componentes/md_grid_list"
+@import "./componentes/md_icon"
+@import "./componentes/form"
+@import "./componentes/tabla"
+@import "./componentes/sidenav"
+
+
+/*
+* Estilo del icono de Cargando
+* Página
+*/
+.loader
+    & > progress
+      bottom 0
+      left 0
+      margin auto
+      position absolute
+      right 0
+      top 0
+      width 50%
+	  -webkit-appearance none
+
+/*
+* Estilo de colores para los
+* diversos componentes
+*/
+.md-primary[color]
+  background color_primary !important
+
+.md-accent[color]
+  background color_accent  !important
+
+.md-warn[color]
+  background color_warn !important
+
+.mat-primary[color]
+    background color_primary !important
+
+.mat-warn[color]
+    background color_warn !important
+
+.mat-accent[color]
+    background color_accent !important
+
+/*
+* Estilo para posicionar y desplazar un
+* componente
+*/
+.centrar
+  left 50%
+  position absolute
+  top 50%
+  transform translate3d(-50%, -50%, 0)
+
+.centrar-horizontal
+  width: 97%;
+  margin: 1% auto;
+
+.width-20
+  position fixed
+  width 20%
+
+.full-ancho
+    width 100%
+
+.fill-remaining-space
+  flex 1 1 auto
+
+.flex
+  flex 1
+
+.padding-top
+  padding-top: 15px
+
+.tabla-lista
+  &  tr
+    border-bottom 1px menu_colorHoverHijo solid
+    padding-bottom 0.5em
+    padding-top 0.5em
+    &:hover
+      background-color menu_colorSeleccionHijo
+  & td, th
+    padding .7em
+
+/*
+* Estilo para alinear
+* un componente
+*/
+.aling-left
+  text-align left
+
+.aling-rigth
+  text-align right
+
+.aling-center
+  text-align center
+
+.aling-vertical
+  vertical-align middle
+
+/*
+* Diferentes estilos comunes para los
+* componentes
+*/
+.cursor
+  cursor pointer
+
+.span
+  display block;
+  height 60px;
+  width 60px;
+  line-height 60px;
+  -moz-border-radius 30px; /* or 50% */
+  border-radius 30px; /* or 50% */
+  background-color black;
+  color white;
+  text-align center;
+  font-size 2em;
+
+a.toolbar-link
+  color darken(white, 5)
+  &:hover
+    color lighten(white, 20)
+    text-decoration none
+
+/*
+* Estilo para la selección de idioma
+*/
+md-toolbar-row select
+    background color_warn
+

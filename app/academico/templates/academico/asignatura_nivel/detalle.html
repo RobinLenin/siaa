@@ -1,0 +1,176 @@
+{% extends 'layout.html' %}
+
+{% block estilos %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/academico/componente.css' %}">
+{% endblock estilos %}
+
+
+{% block titulo %}
+    Asignatura
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' %}
+{% endblock %}
+
+{% block contenido %}
+    {% load guardian_tags %}
+    {% get_obj_perms request.user for asignatura_nivel as "asignaturanivel_perms" %}
+    {% get_obj_perms request.user for asignatura_nivel.nivel as "nivel_perms" %}
+    {% get_obj_perms request.user for asignatura_nivel.nivel.pensum as "pensum_perms" %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.AsignaturaNivel'|verbose_name|capfirst  }}</header>
+            <div class="tools">
+                <button class="btn btn-info"
+                        data-toggle="modal"
+                        data-target="#modal-asignatura-nivel-editar"
+                        {% if not perms.academico.change_asignaturanivel and not 'change_asignaturanivel' in asignaturanivel_perms %}
+                            disabled
+                        {% endif %}>
+                    <i class="fa fa-edit"></i>Editar
+                </button>
+                <a {% if perms.academico.delete_asignaturanivel or 'delete_asignaturanivel' in asignaturanivel_perms  %}
+                    class="btn btn-danger"
+                    href="{% url 'academico:asignatura_nivel_eliminar' asignatura_nivel.id %}"
+                    onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                {% else %}
+                    class="btn btn-danger disabled"
+                {% endif %}>
+                    <i class="fa fa-trash-o"></i>Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="header">
+                <div class="text-center">
+                    <h4>{{ asignatura_nivel.asignatura.nombre }}</h4>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Asignatura:</span>
+                <div class="col-sm-10">
+                    <h5>
+                        <a {% if perms.academico.view_asignatura %}
+                            href="{% url 'academico:asignatura_detalle' asignatura_nivel.asignatura.id %}"
+                        {% endif %}>
+                            {{ asignatura_nivel.asignatura.nombre }}
+                            {% if asignatura_nivel.asignatura.codigo_institucional and asignatura_nivel.asignatura.codigo_unesco %}
+                                ({{ asignatura_nivel.asignatura.codigo_institucional }}-
+                                {{ asignatura_nivel.asignatura.codigo_unesco }})
+                            {% endif %}
+                        </a>
+                    </h5>
+                </div>
+                <span class="col-sm-2">Pensum:</span>
+                <div class="col-sm-10">
+                    <h5>
+                        <a {% if perms.academico.view_pensum or 'view_pensum' in pensum_perms %}
+                            href="{% url 'academico:pensum_detalle' asignatura_nivel.nivel.pensum.id %}"
+                        {% endif %}>
+                            {{ asignatura_nivel.nivel.pensum.nombre }}
+                        </a>
+                    </h5>
+                </div>
+                <span class="col-sm-2">Nivel:</span>
+                <div class="col-sm-10">
+                    <h5>
+                        <a {% if perms.academico.view_nivel or 'view_nivel' in nivel_perms %}
+                            href="{% url 'academico:nivel_detalle' asignatura_nivel.nivel.id %}"
+                        {% endif %}>
+                            {{ asignatura_nivel.nivel.numero }} {{ asignatura_nivel.nivel.pensum.get_organizacion_display }}
+                        </a>
+                    </h5>
+                </div>
+                <span class="col-sm-2">Campo de Formación:</span>
+                <div class="col-sm-10">
+                    <h5>{{ asignatura_nivel.campo_formacion.nombre }}</h5>
+                </div>
+                <span class="col-sm-2">Duración:</span>
+                <div class="col-sm-4">
+
+                    <h5><span id="asignatura-nivel-duracion"> {{ asignatura_nivel.duracion }} </span>
+                        {{ asignatura_nivel.nivel.pensum.get_duracion_unidad_display }}{{ asignatura_nivel.duracion|pluralize }}
+                    </h5>
+                </div>
+                <span class="col-sm-2">Tipo:</span>
+                <div class="col-sm-4">
+                    <h5>{{ asignatura_nivel.tipo }}</h5>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Componentes</h4>
+                </div>
+                <div class="card-body padre-item"
+                     data-guardar-url="{% url 'academico:asignatura_componente_guardar' %}">
+                    {% include 'academico/asignatura_componente/fragmento_lista.html' with asignaturas_componente=asignatura_nivel.asignaturas_componente.all %}
+                </div>
+            </div>
+            {% if prerrequisitos_values %}
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Prerrequisitos
+                            <button class="btn btn-circle btn-info btn-sm pull-right"
+                                    data-toggle="modal" data-target="#modal-prerrequisito-editar"
+                                    {% if not perms.academico.change_asignaturanivel and not 'change_asignaturanivel' in asignaturanivel_perms %} disabled {% endif %}>
+                                <i class="fa fa-plus-circle"></i> Editar
+                            </button>
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for asignatura in asignatura_nivel.prerrequisitos.all %}
+                                {% get_obj_perms request.user for asignatura as "asignatura_perms" %}
+                                <a class="list-group-item list-group-item-action"
+                                        {% if perms.academico.view_asignaturanivel  or "view_asignaturanivel" in asignatura_perms %}
+                                   href="{% url 'academico:asignatura_nivel_detalle' asignatura.id %}"
+                                        {% endif %}>
+                                    {{ asignatura.asignatura.nombre }} - Nivel {{ asignatura.nivel.numero }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if correquisitos_values %}
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Correquisitos
+                            <button class="btn btn-circle btn-info btn-sm pull-right"
+                                    data-toggle="modal" data-target="#modal-correquisito-editar"
+                                    {% if not perms.academico.change_asignaturanivel  and not 'change_asignaturanivel' in asignaturanivel_perms %} disabled {% endif %}>
+                                <i class="fa fa-plus-circle"></i> Editar
+                            </button>
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for asignatura in asignatura_nivel.correquisitos.all %}
+                                {% get_obj_perms request.user for asignatura as "asignatura_perms" %}
+                                <a class="list-group-item list-group-item-action"
+                                        {% if perms.academico.view_asignaturanivel or "view_asignaturanivel" in asignatura_perms %}
+                                   href="{% url 'academico:asignatura_nivel_detalle' asignatura.id %}"
+                                        {% endif %}>
+                                    {{ asignatura.asignatura.nombre }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'academico/asignatura_nivel/modal_editar.html' with nivel=asignatura_nivel.nivel %}
+    {% include 'academico/asignatura_nivel/modal_editar_prerrequisito.html' %}
+    {% include 'academico/asignatura_nivel/modal_editar_correquisito.html' %}
+
+{% endblock contenido %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/academico/componente.js' %}?v=1.0"></script>
+{% endblock javascript %}

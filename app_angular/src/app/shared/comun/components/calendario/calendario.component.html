@@ -1,0 +1,18 @@
+<mat-form-field class="full-ancho">
+    <input matInput
+           placeholder="{{placeholder}}"
+           [required]="required"
+           [disabled]="disabled"
+           [(ngModel)]="fecha"
+           [matDatepicker]="datepicker"
+           (ngModelChange)="changeInputFecha()">
+    <mat-datepicker-toggle matSuffix
+                           [for]="datepicker"
+                           [disabled]="disabled"></mat-datepicker-toggle>
+    <!--     <button matSuffix
+[matDatepickerToggle="datepicker"]
+[disabled]="disabled"
+type="button">
+</button> -->
+    <mat-datepicker #datepicker [touchUi]="true"></mat-datepicker>
+</mat-form-field>

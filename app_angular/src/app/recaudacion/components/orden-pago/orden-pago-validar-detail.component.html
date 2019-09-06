@@ -1,0 +1,168 @@
+<mat-card class="container">
+    <mat-card-title>
+        <div fxLayout='row'>
+            <div fxFlex="40%">
+                Validación del Pago
+            </div>
+            <span class="flex"></span>
+            <button mat-raised-button
+                    color="warn"
+                    (click)="regresar()">Regresar
+            </button>
+        </div>
+    </mat-card-title>
+</mat-card>
+
+<mat-card *ngIf="ordenPago" class="container">
+    <mat-card-content>
+        <div fxLayout='row'>
+            <div fxFlex="80%" fxLayoutAlign="center">
+                <h5>{{ ordenPago.persona.nombres_completos }} ({{ ordenPago.persona.numero_documento }})
+                </h5>
+            </div>
+            <div *ngIf="ordenPago.estado=='PENDIENTE'" fxFlex="20%" fxLayoutAlign="end">
+                <button mat-raised-button
+                        color="primary"
+                        type="button"
+                        (click)="validar()">Validar
+                </button>
+            </div>
+        </div>
+    </mat-card-content>
+
+    <mat-card-content>
+        <mat-card>
+            <mat-card-content>
+                <mat-card-subtitle>Orden de pago ({{ordenPago.id}})
+                </mat-card-subtitle>
+                <div fxLayout='row'>
+                    <div fxFlex="20%">
+                        <b>Estado: </b>
+                    </div>
+                    <div fxFlex="80%">
+                        <span>{{ ordenPago.estado }}</span>
+                    </div>
+                </div>
+                <div fxLayout='row'>
+                    <div fxFlex="20%">
+                        <b>Email: </b>
+                    </div>
+                    <div fxFlex="80%">
+                        {{ ordenPago.persona.correo_electronico }}
+                    </div>
+                </div>
+                <div fxLayout='row'>
+                    <div fxFlex="20%">
+                        <b>Fecha de emisión: </b>
+                    </div>
+                    <div fxFlex="80%">
+                        {{ ordenPago.fecha_emision |date: 'yyyy-MM-dd HH:mm:ss a' }}
+                    </div>
+                </div>
+                <div fxLayout='row' *ngIf="ordenPago.fecha_vencimiento">
+                    <div fxFlex="20%">
+                        <b>Fecha de vencimiento: </b>
+                    </div>
+                    <div fxFlex="80%">
+                        {{ ordenPago.fecha_vencimiento |date: 'yyyy-MM-dd HH:mm:ss a' }}
+                    </div>
+                </div>
+                <div fxLayout='row'>
+                    <div fxFlex="20%">
+                        <b>Descripción:</b>
+                    </div>
+                    <div fxFlex="80%">
+                        {{ ordenPago.descripcion }}
+                    </div>
+                </div>
+                <div fxLayout='row' *ngIf="ordenPago.referencia">
+                    <div fxFlex="20%">
+                        <b>Referencia:</b>
+                    </div>
+                    <div fxFlex="80%">
+                        {{ ordenPago.referencia }}
+                    </div>
+                </div>
+                <div fxLayout='row' *ngIf="ordenPago.referencia_externa">
+                    <div fxFlex="20%">
+                        <b>Referencia externa:</b>
+                    </div>
+                    <div fxFlex="80%">
+                        {{ ordenPago.referencia_externa }}
+                    </div>
+                </div>
+                <div fxLayout='row'>
+                    <div fxFlex="50%" *ngIf="ordenPago.pago">
+                        <mat-list>
+                            <h4 mat-subheader>Pago</h4>
+                            <mat-list-item>
+                                <mat-icon mat-list-avatar>money_off</mat-icon>
+                                <h4 mat-line>{{ ordenPago.pago.forma_pago }}</h4>
+                                <p mat-line>Total: {{ ordenPago.pago.total }}</p>
+                                <p mat-line>Fecha pago: {{ ordenPago.pago.fecha_pago |date: 'yyyy-MM-dd HH:mm:ss a' }}</p>
+                                <p mat-line *ngIf="ordenPago.pago.fecha_reverso">Fecha reverso: {{ ordenPago.pago.fecha_reverso |date: 'yyyy-MM-dd HH:mm:ss a' }}</p>
+                                <p mat-line>Referencia: {{ ordenPago.pago.referencia }}
+                                    <span *ngIf="ordenPago.pago.depositante">({{ ordenPago.pago.depositante }})</span>
+                                </p>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                    <div fxFlex="50%">
+                        <mat-list>
+                            <h4 mat-subheader>Dirección</h4>
+                            <mat-list-item>
+                                <mat-icon mat-list-avatar>store_mall_directory</mat-icon>
+                                <h4 mat-line>{{ ordenPago.direccion.tipo_direccion.nombre }}</h4>
+                                <p mat-line> {{ ordenPago.direccion.calle_principal }} {{ ordenPago.direccion.calle_secundaria }}</p>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                </div>
+                <div fxLayout='row'>
+                    <div fxFlex="100%">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th><i aria-hidden="true"></i>Secuencial</th>
+                                    <th><i aria-hidden="true"></i>Estado</th>
+                                    <th><i aria-hidden="true"></i>Cantidad</th>
+                                    <th><i aria-hidden="true"></i>Código</th>
+                                    <th><i aria-hidden="true"></i>Descripción</th>
+                                    <th><i aria-hidden="true"></i>Valor Unitario</th>
+                                    <th><i aria-hidden="true"></i>Tipo Impuesto</th>
+                                    <th><i aria-hidden="true"></i>Impuesto</th>
+                                    <th><i aria-hidden="true"></i>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let item of ordenPago.ordenes_pago_detalle">
+                                    <td>{{ item.secuencial ? item.secuencial : 'sn' }}</td>
+                                    <td>{{ item.estado }}</td>
+                                    <td>{{ item.cantidad }}</td>
+                                    <td>{{ item.producto_codigo }}</td>
+                                    <td>{{ item.producto_descripcion }}
+                                        <br *ngIf="item.observacion">
+                                        {{ item.observacion }}
+                                    </td>
+                                    <td>{{ item.precio }}</td>
+                                    <td>{{ item.tipo_impuesto.nombre }}</td>
+                                    <td>{{ item.impuesto }}</td>
+                                    <td class="text-right">{{ item.total| number : '1.2-2' }}</td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr class="text-right">
+                                    <td colspan="8"><strong>VALOR TOTAL</strong></td>
+                                    <td>{{ordenPago.total|currency:'USD':true }}</td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-card-content>
+</mat-card>
+

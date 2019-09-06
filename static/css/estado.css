@@ -1,0 +1,59 @@
+.estado.breadcrumb {
+  list-style: none;
+  overflow: hidden;
+  font: 14px Sans-Serif;
+}
+.estado.breadcrumb li {
+  float: left;
+}
+.estado.breadcrumb li a {
+  color: white;
+  text-decoration: none;
+  padding: .5em .5em .5em 1.5em;
+  background: hsl(219, 12%, 56%);
+  position: relative;
+  display: block;
+  float: left;
+}
+
+.estado.breadcrumb li:not(:last-child) a::after {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 1em solid transparent; /* Go big on the size, and let overflow hide */
+  border-bottom: 1em solid transparent;
+  border-left: 1em solid hsl(219, 12%, 56%,1);
+  position: absolute;
+  top: 50%;
+  margin-top: -1em;
+  left: 100%;
+  z-index: 2;
+}
+.estado.breadcrumb li a::before {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 1em solid transparent;
+  border-bottom: 1em solid transparent;
+  border-left: 1.1em solid white;
+  position: absolute;
+  top: 50%;
+  margin-top: -1em;
+  left: 100%;
+  z-index: 1;
+}
+
+
+.estado.breadcrumb li a.active {
+  background: hsl(143, 5%, 29%);
+}
+.estado.breadcrumb li a.active:after {
+  border-left-color: hsl(143, 5%, 29%); !important;
+}
+
+.estado.breadcrumb li:last-of-type>* {
+    padding-right: 1.6em;
+    border-radius: 0 .25em .25em 0;
+}

@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Sección Reportes
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Reportes Sniese</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <span class="parent-item">Sniese</span> <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Reportes</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Reporte</header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="{% url 'talento_humano:generar.reportes.sniese' %}">
+            <div class="form-group">
+                <label for="tipo_reporte">Tipo:</label>
+                <select class="form-control" id="tipo_reporte" name="tipo_reporte">
+                    {% for tipo_rep in tipos_reporte %}
+                    <option value="{{ tipo_rep }}"
+                            {% if tipo_rep == seleccionado %} selected="selected" {% endif %}>
+                        {{ tipo_rep }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+
+                <label for="fecha_inicio">Fecha Inicio:</label>
+                <div id="fecha_inicio" class="form-inline">
+                    <div class="form-group">
+                        <label>Desde:</label>
+                        <input type="date" class="form-control" name="fecha_desde" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Hasta:</label>
+                        <input type="date" class="form-control" name="fecha_hasta" required>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="form-group tipo_relacion"
+                 {% if seleccionado == 'funcionarios' %}
+                 style="display: none;"
+                 {% endif %}>
+                <label for="tipo_relacion">Tipo relacion laboral:</label>
+                <div class="" id="tipo_relacion">
+                    {% for tipo_rel in tipo_relacion_laboral %}
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="{{ tipo_rel.id }}" name="tipo_rel">{{ tipo_rel }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Generar</button>
+        </form>
+    </div>
+    <div class="panel-footer"></div>
+</div>
+<div class="page-header">
+
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/th_reporte_sniese.js' %}"></script>
+{% endblock javascript %}

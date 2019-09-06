@@ -1,0 +1,10 @@
+<mat-form-field class="full-ancho ">
+  <mat-select placeholder="{{ placeholder }}"
+              [(ngModel)]="selectedValue"
+              [disabled]="isDisabled"
+              [required]="isRequired"
+              (ngModelChange)="selectItem($event)">
+    <mat-option [value]=""> [Seleccione]</mat-option>
+    <mat-option *ngFor="let item  of items" [value]="item.id">{{ item.nombre }}</mat-option>
+  </mat-select>
+</mat-form-field>

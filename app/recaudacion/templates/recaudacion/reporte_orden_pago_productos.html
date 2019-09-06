@@ -1,0 +1,64 @@
+{% extends "weasyprint/pdf_base.html" %}
+{% block contenido %}
+    {% if detalle_emitidas %}
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th colspan="4" class="text-center">RECAUDACIÓN POR PRODUCTO - EMITIDAS</th>
+            </tr>
+            <tr>
+                <th>Producto</th>
+                <th></th>
+                <th class="text-right">Cantidad</th>
+                <th class="text-right">Valor total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for detalle in detalle_emitidas %}
+                <tr>
+                    <td>{{ detalle.producto_codigo }}</td>
+                    <td>{{ detalle.producto_descripcion }}</td>
+                    <td class="text-right">{{ detalle.cantidad }}</td>
+                    <td class="text-right">{{ detalle.total }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if detalle_anuladas %}
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th colspan="4" class="text-center">RECAUDACIÓN POR PRODUCTO - ANULADAS</th>
+            </tr>
+            <tr>
+                <th>Producto</th>
+                <th></th>
+                <th class="text-right">Cantidad</th>
+                <th class="text-right">Valor total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for detalle in detalle_anuladas %}
+                <tr>
+                    <td>{{ detalle.producto_codigo }}</td>
+                    <td>{{ detalle.producto_descripcion }}</td>
+                    <td class="text-right">{{ detalle.cantidad }}</td>
+                    <td class="text-right">{{ detalle.total }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <table class="ancho-100">
+        <tr class="text-center">
+            <td>
+                <br><br><br>
+                ------------------------------------------<br>
+                {{ usuario.persona.numero_documento }}-{{ usuario.persona.get_nombres_completos }}
+            </td>
+        </tr>
+    </table>
+{% endblock %}

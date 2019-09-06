@@ -1,0 +1,75 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Código institucional</th>
+            <th>Nombre</th>
+            <th>Fecha de publicación</th>
+            <th>Campo detallado</th>
+            <th>ISSN</th>
+            <th>Base de datos</th>
+            <th>Nombre de revista</th>
+            <th>Aceptado</th>
+            <th>Publicado</th>
+            <th>Filiación</th>
+            <th>Observación</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for articulo in articulos_revista %}
+            <tr>
+                <td>{{ articulo.codigo_institucional }}</td>
+                <td>{{ articulo.nombre }}</td>
+                <td>{{ articulo.fecha_publicacion }}</td>
+                <td>{{ articulo.campo_detallado }}</td>
+                <td>{{ articulo.issn }}</td>
+                <td>{{ articulo.base_datos_indexada }}</td>
+                <td>{{ articulo.nombre_revista }}</td>
+                <td>
+                    {% if articulo.aceptado %}
+                        <span class="fa fa-check" aria-hidden="true"></span>
+                    {% else %}
+                        <span class="fa fa-remove" aria-hidden="true"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if articulo.publicado %}
+                        <span class="fa fa-check" aria-hidden="true"></span>
+                    {% else %}
+                        <span class="fa fa-remove" aria-hidden="true"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if articulo.filiacion %}
+                        <span class="fa fa-check" aria-hidden="true"></span>
+                    {% else %}
+                        <span class="fa fa-remove" aria-hidden="true"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ articulo.observacion|default:"" }}
+                    {% if articulo.url %}
+                        <a href="{{ articulo.url }}" target="_blank" rel="noreferrer nooponer nofollow">Link</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-info"
+                           title="Editar"
+                           href="{% url 'cientifica:articulo_revista_editar' articulo.id %}?next={{request.path}}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a class="btn btn-outline-danger"
+                           title="Eliminar"
+                           onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                           href="{% url 'cientifica:articulo_revista_eliminar' articulo.id %}?next={{request.path}}">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

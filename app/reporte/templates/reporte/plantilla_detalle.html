@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta name="description" content="Responsive Admin Template"/>
+    <meta name="author" content="SmartUniversity"/>
+    <title>SIAAF - {% block titulo %}{% endblock %}</title>
+
+    {% load staticfiles %}
+    <link rel="SHORTCUT ICON" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link href="{% static 'css/reporte/spectrum.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/reporte/reportbro.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/reporte/styles.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/reporte/plantilla_lista.css' %}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+    <div id="container">
+        <header>
+            <nav>
+                <i class="fa fa-home"></i>
+                <a class="btn btn-primary" href="{% url 'reporte:plantilla_lista' %}">
+                    Lista de Reportes
+                </a>
+                <a class="btn btn-default">
+                    Reporte: {{ plantilla.descripcion }}
+                </a>
+            </nav>
+        </header>
+        <div id="content">
+            <div id="reportbro"></div>
+        </div>
+    </div>
+
+
+    <!-- report bro -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/reporte/ext/autosize.js' %}"></script>
+    <script src="{% static 'js/reporte/ext/JsBarcode.all.min.js' %}"></script>
+    <script src="{% static 'js/reporte/ext/spectrum.js' %}"></script>
+    <script src="{% static 'js/reporte/reportbro.js' %}"></script>
+
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <!-- bootstrap -->
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <script>
+        function guardar() {
+            var report = $('#reportbro').reportBro('getReport');
+            report.id = {{ plantilla.id }}
+                $.ajax({
+                    url: "/reporte/plantilla/guardar-definicion",
+                    data: JSON.stringify(report),
+                    type: "POST",
+                    contentType: "application/json",
+                    success: function (data) {
+                        $('#reportbro').reportBro('setModified', false);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('No se pudo guardar le reporte');
+                    }
+                });
+        }
+
+        $(document).ready(function () {
+            var rb = $('#reportbro').reportBro({
+                reportServerUrl: "{% url 'reporte:plantilla_vista_previa' %}",
+                saveCallback: guardar
+            });
+            var report = {{definicion}};
+            if (report) {
+                rb.load(report);
+            }
+        });
+    </script>
+</body>

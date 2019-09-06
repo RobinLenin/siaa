@@ -1,0 +1,10 @@
+<mat-toolbar>
+    <button *ngIf="mostrarBoton && habilitarBoton"
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="clickBoton()">{{ etiquetaBoton }}</button>
+    <span class="fill-remaining-space"></span>
+    <span *ngIf="mostrarTotal">{{ etiquetaTotal }} ({{ visualizadosTotal }} de {{ itemsTotal }})</span>
+</mat-toolbar>
+

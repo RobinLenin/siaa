@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+
+{% block estilos %}
+    {{ block.super }}
+    {% load staticfiles %}
+    <link href="{% static 'css/reporte/plantilla_lista.css' %}" rel="stylesheet" type="text/css"/>
+
+{% endblock %}
+
+{% block titulo %}
+    Gestion de Reportes
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>
+                Administración de Reportes
+            </header>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-6">
+                    <div class="btn-group">
+                        <button class="btn btn-info agregar_fila">
+                            Nuevo <i class="fa fa-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#cargarPlantilla">
+                            Cargar<i class="fa fa-upload"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-scrollable">
+                <table id="lista_plantillas" class="display" style="width: 100%" data-item_link="">
+                    <thead>
+                    <tr>
+                        <th>Descripcion</th>
+                        <th>Codigo</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for plantilla in plantillas %}
+                        <tr class="plantilla_detalle" data-plantilla_id="{{ plantilla.id }}">
+                            <td class="plantilla_descripcion">
+                                <a class="item-link"
+                                   href="{% url 'reporte:plantilla_detalle' plantilla.id %}">
+                                    {{ plantilla.descripcion }}
+                                </a>
+                            </td>
+                            <td class="plantilla_codigo">{{ plantilla.codigo }}</td>
+                            <td>
+                                <button class="btn btn-success btn-xs guardar" data-toggle="tooltip">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                                <button class="btn btn-primary btn-xs editar" data-toggle="tooltip">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="btn btn-warning btn-xs duplicar" data-toggle="tooltip">
+                                    <i class="fa fa-copy"></i>
+                                </button>
+                                <button class="btn btn-danger btn-xs eliminar" data-toggle="tooltip">
+                                    <i class="fa fa-trash-o "></i>
+                                </button>
+                                <a class="btn btn-default btn-xs exportar" data-toggle="tooltip"
+                                   href="{% url 'reporte:plantilla_exportar' plantilla.id %}">
+                                    <i class="fa fa-download "></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="cargarPlantilla" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" enctype="multipart/form-data" action="{% url 'reporte:plantilla_importar' %}">
+                    <div class="modal-header">
+                        {% csrf_token %}
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Seleccione el archivo</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="file" name="archivo" accept=".siaaf, .txt">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Cargar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/reporte/plantilla_lista.js' %}"></script>
+
+{% endblock %}
+

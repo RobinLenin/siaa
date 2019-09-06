@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+
+
+{% block titulo %}
+    Planificacion
+{% endblock %}
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Módulo Planificacion</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li class="active">Planificacion y Desarrollo</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="container-fluid text-center">
+        <h2>Planificación y Desarrollo</h2>
+        <h4></h4>
+        <br>
+        <div class="row">
+            <div class="col-sm-4">
+                <span class="fa fa-tasks"></span>
+                <a href="{% url 'planificacion:plan_estrategico_lista' %}">
+                    <h4>PEDI</h4>
+                    <p>Planes estratégicos de desarrollo Institucional</p>
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <span class="fa fa-calendar"></span>
+                <a data-toggle="tab" href="#tab-poa">
+                    <h4>POA</h4>
+                    <p>Planes Operativos Anuales</p>
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <span class="fa fa-dashboard"></span>
+                <a data-toggle="tab" href="#tab-pac">
+                    <h4>PAC</h4>
+                    <p></p>
+                </a>
+            </div>
+        </div>
+        <br><br>
+    </div>
+
+
+    <div class="tab-content">
+        <div id="tab-pedi" class="tab-pane fade">
+            <h3>PEDI</h3>
+            <p>Planes Estrategicos</p>
+        </div>
+        <div id="tab-poa" class="tab-pane fade">
+            h3>POA</h3>
+            <p>Planes Operativos</p>
+        </div>
+        <div id="tab-pac" class="tab-pane fade">
+            <h3>PAC</h3>
+            <p>Plan Anual de Contrataciones</p>
+        </div>
+    </div>
+
+{% endblock %}

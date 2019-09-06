@@ -1,0 +1,13 @@
+.card-programas-list{
+
+}
+div#pensums-list{
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+table#tabla-pensums {
+  display:block;
+  height : 300px;
+  overflow-y : scroll;
+}

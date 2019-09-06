@@ -1,0 +1,73 @@
+<toolbar-acciones [titulo]="'Ordenes de pago sin Puntos de Emisión UAA (pendientes)'"
+                  [botones]="botones"
+                  [resultado]="ordenesPago.length"
+                  [activarEditar]="activarEditar"
+                  [activarBuscador]="activarBuscador"
+                  (notificadorInit)="initPagos()"
+                  (notificadorEditar)="validarPago()"
+                  (notificadorBuscador)="changeBuscador()">
+</toolbar-acciones>
+
+<paginador-buscar *ngIf="activarBuscador"
+                  [servicioUrl]="servicio"
+                  [itemsPorPagina]="itemsPorPagina"
+                  [filtro]="filtro"
+                  (notificadorFiltro)="filtro=$event"
+                  (notificadorDatos)="ordenesPago=$event">
+</paginador-buscar>
+
+<mat-card>
+    <mat-card-content>
+        <div class="example-container mat-elevation-z8">
+            <mat-table [dataSource]="ordenesPago">
+
+                <ng-container matColumnDef="accion">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <mat-checkbox id="{{element.id}}"
+                                      [checked]="esItemSeleccionado(element)"
+                                      (change)="selectedItem(element)"></mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+
+				<ng-container matColumnDef="cliente">
+					<mat-header-cell *matHeaderCellDef> Cliente </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.persona.nombres_completos}} </mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="identificacion">
+					<mat-header-cell *matHeaderCellDef> Nro. Identificación </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.persona.numero_documento}} </mat-cell>
+				</ng-container>
+
+                <ng-container matColumnDef="fecha_emision">
+					<mat-header-cell *matHeaderCellDef> Fecha de Emisión </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.fecha_emision | date: 'yyyy-MM-dd HH:mm:ss'}} </mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="estado">
+					<mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{ element.estado }} </mat-cell>
+				</ng-container>
+
+                <ng-container matColumnDef="descripcion">
+					<mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{ element.descripcion }} </mat-cell>
+				</ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<paginador-scroll [servicioUrl]="servicio"
+                  [itemsPorPagina]="itemsPorPagina"
+                  [filtro]="filtro"
+                  [pagina]="pagina"
+                  [datos]="ordenesPago"
+                  (notificadorPagina)="pagina=$event"
+                  (notificadorDatos)="ordenesPago=$event">
+</paginador-scroll>
+

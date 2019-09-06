@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Ausentismos
+{% endblock %}
+
+{% block migas %}
+<div class="page-bar">
+    <div class="page-title-breadcrumb">
+        <div class=" pull-left">
+            <div class="page-title">Módulo de talento humano</div>
+        </div>
+        <ol class="breadcrumb page-breadcrumb pull-right">
+            <li>
+                <i class="fa fa-home"></i>
+                <a class="parent-item" href="{% url 'talento_humano:index' %}">Talento humano</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Reporte</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-box">
+    <div class="card-head">
+        <header>Reportes de Ausentismos</header>
+        <div class="tools">
+            <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
+            <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+            <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+        </div>
+    </div>
+    <div class="card-body ">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="desde">Desde*:</label>
+                    <input class="datepicker form-control" id="desde" name="desde" type="text" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="hasta">Hasta*:</label>
+                    <input class="datepicker form-control" id="hasta" name="hasta" type="text" required>
+                </div>
+                <div class="col-md-12">
+                    <label for="hasta">Tipo de ausentismos:</label>
+                    <select class="form-control" name="ausentismos" size="15" multiple>
+                        <option value="0">Todos</option>
+                        {% for ausentismo in ausentismos %}
+                        <option value="{{ ausentismo.id }}">{{ ausentismo.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-12 text-center">
+                    <div class="btn-group">
+                        <button type="button" formtarget="_blank" name="imprimir_sencillo_pdf"
+                                class='btn btn-primary'>
+                            Exportar
+                        </button>
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <button type="submit" formtarget="_blank" name="imprimir_pdf" class="btn btn-link">
+                                    <i class="fa fa-file-pdf-o text-danger"></i> PDF
+                                </button>
+                            </li>
+                            <li>
+                                <button type="submit" formtarget="_blank" name="imprimir_excel"
+                                        class="btn btn-link">
+                                    <i class="fa fa-file-excel-o text-success"></i> Excel
+                                </button>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+        $(function () {
+            $.datepicker.regional['es'] = {
+                minDate: -3650,
+                maxDate: 1000
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+            $("#desde").datepicker({dateFormat:"yy-mm-dd"}).datepicker("setDate",new Date());
+            $("#hasta").datepicker({dateFormat:"yy-mm-dd"}).datepicker("setDate",new Date());
+        });
+
+
+
+
+
+</script>
+{% endblock %}

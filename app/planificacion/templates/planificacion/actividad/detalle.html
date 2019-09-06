@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    PEDI
+{% endblock %}
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Modulo de Planificacion</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{% url 'planificacion:plan_operativo_lista' %}" class="parent-item">Planes
+                        Operativos</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:plan_operativo_detalle' actividad.meta_anual.get_plan_operativo.id %}"
+                       class="parent-item">Plan Operativo {{ actividad.meta_anual.get_plan_operativo.periodo }}</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:meta_anual_detalle' actividad.meta_anual.id %}"
+                       class="parent-item">Meta Anual</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Actividad {{ actividad.orden }}</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Actividad</header>
+            <div class="tools">
+                <a title="Editar Actividad" class="btn btn-info" data-toggle="modal" data-target="#modal-actividad"
+                        {% if not perms.planificacion.change_actividad %} disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </a>
+                <a title="Eliminar Actividad" class="btn btn-danger"
+                   href="{% url 'planificacion:actividad_eliminar' actividad.id %}"
+                        {% if not perms.planificacion.delete_actividad %} disabled {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+
+        </div>
+        <div class="card-body ">
+            {%  include 'estado.html' with estado=actividad.estado estados=actividad.ESTADOS %}
+            {% include 'planificacion/actividad/fragmento_detalle.html' %}
+        </div>
+    </div>
+    {% include 'planificacion/actividad/modal_editar.html' with meta_anual=actividad.meta_anual %}
+    {% include 'planificacion/verificacion/modal_editar.html' %}
+    {% include 'planificacion/presupuesto/modal_editar.html' with presupuesto=actividad.presupuesto form=presupuesto_form%}
+
+
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/planificacion/actividad_detalle.js' %}"></script>
+    <script src="{% static 'js/planificacion/actividad_editar.js' %}"></script>
+{% endblock javascript %}

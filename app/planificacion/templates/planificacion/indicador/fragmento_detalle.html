@@ -1,0 +1,60 @@
+<div class="panel panel-default">
+    <div class="panel-heading row">
+        <div class="text-center col-sm-10">
+            <h4>{{ indicador.nombre }}</h4>
+        </div>
+        <div class="btn-group-vertical col-sm-2">
+
+        </div>
+    </div>
+    <div class="panel-body">
+
+
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Resultado esperado:</span>
+            <div class="col-sm-10">
+                <h5 align="justify">{{ indicador.resultado.nombre }}</h5>
+            </div>
+        </div>
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Meta:</span>
+            <div class="col-sm-10">
+                <h5 align="justify">{{ indicador.meta_nombre }}</h5>
+            </div>
+        </div>
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Medible:</span>
+            <div class="col-sm-4">
+                <h5 >{{ indicador.medible|yesno:"Si,No"}}</h5>
+            </div>
+            {% if indicador.medible %}
+                <span class="col-sm-2">Porcentaje:</span>
+                <div class="col-sm-4">
+                    <h5 >{{ indicador.porcentaje|yesno:"Si,No" }}</h5>
+                </div>
+                <span class="col-sm-2">Meta esperada:</span>
+                <div class="col-sm-4">
+                    <h5 >{{ indicador.meta_valor }}{% if indicador.porcentaje %} %{% endif %}</h5>
+                </div>
+            {% endif %}
+            <span class="col-sm-2">Presupuesto:</span>
+            <div class="col-sm-4">
+                <h5 >{{ indicador.presupuesto }}</h5>
+            </div>
+        </div>
+        <hr/>
+         <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Desglose de la Meta:
+                <button class="btn btn-info pull-right btn-circle btn-xs" data-toggle="modal"
+                        data-target="#modal-meta">
+                    <i class="fa fa-plus-circle"></i>Nuevo
+                </button>
+                    </h5>
+            </div>
+            <div class="card-body">
+                {% include 'planificacion/meta_anual/fragmento_lista.html' with metas_anuales=indicador.metas_anuales.all %}
+            </div>
+        </div>
+    </div>
+</div>

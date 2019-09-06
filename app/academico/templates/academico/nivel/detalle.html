@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Nivel del pensum
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' %}
+{% endblock %}
+
+{% block contenido %}
+    {% load guardian_tags %}
+    {% get_obj_perms request.user for nivel as "nivel_perms" %}
+    {% get_obj_perms request.user for nivel.pensum as "pensum_perms" %}
+    {% get_obj_perms request.user for nivel.pensum.programa_estudio as "programaestudio_perms" %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>{{ 'academico.Nivel'|verbose_name|capfirst  }}</header>
+            <div class="tools">
+                <button class="btn btn-info"
+                        data-toggle="modal"
+                        data-target="#modal-nivel-editar"
+                        {% if not perms.academico.change_nivel and not 'change_nivel' in nivel_perms %} disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </button>
+                <a
+                        {% if perms.academico.delete_nivel or 'delete_nivel' in nivel_perms %}
+                            class="btn btn-danger"
+                            onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                            h href="{% url 'academico:nivel_eliminar' nivel.id %}"
+                        {% else %}
+                            class="btn btn-outline-danger disabled"
+                        {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="panel panel-default">
+                <div class="panel-heading row">
+                    <div class="text-center col-sm-8">
+                        <h4> {{ nivel.pensum.get_organizacion_display }} {{ nivel.numero }}</h4>
+                    </div>
+                    <div class="btn-group-vertical col-sm-4">
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group form-inline text-left">
+                        <span class="col-sm-2">Programa de estudio:</span>
+                        <div class="col-sm-10">
+                            <h5>
+                                <a {% if perms.academico.view_programaestudio or 'view_programaestudio' in programaestudio_perms %}
+                                    href="{% url 'academico:programa_estudio_detalle' nivel.pensum.programa_estudio.id %}"
+                                {% endif %}>{{ nivel.pensum.programa_estudio.nombre }}</a>
+                            </h5>
+                        </div>
+                        <span class="col-sm-2">Pensum:</span>
+                        <div class="col-sm-10">
+                            <h5>
+                                <a {% if perms.academico.view_pensum or 'view_pensum' in pensum_perms %}
+                                    href="{% url 'academico:pensum_detalle' nivel.pensum.id %}"
+                                {% endif %}>{{ nivel.pensum.nombre }}</a>
+                            </h5>
+                        </div>
+                        <span class="col-sm-2">Organización curricular:</span>
+                        <div class="col-sm-10">
+                            <h5>{{ nivel.organizacion_curricular | default:"" }}</h5>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'academico.AsignaturaNivel'|verbose_name_plural }}
+                        <button class="btn btn-circle btn-info btn-sm pull-right"
+                                data-toggle="modal" data-target="#modal-asignatura-nivel-editar"
+                                {% if not perms.academico.add_asignaturanivel and not 'add_asignaturanivel' in nivel_perms %} disabled {% endif %}>
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% include 'academico/asignatura_nivel/fragmento_lista.html' with asignaturas_nivel=nivel.asignaturas.all %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% include 'academico/nivel/modal_editar.html' with pensum=nivel.pensum %}
+    {% include 'academico/asignatura_nivel/modal_editar.html' %}
+{% endblock contenido %}

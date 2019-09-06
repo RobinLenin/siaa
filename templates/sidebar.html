@@ -1,0 +1,30 @@
+<div class="sidebar-container">
+	<div class="sidemenu-container navbar-collapse collapse fixed-menu">
+		<div id="remove-scroll" class="left-sidemenu">
+			<ul class="sidemenu  page-header-fixed slimscroll-style" data-keep-expanded="false" data-auto-scroll="true"
+			 data-slide-speed="200" style="padding-top: 20px">
+				<li class="sidebar-toggler-wrapper hide">
+					<div class="sidebar-toggler">
+						<span></span>
+					</div>
+				</li>
+				<li class="nav-item">
+					<a href="/" class="nav-link nav-toggle"> <i class="material-icons">event</i>
+						<span class="title">Inicio</span>
+					</a>
+				</li>
+				{% if user.is_admin %}
+				<li class="nav-item">
+					<a href="{% url 'admin:index' %}" class="nav-link nav-toggle"> <i class="fa fa-th-large"></i>
+						<span class="title">Administración</span>
+					</a>
+				</li>
+				{% endif %}
+                {% for funcionalidad in request.user.funcionalidades_siaaf %}
+                    {% include 'funcionalidad.html' %}
+                {% endfor %}
+
+			</ul>
+		</div>
+	</div>
+</div>

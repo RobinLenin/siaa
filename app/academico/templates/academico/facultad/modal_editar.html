@@ -1,0 +1,51 @@
+<div class="modal fade" id="modal-facultad-editar">
+    <form action="{% url 'academico:facultad_guardar' %}" method="POST" role="form" class="auto-validate">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ facultad.id }}">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'academico.Facultad'|verbose_name|capfirst  }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text"
+                                       class="form-control letras_man_min"
+                                       placeholder="Nombre.."
+                                       id="nombre"
+                                       name="nombre"
+                                       value="{{ facultad.nombre }}"
+                                       minlength="3"
+                                       maxlength="255"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="siglas">Siglas:</label>
+                                <input type="text"
+                                       class="form-control mayuscula letras_espacios"
+                                       placeholder="Siglas.."
+                                       id="siglas"
+                                       name="siglas"
+                                       value="{{ facultad.siglas }}"
+                                       minlength="3"
+                                       maxlength="7"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

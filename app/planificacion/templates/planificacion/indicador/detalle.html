@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    PEDI
+{% endblock %}
+
+{% block migas %}
+    <div class="page-bar">
+        <div class="page-title-breadcrumb">
+            <div class=" pull-left">
+                <div class="page-title">Modulo de Planificacion</div>
+            </div>
+            <ol class="breadcrumb page-breadcrumb pull-right">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{% url 'planificacion:plan_estrategico_lista' %}" class="parent-item">Planes
+                        Estrategicos</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:plan_estrategico_detalle' indicador.resultado.objetivo_operativo.objetivo_estrategico.plan_estrategico.id %}"
+                       class="parent-item">{{ indicador.resultado.objetivo_operativo.objetivo_estrategico.plan_estrategico.nombre }}</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:objetivo_estrategico_detalle' indicador.resultado.objetivo_operativo.objetivo_estrategico.id %}"
+                       class="parent-item">Estrategico {{ indicador.resultado.objetivo_operativo.objetivo_estrategico.codigo }}</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:objetivo_operativo_detalle' indicador.resultado.objetivo_operativo.id %}"
+                       class="parent-item">Operativo {{ indicador.resultado.objetivo_operativo.codigo }}</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{% url 'planificacion:resultado_detalle' indicador.resultado.id %}"
+                       class="parent-item">Resultado {{ indicador.resultado.codigo }}</a> <i
+                        class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Indicador</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Indicador</header>
+            <div class="tools">
+                <a title="Editar Indicador" class="btn btn-info"
+                   data-toggle="modal" data-target="#modal-indicador"
+                        {% if not perms.planificacion.change_indicador%} disabled {% endif %}>
+                    <i class="fa fa-edit"></i> Editar
+                </a>
+                <a title="Eliminar Indicador" class="btn btn-danger"
+                   href="{% url 'planificacion:indicador_eliminar' indicador.id %}"
+                        {% if not perms.planificacion.delete_indicador %} disabled {% endif %}>
+                    <i class="fa fa-trash-o"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        <div class="card-body ">
+            {% include 'planificacion/indicador/fragmento_detalle.html' %}
+        </div>
+    </div>
+{#    Modales#}
+    {% include 'planificacion/indicador/modal_editar.html' with resultado=indicador.resultado%}
+    {% include 'planificacion/meta_anual/modal_editar.html' %}
+
+{% endblock %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/js_cookie.js' %}"></script>
+    <script src="{% static 'js/planificacion/indicador_editar.js' %}"></script>
+    <script src="{% static 'js/planificacion/meta_anual_lista.js' %}"></script>
+{% endblock javascript %}
+

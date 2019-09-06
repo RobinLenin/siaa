@@ -1,0 +1,45 @@
+{% load guardian_tags %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Duración</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for asignatura_nivel in asignaturas_nivel %}
+            {% get_obj_perms request.user for asignatura_nivel as "asignaturanivel_perms" %}
+            <tr>
+                <td>
+                    <a {% if perms.academico.view_asignaturanivel or 'view_asignaturanivel' in asignaturanivel_perms %}
+                        href="{% url 'academico:asignatura_nivel_detalle' asignatura_nivel.id %}"
+                    {% endif %}>
+                        {{ asignatura_nivel.asignatura.nombre }}
+                    </a>
+                </td>
+                <td>
+                    {% if asignatura_nivel.duracion %}
+                        {{ asignatura_nivel.duracion }}
+                    {% else %}
+                        0
+                    {% endif %}
+                    {{ asignatura_nivel.nivel.pensum.get_duracion_unidad_display }}{{ asignatura_nivel.duracion|pluralize }}
+                <td>
+                    <a title="Eliminar"
+                            {% if perms.academico.delete_asignaturanivel or 'delete_asignaturanivel' in asignaturanivel_perms %}
+                       class="btn btn-outline-danger"
+                       onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                       href="{% url 'academico:asignatura_nivel_eliminar' asignatura_nivel.id %}"
+                            {% else %}
+                       class="btn btn-outline-danger disabled"
+                            {% endif %}>
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,37 @@
+<div class="table-responsive-lg">
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Codigo</th>
+            <th>Descripcion</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for objetivo_estrategico in objetivos_estrategicos %}
+            <tr>
+                <td>{{ objetivo_estrategico.codigo }}
+                <td><a href="{% url 'planificacion:objetivo_estrategico_detalle' objetivo_estrategico.id %}">{{ objetivo_estrategico }}</a>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-info btn-xs editar-oe"
+                                data-id="{{ objetivo_estrategico.id }}"
+                                data-nombre="{{ objetivo_estrategico.nombre }}"
+                                data-codigo="{{ objetivo_estrategico.codigo }}"
+                        title="Editar"><i class="fa fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-xs eliminar-oe" data-id="{{ objetivo_estrategico.id }}" data-activo="{{ objetivo_estrategico.activo }}"><i
+                                title="Eliminar" class="fa fa-trash-o"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
