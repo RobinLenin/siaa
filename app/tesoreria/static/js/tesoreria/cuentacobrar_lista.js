@@ -4,7 +4,7 @@ $(function () {
 
 function initDataTable(){
     table = $('#cuenta_cobrar').DataTable({
-        "processing": true,
+        "processing": false,
         "serverSide": true,
         "stateSave": true,
         "order": [[0, "asc"], [1, "asc"], [2, "asc"]],

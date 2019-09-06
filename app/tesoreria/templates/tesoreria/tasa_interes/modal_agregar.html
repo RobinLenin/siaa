@@ -1,7 +1,7 @@
 <div class="modal fade" id="modal-tasa_interes-guardar">
     <form action="{% url 'tesoreria:tasa_interes.guardar' %}" method="POST" role="form" id="formTasaInteres">
         {% csrf_token %}
-        <input type="hidden" id="id" name="id" value="{{ CuentaCobrar.id }}"/>
+        <input type="hidden" id="id" name="id" value="{{ TasaInteres.id }}"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>
         <div class="modal-dialog">
             <div class="modal-content">
@@ -10,55 +10,32 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="form-group col-md-12">
-                            <label for="nombre">Nombre:</label>
-                            <input type="text"
-                                   class="form-control letras_man_min"
-                                   placeholder="Nombre.."
-                                   id="nombre"
-                                   name="nombre"
-                                   value="{{ asignatura.nombre }}"
-                                   minlength="3"
-                                   maxlength="255"
-                                   required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="codigo_institucional">Código institucional:</label>
-                            <input type="text"
-                                   class="form-control letras_numeros"
-                                   placeholder="Codigo institucional.."
-                                   id="codigo_institucional"
-                                   name="codigo_institucional"
-                                   value="{{ asignatura.codigo_institucional }}"
-                                   minlength="3"
-                                   maxlength="25"
-                                   required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="codigo_unesco">Código UNESCO:</label>
-                            <input type="text"
-                                   class="form-control letras_numeros"
-                                   placeholder="Codigo unesco.."
-                                   id="codigo_unesco"
-                                   name="codigo_unesco"
-                                   value="{{ asignatura.codigo_unesco }}"
-                                   minlength="3"
-                                   maxlength="25"
-                                   required>
-                        </div>
-                        <div class="col-md-12 col-sm-6 col-xs-6">
+                        {% now "Y-m" as ahora %}
+                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label for="tipo">Tipo:</label>
-                                <select id="tipo" name="tipo" class="form-control" required>
-                                    <option value="" selected="selected">-- Seleccione --</option>
-                                    {% for item in CHOICE_TIPO %}
-                                        <option value="{{ item.0 }}"
-                                                {% if asignatura.tipo == item.0 %}selected{% endif %}>
-                                            {{ item.1 }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
+                                <label for="fecha">Fecha:</label>
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Fecha.."
+                                       name="fecha"
+                                       id="fecha"
+                                       value="{{ tasa_interes.fecha|date:"Y-m"|default:ahora }}"
+                                       required>
                             </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="monto">Monto:</label>
+                            <input type="number"
+                                   placeholder="0.00"
+                                   step="0.01"
+                                   class="form-control"
+                                   id="monto"
+                                   name="monto"
+                                   value="{{ cuenta_cobrar.monto }}"
+                                   minlength="0"
+                                   maxlength="10"
+                                   required>
                         </div>
                     </div>
                 </div>

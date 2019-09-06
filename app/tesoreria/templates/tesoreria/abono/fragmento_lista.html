@@ -1,0 +1,41 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Concepto</th>
+            <th>Fecha</th>
+            <th>Monto</th>
+            <th>Saldo</th>
+            <th>Deuda</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for abono in abonos %}
+            <tr>
+                <td>
+                    <a {% if perms.academico.view_abono %}
+                        href="{% url 'tesoreria:abono_detalle' abono.id %}?next={{ request.path }}"
+                    {% endif %}>
+                        {{ abono.concepto }}
+                    </a>
+                <td>{{ abono.fecha_pago|default:"" }}</td>
+                <td>{{ abono.monto }}</td>
+                <td>{{ abono.saldo }}</td>
+<!--            <td>
+                    <a title="Eliminar"
+                            {% if perms.academico.delete_autoridadfacultad %}
+                       class="btn btn-outline-danger"
+                       onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                       href="{% url 'academico:autoridad_facultad_eliminar' autoridad_facultad.id %}"
+                            {% else %}
+                       class="btn btn-outline-danger disabled"
+                            {% endif %}>
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </td> -->
+                <td>{{ abono.saldo - abono.monto }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

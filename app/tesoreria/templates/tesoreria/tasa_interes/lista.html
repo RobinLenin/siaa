@@ -22,7 +22,7 @@
                 <div class="pull-right">
                     <button class="btn btn-info btn-xs"
                             data-toggle="modal" data-target="#modal-tasa_interes-guardar"
-                            {% if not perms.academico.add_asignatura %} disabled {% endif %}>
+                            {% if not perms.tesoreria.add_tasainteres %} disabled {% endif %}>
                         <i class="fa fa-plus-circle"></i>Nuevo
                     </button>
                 </div>
@@ -33,9 +33,8 @@
                 <table class="table table-hover" id="asignatura">
                     <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Código Unesco</th>
-                        <th>Tipo</th>
+                        <th>Tasa</th>
+                        <th>Fecha</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -52,6 +51,6 @@
     <script src="{% static 'js/js_cookie.js' %}"></script>
     <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'js/academico/asignatura_lista.js' %}"></script>
+    <script src="{% static 'js/tesoreria/cuenta_cobrar_lista.js' %}"></script>
     <script src="{% static 'js/academico/asignatura_detalle.js' %}"></script>
 {% endblock %}

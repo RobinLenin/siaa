@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block titulo %}
-    Facultad
+    Cuentas por Cobrar
 {% endblock %}
 
 {% block migas %}
@@ -15,10 +15,10 @@
             <div class="tools">
                 <button class="btn btn-info"
                         data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
-                        {% if not perms.academico.change_facultad %} disabled {% endif %}>
+                        {% if not perms.tesoreria.change_cuentacobrar %} disabled {% endif %}>
                     <i class="fa fa-edit"></i> Editar
                 </button>
-                <a {% if perms.academico.delete_facultad %}
+                <a {% if perms.tesoreria.delete_cuentacobrar %}
                     class="btn btn-danger"
                     href="{% url 'tesoreria:cuenta_cobrar.eliminar' cuenta_cobrar.id %}"
                     onclick="return confirm('¿Está seguro de eliminar el registro?')"
@@ -31,39 +31,39 @@
         </div>
         <div class="card-body ">
             <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Nombre:</span>
+                <span class="col-sm-2">Cliente:</span>
                 <div class="col-sm-10">
-                    <h5>{{ facultad.nombre }}</h5>
+                    <h5>{{ cuenta_cobrar.cliente }}</h5>
                 </div>
             </div>
 
             <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Siglas:</span>
+                <span class="col-sm-2">Concepto:</span>
                 <div class="col-sm-10">
-                    <h5>{{ facultad.siglas }}</h5>
+                    <h5>{{ cuenta_cobrar.concepto }}</h5>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h4>{{ 'academico.AutoridadFacultad'|verbose_name_plural|capfirst  }}
+                    <h4>{{ 'tesoreria.Abono'|verbose_name_plural|capfirst  }}
                         <button class="btn btn-circle btn-info btn-sm pull-right"
-                                data-toggle="modal" data-target="#modal-autoridad-facultad-editar"
-                                {% if not perms.academico.add_autoridadfacultad %} disabled {% endif %}>
+                                data-toggle="modal" data-target="#modal-abono-guardar"
+                                {% if not perms.tesoreria.add_abono %} disabled {% endif %}>
                             <i class="fa fa-plus-circle"></i> Nuevo
                         </button>
                     </h4>
                 </div>
                 <div class="card-body">
-                    {% include 'academico/autoridad_facultad/fragmento_lista.html' with autoridades_facultad=facultad.autoridades_facultad.all %}
+                    {% include 'tesoreria/abono/fragmento_lista.html' with abono=cuenta_cobrar.abono.all %}
                 </div>
             </div>
         </div>
     </div>
     {% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
-    {% include 'academico/facultad/modal_editar.html' %}
+    {% include 'tesoreria/abono/modal_agregar.html' %}
 {% endblock contenido %}
 {% block javascript %}
     {% load staticfiles %}
-    <script src="{% static 'js/academico/autoridad_editar.js' %}"></script>
+    <script src="{% static 'js/academico/abono_editar.js' %}"></script>
 {% endblock %}

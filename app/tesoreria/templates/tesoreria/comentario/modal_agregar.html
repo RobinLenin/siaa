@@ -1,64 +1,55 @@
-<div class="modal fade" id="modal-cuenta_cobrar-guardar">
-    <form action="{% url 'tesoreria:cuenta_guardar' %}" method="POST" role="form" id="formCuentaCobrar">
+<div class="modal fade" id="modal-comentario-guardar">
+    <form action="{% url 'tesoreria:comentario.guardar' %}" method="POST" role="form" id="formComentario">
         {% csrf_token %}
-        <input type="hidden" id="id" name="id" value="{{ CuentaCobrar.id }}"/>
+        <input type="hidden" id="id" name="id" value="{{ Comentario.id }}"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">{{ 'academico.Asignatura'|verbose_name|capfirst  }}</h4>
+                    <h4 class="modal-title">{{ 'tesoreria.Comentario'|verbose_name|capfirst  }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="form-group col-md-12">
-                            <label for="nombre">Nombre:</label>
+                        {% now "Y-m-d" as ahora %}
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label for="fecha_creacion">Fecha de Creación:</label>
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Fecha de emisión.."
+                                       name="fecha_creacion"
+                                       id="fecha_creacion"
+                                       value="{{ cuenta_cobrar.fecha_creacion|date:"Y-m-d"|default:ahora }}"
+                                       required">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="concepto">Concepto:</label>
                             <input type="text"
                                    class="form-control letras_man_min"
-                                   placeholder="Nombre.."
-                                   id="nombre"
-                                   name="nombre"
-                                   value="{{ asignatura.nombre }}"
+                                   placeholder="Concepto.."
+                                   id="concepto"
+                                   name="concepto"
+                                   value="{{ comentario.concepto }}"
                                    minlength="3"
                                    maxlength="255"
                                    required>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="codigo_institucional">Código institucional:</label>
-                            <input type="text"
-                                   class="form-control letras_numeros"
-                                   placeholder="Codigo institucional.."
-                                   id="codigo_institucional"
-                                   name="codigo_institucional"
-                                   value="{{ asignatura.codigo_institucional }}"
+                            <label for="detalle">Detalle:</label>
+                            <textarea name="comentarios" r
+                                      ows="10" c
+                                      ols="40"
+                                      class="form-control letras_man_min"
+                                   placeholder="Detalle.."
+                                   id="detalle"
+                                   name="detalle"
+                                   value="{{ comentario.detalle }}"
                                    minlength="3"
-                                   maxlength="25"
+                                   maxlength="255"
+                                      onresize="false"
                                    required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="codigo_unesco">Código UNESCO:</label>
-                            <input type="text"
-                                   class="form-control letras_numeros"
-                                   placeholder="Codigo unesco.."
-                                   id="codigo_unesco"
-                                   name="codigo_unesco"
-                                   value="{{ asignatura.codigo_unesco }}"
-                                   minlength="3"
-                                   maxlength="25"
-                                   required>
-                        </div>
-                        <div class="col-md-12 col-sm-6 col-xs-6">
-                            <div class="form-group">
-                                <label for="tipo">Tipo:</label>
-                                <select id="tipo" name="tipo" class="form-control" required>
-                                    <option value="" selected="selected">-- Seleccione --</option>
-                                    {% for item in CHOICE_TIPO %}
-                                        <option value="{{ item.0 }}"
-                                                {% if asignatura.tipo == item.0 %}selected{% endif %}>
-                                            {{ item.1 }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                            </textarea>
                         </div>
                     </div>
                 </div>

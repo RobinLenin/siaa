@@ -85,6 +85,7 @@ def cuenta_cobrar_buscar(request):
 
 
 @login_required
+@permission_required('tesoreria.change_cuentacobrar', raise_exception=True, )
 @require_http_methods(['POST'])
 def cuenta_cobrar_guardar(request):
     next = request.POST.get('next')
@@ -111,7 +112,7 @@ def cuenta_cobrar_guardar(request):
 
 
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.delete_cuentacobrar', raise_exception=True, )
 def cuenta_cobrar_eliminar(request, id):
 
     cuenta_cobrar = get_object_or_404(CuentaCobrar, id=id)
@@ -129,7 +130,7 @@ def cuenta_cobrar_eliminar(request, id):
 
 
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.view_cuentacobrar', raise_exception=True, )
 def cuenta_cobrar_detalle(request, id):
 
     cuenta_cobrar = get_object_or_404(CuentaCobrar, id=id)
@@ -258,6 +259,7 @@ def comentario_listar(request):
 """""
 # ////////////////////////Abono//////////////
 @login_required
+@permission_required('tesoreria.change_abono', raise_exception=True, )
 @require_http_methods(['POST'])
 def abono_guardar(request):
     next = request.POST.get('next')
@@ -402,7 +404,7 @@ def tasa_interes_guardar(request):
 
 
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.delete_tasainteres', raise_exception=True, )
 def tasa_interes_eliminar(request, id):
 
     tasa_interes = get_object_or_404(TasaInteres, id=id)
