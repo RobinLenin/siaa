@@ -39,7 +39,7 @@ class Abono(models.Model):
     interes = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     fecha_pago= models.DateField()
     observacion= models.TextField()
-    cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.CASCADE, related_name='abonos')
+    cuenta_cobrar = models.ForeignKey('CuentaCobrar', on_delete=models.CASCADE, related_name='abonos')
 
     def __str__(self):
         return "{0} {1} {2}".format(self.fecha_pago, self.monto, self.interes)

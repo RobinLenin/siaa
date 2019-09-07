@@ -25,7 +25,7 @@ urlpatterns = [
     # path('cuenta_cobrar/abonos/listar', views.abono_listar, name='abonos_listar'),
 
     path('tasa_interes/guardar', views.tasa_interes_guardar, name='tasa_interes.guardar'),
-    path('tasa_interes/eliminar/<int:id, int:id_cuenta>', views.tasa_interes_eliminar, name='tasa_interes.eliminar'),
+    path('tasa_interes/eliminar/<int:id>', views.tasa_interes_eliminar, name='tasa_interes.eliminar'),
     path('tasa_interes/listar', views.tasa_interes_listar, name='tasa_interes.listar'),
     path('tasa_interes/lista-paginador', views.tasa_interes_lista_paginador, name='tasa_interes.lista_paginador'),
     path('tasa_interes/buscar', views.tasa_interes_buscar, name='tasa_interes.buscar'),

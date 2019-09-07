@@ -283,14 +283,14 @@ def abono_guardar(request):
 
 @login_required
 #@permission_required('tesoreria.delete_abono', raise_exception=True, )
-def abono_eliminar(request, id,id_cuenta):
+def abono_eliminar(request, id):
 
-    comentario = get_object_or_404(Abono, id=id)
+    abono = get_object_or_404(Abono, id=id)
 
     try:
-        if comentario.delete():
+        if abono.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar.detalle',id_cuenta)
+            return redirect('tesoreria:cuenta_cobrar.detalle', abono.cuenta_cobrar_id)
         else:
             messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
             return redirect('tesoreria:cuenta_cobrar.detalle', id)
@@ -330,6 +330,7 @@ def tasa_interes_listar(request):
     navegacion = ('Modulo financiero',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
                    ('Tasas de interes', None)])
+    tasa_interes = TasaInteres.objects.all()
     return render(request, 'tesoreria/tasa_interes/lista.html', locals())
 
 
@@ -375,26 +376,20 @@ def tasa_interes_buscar(request):
 
 
 @login_required
-#@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.change_tasainteres', raise_exception=True, )
 @require_http_methods(['POST'])
 def tasa_interes_guardar(request):
     next = request.POST.get('next')
     id = request.POST.get('id')
     if id:
         tasa_interes = get_object_or_404(TasaInteres, id=id)
-        if not (request.user.has_perm("tesoreria") or request.user.has_perm(
-                "tesoreria", TasaInteres)):
-            raise PermissionDenied
     else:
-        if not request.user.has_perm("tesoreria"):
-            raise PermissionDenied
         tasa_interes = TasaInteres()
 
     tasa_interes = TasaInteresForm(request.POST, instance=tasa_interes)
     if tasa_interes.is_valid():
         tasa_interes.save()
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
-
     else:
         messages.warning(request, tasa_interes.errors)
 
