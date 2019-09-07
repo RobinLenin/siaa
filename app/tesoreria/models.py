@@ -45,7 +45,7 @@ class Abono(models.Model):
         return "{0} {1} {2}".format(self.fecha_pago, self.monto, self.interes)
 
 class Comentario(models.Model):
-    cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.PROTECT, related_name='comentarios')
+    cuenta_cobrar = models.ForeignKey('CuentaCobrar', on_delete=models.CASCADE, related_name='comentarios')
     fecha_creacion= models.DateTimeField( verbose_name="Fecha de creacion")
     concepto = models.CharField(max_length=100)
     detalle= models.TextField()

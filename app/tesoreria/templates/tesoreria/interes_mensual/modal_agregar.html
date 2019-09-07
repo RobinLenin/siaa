@@ -1,71 +1,112 @@
-<div class="modal fade" id="modal-cuenta_cobrar-guardar">
-    <form action="{% url 'tesoreria:cuenta_guardar' %}" method="POST" role="form" id="formCuentaCobrar">
+<div class="modal fade" id="modal-interes_mensual-guardar">
+    <form action="{% url 'tesoreria:interes_mensual.guardar' %}" method="POST" role="form" id="formInteresMensual">
         {% csrf_token %}
-        <input type="hidden" id="id" name="id" value="{{ CuentaCobrar.id }}"/>
+        <input type="hidden" id="id" name="id" value="{{ abono.id }}"/>
+        <input type="hidden" id="id_cuenta" name="cuenta_cobrar"  value="{{ cuenta_cobrar.id }}"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">{{ 'academico.Asignatura'|verbose_name|capfirst  }}</h4>
+                    <h4 class="modal-title">{{ 'tesoreria.Abono'|verbose_name|capfirst  }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="form-group col-md-12">
-                            <label for="nombre">Nombre:</label>
-                            <input type="text"
-                                   class="form-control letras_man_min"
-                                   placeholder="Nombre.."
-                                   id="nombre"
-                                   name="nombre"
-                                   value="{{ asignatura.nombre }}"
-                                   minlength="3"
-                                   maxlength="255"
-                                   required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="codigo_institucional">Código institucional:</label>
-                            <input type="text"
-                                   class="form-control letras_numeros"
-                                   placeholder="Codigo institucional.."
-                                   id="codigo_institucional"
-                                   name="codigo_institucional"
-                                   value="{{ asignatura.codigo_institucional }}"
-                                   minlength="3"
-                                   maxlength="25"
-                                   required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="codigo_unesco">Código UNESCO:</label>
-                            <input type="text"
-                                   class="form-control letras_numeros"
-                                   placeholder="Codigo unesco.."
-                                   id="codigo_unesco"
-                                   name="codigo_unesco"
-                                   value="{{ asignatura.codigo_unesco }}"
-                                   minlength="3"
-                                   maxlength="25"
-                                   required>
-                        </div>
-                        <div class="col-md-12 col-sm-6 col-xs-6">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label for="tipo">Tipo:</label>
-                                <select id="tipo" name="tipo" class="form-control" required>
+                                <label for="forma_pago">Forma de pago:</label>
+                                <select id="forma_pago" name="forma_pago" class="form-control" required>
                                     <option value="" selected="selected">-- Seleccione --</option>
-                                    {% for item in CHOICE_TIPO %}
-                                        <option value="{{ item.0 }}"
-                                                {% if asignatura.tipo == item.0 %}selected{% endif %}>
-                                            {{ item.1 }}
+                                    {% for key, value in CHOICE_FORMAPAGO %}
+                                        <option value="{{ key }}"
+                                                {% if abono.forma_pago == key %}selected{% endif %}>
+                                            {{ value }}
                                         </option>
                                     {% endfor %}
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="concepto">Concepto:</label>
+                            <input type="text"
+                                   class="form-control letras_man_min"
+                                   placeholder="Concepto.."
+                                   id="concepto"
+                                   name="concepto"
+                                   value="{{ abono.concepto }}"
+                                   minlength="3"
+                                   maxlength="255"
+                                   required>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="monto">Monto:</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="monto"
+                                   name="monto"
+                                   value="{{ abono.monto }}"
+                                   minlength="0"
+                                   maxlength="10"
+                                   required>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="interes">Interes:</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="interes"
+                                   name="interes"
+                                   value="{{ abono.interes }}"
+                                   minlength="0"
+                                   maxlength="10"
+                                   default="0.0"
+                                   required>
+                        </div>
+
+                        {% now "Y-m-d" as ahora %}
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label for="fecha_pago">Fecha de pago:</label>
+                                <input type="date"
+                                       class="form-control"
+                                       placeholder="Fecha de pago.."
+                                       name="fecha_pago"
+                                       id="fecha_pago"
+                                       value="{{ abono.fecha_pago|date:"Y-m-d"|default:ahora }}"
+                                       required>
+                            </div>
+                        </div>
+<!--
+                        <div class="form-group col-md-6">
+                            <label for="saldo">Saldo:</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="saldo"
+                                   name="saldo"
+                                   value="{{ cuenta_cobrar.saldo }}"
+                                   minlength="0"
+                                   maxlength="10"
+                                   required>
+                        </div> -->
+
+                        <div class="form-group col-md-12">
+                            <label for="observacion">Observación:</label>
+                            <input type="text"
+                                   class="form-control letras_man_min"
+                                   placeholder="Observación.."
+                                   id="observacion"
+                                   name="observacion"
+                                   value="{{ abono.observacion }}"
+                                   minlength="3"
+                                   maxlength="255"
+                                   required>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
                     </button>
-                    <button id="enviar" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Guardar</button>
+                    <button id="enviar" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Registrar</button>
                 </div>
             </div>
         </div>

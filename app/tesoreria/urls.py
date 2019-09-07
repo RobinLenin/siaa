@@ -16,7 +16,7 @@ urlpatterns = [
     # path('cuenta_cobrar/titulo_credito/eliminar', views.titulo_credito_eliminar, name='titulo_credito.eliminar'),
 
     path('comentario/guardar', views.comentario_guardar, name='comentario.guardar'),
-    path('comentario/eliminar/<int:id>', views.comentario_eliminar, name='comentario.eliminar'),
+    path('comentario/eliminar/<int:id>', views.comentario_eliminar, name='comentario_eliminar'),
     path('comentario/detalle/<int:id>', views.comentario_detalle, name='comentario.detalle'),
     # path('comentario/listar', views.comentario_listar, name='comentario.listar'),
 

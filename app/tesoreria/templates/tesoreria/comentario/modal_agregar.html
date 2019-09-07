@@ -1,7 +1,8 @@
 <div class="modal fade" id="modal-comentario-guardar">
     <form action="{% url 'tesoreria:comentario.guardar' %}" method="POST" role="form" id="formComentario">
         {% csrf_token %}
-        <input type="hidden" id="id" name="id" value="{{ Comentario.id }}"/>
+        <input type="hidden" id="id" name="id" value="{{ comentario.id }}"/>
+        <input type="hidden" id="id_cuenta" name="cuenta_cobrar"  value="{{ cuenta_cobrar.id }}"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>
         <div class="modal-dialog">
             <div class="modal-content">
@@ -19,11 +20,11 @@
                                        placeholder="Fecha de emisión.."
                                        name="fecha_creacion"
                                        id="fecha_creacion"
-                                       value="{{ cuenta_cobrar.fecha_creacion|date:"Y-m-d"|default:ahora }}"
+                                       value="{{ comentario.fecha_creacion|date:"Y-m-d"|default:ahora }}"
                                        required">
                             </div>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                             <label for="concepto">Concepto:</label>
                             <input type="text"
                                    class="form-control letras_man_min"
@@ -35,9 +36,9 @@
                                    maxlength="255"
                                    required>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                             <label for="detalle">Detalle:</label>
-                            <textarea name="comentarios" r
+                            <textarea name="detalle" r
                                       ows="10" c
                                       ols="40"
                                       class="form-control letras_man_min"

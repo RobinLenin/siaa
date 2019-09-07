@@ -187,25 +187,20 @@ def titulo_credito_eliminar(request, id_titulo_credito):
 # ////////////////////////Comentario//////////////
 
 @login_required
+@permission_required('tesoreria.change_comentario', raise_exception=True, )
 @require_http_methods(['POST'])
 def comentario_guardar(request):
     next = request.POST.get('next')
     id = request.POST.get('id')
     if id:
         comentario = get_object_or_404(Comentario, id=id)
-        if not (request.user.has_perm("tesoreria") or request.user.has_perm(
-                "tesoreria", comentario)):
-            raise PermissionDenied
     else:
-        if not request.user.has_perm("tesoreria"):
-            raise PermissionDenied
         comentario = Comentario()
 
     comentario_form = ComentarioForm(request.POST, instance=comentario)
     if comentario_form.is_valid():
         comentario_form.save()
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
-
     else:
         messages.warning(request, comentario_form.errors)
 
@@ -213,18 +208,17 @@ def comentario_guardar(request):
 
 
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.delete_comentario', raise_exception=True, )
 def comentario_eliminar(request, id):
 
-    comentario = get_object_or_404(CuentaCobrar, id=id)
+    comentario = get_object_or_404(Comentario, id=id)
     try:
         if comentario.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar.detalle')
+            return redirect('tesoreria:cuenta_cobrar.detalle', comentario.cuenta_cobrar_id)
         else:
             messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:comentario.detalle', id)
-
+            return redirect('tesoreria:cuenta_cobrar.detalle', id)
     except Exception as e:
         messages.warning(request, str(e))
         return HttpResponseServerError(render(request, '500.html'))
@@ -234,8 +228,19 @@ def comentario_eliminar(request, id):
 @permission_required('tesoreria', raise_exception=True, )
 def comentario_detalle(request, id):
 
-    cuenta_cobrar = get_object_or_404(CuentaCobrar, id=id)
-    return render(request, 'tesoreria/cuenta_cobrar/detalle.html', locals())
+    comentario = get_object_or_404(Comentario, id=id)
+
+    navegacion = ('Módulo Académico',
+                  [('Tesoreria', reverse('tesoreria:index_tesoreria')),
+                   ('Cuentas por Cobrar', reverse('tesoreria:cuenta_cobrar.listar')),
+                   (comentario.concepto, None)])
+
+    return render(request, 'tesoreria/comentario/detalle.html', locals())
+
+
+
+
+
 
 
 """@login_required
@@ -282,7 +287,7 @@ def abono_guardar(request):
 
 
 @login_required
-#@permission_required('tesoreria.delete_abono', raise_exception=True, )
+@permission_required('tesoreria.delete_abono', raise_exception=True, )
 def abono_eliminar(request, id):
 
     abono = get_object_or_404(Abono, id=id)

@@ -58,10 +58,26 @@
                     {% include 'tesoreria/abono/fragmento_lista.html' with abonos=cuenta_cobrar.abonos.all %}
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'tesoreria.Comentario'|verbose_name_plural|capfirst  }}
+                        <button class="btn btn-circle btn-info btn-sm pull-right"
+                                data-toggle="modal" data-target="#modal-comentario-guardar"
+                                {% if not perms.tesoreria.add_comentario %} disabled {% endif %}>
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </button>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% include 'tesoreria/comentario/fragmento_lista.html' with comentarios=cuenta_cobrar.comentarios.all %}
+                </div>
+            </div>
         </div>
     </div>
     {% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
     {% include 'tesoreria/abono/modal_agregar.html' %}
+    {% include 'tesoreria/comentario/modal_agregar.html' %}
 {% endblock contenido %}
 {% block javascript %}
     {% load staticfiles %}

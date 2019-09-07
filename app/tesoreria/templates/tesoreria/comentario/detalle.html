@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block titulo %}
-    Asignatura
+    Providencias
 {% endblock %}
 
 {% block migas %}
@@ -11,17 +11,17 @@
 {% block contenido %}
     <div class="card card-box">
         <div class="card-head">
-            <header>{{ 'academico.Asignatura'|verbose_name|capfirst  }}</header>
+            <header>{{ 'tesoreria.Comentario'|verbose_name|capfirst  }}</header>
             <div class="tools">
                 <button class="btn btn-info"
                         data-toggle="modal"
-                        data-target="#modal-asignatura-editar"
-                        {% if not perms.academico.change_asignatura %} disabled {% endif %}>
+                        data-target="#modal-comentario-guardar"
+                        {% if not perms.tesoreria.change_comentario %} disabled {% endif %}>
                     <i class="fa fa-edit"></i>Editar
                 </button>
                 <a {% if perms.academico.delete_asignatura %}
                     class="btn btn-danger"
-                    href="{% url 'academico:asignatura_eliminar' asignatura.id %}"
+                    href="{% url 'tesoreria:comentario_eliminar' comentario.id %}"
                     onclick="return confirm('¿Está seguro de eliminar el registro?')"
                 {% else %}
                     class="btn btn-danger disabled"
@@ -33,46 +33,36 @@
         <div class="card-body ">
             <div class="header">
                 <div class="text-center">
-                    <h4>{{ asignatura.nombre }}
-                        {% if asignatura.codigo_institucional and asignatura.codigo_unesco %}
-                            ({{ asignatura.codigo_institucional }}-{{ asignatura.codigo_unesco }})
-                        {% endif %}
-                    </h4>
+                    <h4>Providencia</h4>
                 </div>
             </div>
             <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Código institucional:</span>
+                <span class="col-sm-2">Concepto:</span>
                 <div class="col-sm-10">
-                    <h5>{{ asignatura.codigo_institucional }}</h5>
+                    <h5>{{ comentario.concepto }}</h5>
                 </div>
             </div>
             <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Código UNESCO:</span>
+                <span class="col-sm-2">Fecha:</span>
                 <div class="col-sm-10">
-                    <h5>{{ asignatura.codigo_unesco }}</h5>
+                    <h5>{{ comentario.fecha_creacion }}</h5>
                 </div>
             </div>
             <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Tipo:</span>
+                <span class="col-sm-2">Detalle:</span>
                 <div class="col-sm-10">
-                    <h5>{{ asignatura.get_tipo_display }}</h5>
-                </div>
-            </div>
-            <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Nombre:</span>
-                <div class="col-sm-10">
-                    <h5>{{ asignatura.nombre }}</h5>
+                    <h5>{{ comentario.detalle }}</h5>
                 </div>
             </div>
         </div>
     </div>
 
-    {% include 'academico/asignatura/modal_editar.html' %}
+    {% include 'tesoreria/comentario/modal_agregar.html' %}
 
 {% endblock contenido %}
 
 {% block javascript %}
     {% load staticfiles %}
     <script src="{% static 'js/js_cookie.js' %}"></script>
-    <script src="{% static 'js/academico/asignatura_detalle.js' %}"></script>
+    <script src="{% static 'js/tesoreria/comentario_detalle.js' %}"></script>
 {% endblock %}

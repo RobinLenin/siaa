@@ -14,7 +14,7 @@
                 <td>{{ comentario.fecha_creacion|default:"" }}</td>
                 <td>
                     <a {% if perms.academico.view_comentario %}
-                        href="{% url 'tesoreria:comentario_detalle' comentario.id %}?next={{ request.path }}"
+                        href="{% url 'tesoreria:comentario.detalle' comentario.id %}?next={{ request.path }}"
                     {% endif %}>
                         {{ comentario.concepto }}
                     </a>
@@ -24,7 +24,7 @@
                             {% if perms.tesoreria.delete_comentario %}
                        class="btn btn-outline-danger"
                        onclick="return confirm('¿Está seguro de eliminar el registro?')"
-                       href="{% url 'tesoreria:comentario.eliminar' comentario.id %}"
+                       href="{% url 'tesoreria:comentario_eliminar' comentario.id %}"
                             {% else %}
                        class="btn btn-outline-danger disabled"
                             {% endif %}>
