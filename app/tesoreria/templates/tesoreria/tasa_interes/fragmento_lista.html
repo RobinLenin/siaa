@@ -17,7 +17,7 @@
                             {% if perms.tesoreria.delete_tasainteres %}
                        class="btn btn-outline-danger"
                        onclick="return confirm('¿Está seguro de eliminar el registro?')"
-                       href="{% url 'tesoreria:tasa_interes.eliminar' tasa_interes.id %}"
+                       href="{% url 'tesoreria:tasa_interes_eliminar' tasa_interes.id %}"
                             {% else %}
                        class="btn btn-outline-danger disabled"
                             {% endif %}>

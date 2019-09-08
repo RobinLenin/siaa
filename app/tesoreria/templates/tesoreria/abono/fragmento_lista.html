@@ -3,10 +3,10 @@
         <thead>
         <tr>
             <th>Concepto</th>
-            <th>Fecha</th>
+            <th>Fecha de pago</th>
             <th>Monto</th>
-            <th>Saldo</th>
-            <th>Deuda</th>
+            <th>Interes</th>
+             <th>Acción</th>
             </tr>
         </thead>
         <tbody>
@@ -21,7 +21,7 @@
                 </td>
                 <td>{{ abono.fecha_pago|default:"" }}</td>
                 <td>{{ abono.monto }}</td>
-                <td>{{ abono.saldo }}</td>
+                <td>{{ abono.interes }}</td>
                 <td>
                     <a title="Eliminar"
                             {% if perms.tesoreria.delete_abono %}
@@ -34,9 +34,18 @@
                         <i class="fa fa-trash-o"></i>
                     </a>
                 </td>
-                <td>{{ abono.saldo }}</td>
+
             </tr>
         {% endfor %}
         </tbody>
+         <thead>
+        <tr>
+            <th>Total</th>
+            <th></th>
+            <th>Monto</th>
+            <th>Interes</th>
+             <th></th>
+            </tr>
+        </thead>
     </table>
 </div>

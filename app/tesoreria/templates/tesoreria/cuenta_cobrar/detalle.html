@@ -20,7 +20,7 @@
                 </button>
                 <a {% if perms.tesoreria.delete_cuentacobrar %}
                     class="btn btn-danger"
-                    href="{% url 'tesoreria:cuenta_cobrar.eliminar' cuenta_cobrar.id %}"
+                    href="{% url 'tesoreria:cuenta_cobrar_eliminar' cuenta_cobrar.id %}"
                     onclick="return confirm('¿Está seguro de eliminar el registro?')"
                 {% else %}
                     class="btn btn-danger disabled"
@@ -32,18 +32,30 @@
         <div class="card-body ">
             <div class="form-group form-inline text-left">
                 <span class="col-sm-2">Cliente:</span>
-                <div class="col-sm-10">
-                    <h5>{{ cuenta_cobrar.cliente.primer_nombre }}</h5>
+                <div class="col-sm-3">
+                    <h5>{{ cuenta_cobrar.cliente.get_nombres_completos}}</h5>
+                </div>
+                 <span class="col-sm-2">Fecha de creación:</span>
+                <div class="col-sm-5">
+                    <h5>{{ cuenta_cobrar.fecha_emision }}</h5>
                 </div>
             </div>
-
-            <div class="form-group form-inline text-left">
+             <div class="form-group form-inline text-left">
                 <span class="col-sm-2">Concepto:</span>
-                <div class="col-sm-10">
+                <div class="col-sm-3">
                     <h5>{{ cuenta_cobrar.concepto }}</h5>
                 </div>
+                 <span class="col-sm-2">Fecha de vencimiento:</span>
+                <div class="col-sm-5">
+                    <h5>{{ cuenta_cobrar.fecha_vencimiento }}</h5>
+                </div>
             </div>
-
+               <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Monto:</span>
+                <div class="col-sm-10">
+                    <h5>{{ cuenta_cobrar.monto }}</h5>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-header">
                     <h4>{{ 'tesoreria.Abono'|verbose_name_plural|capfirst  }}
@@ -73,6 +85,7 @@
                     {% include 'tesoreria/comentario/fragmento_lista.html' with comentarios=cuenta_cobrar.comentarios.all %}
                 </div>
             </div>
+
         </div>
     </div>
     {% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}

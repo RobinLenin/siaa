@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-tasa_interes-guardar">
-    <form action="{% url 'tesoreria:tasa_interes.guardar' %}" method="POST" role="form" id="formTasaInteres">
+    <form action="{% url 'tesoreria:tasa_interes_guardar' %}" method="POST" role="form" id="formTasaInteres">
         {% csrf_token %}
         <input type="hidden" id="id" name="id" value="{{ tasainteres.id }}"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>

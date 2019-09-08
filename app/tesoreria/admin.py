@@ -7,7 +7,7 @@ from app.seguridad.admin import AuditModelAdmin
 
 class CuentaCobrarAdmin(admin.ModelAdmin):
     #fields = ('codigo', 'descripcion', 'definicion', 'updated_by', 'created_by', 'created_at', 'updated_at',)
-    #search_fields = ('descripcion', 'codigo',)
+    # search_fields = ('concepto', 'cliente',)
     list_display = ('concepto', 'cliente',)
     raw_id_fields = ('cliente',)
 

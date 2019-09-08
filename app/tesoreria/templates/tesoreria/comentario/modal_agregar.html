@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-comentario-guardar">
-    <form action="{% url 'tesoreria:comentario.guardar' %}" method="POST" role="form" id="formComentario">
+    <form action="{% url 'tesoreria:comentario_guardar' %}" method="POST" role="form" id="formComentario">
         {% csrf_token %}
         <input type="hidden" id="id" name="id" value="{{ comentario.id }}"/>
         <input type="hidden" id="id_cuenta" name="cuenta_cobrar"  value="{{ cuenta_cobrar.id }}"/>
@@ -45,7 +45,7 @@
                                    placeholder="Detalle.."
                                    id="detalle"
                                    name="detalle"
-                                   value="{{ comentario.detalle }}"
+                                   value="{{ comentario_detalle }}"
                                    minlength="3"
                                    maxlength="255"
                                       onresize="false"

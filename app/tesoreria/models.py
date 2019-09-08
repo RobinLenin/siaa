@@ -9,6 +9,7 @@ from decimal import Decimal
 
 
 class CuentaCobrar(models.Model):
+    estado = models.BooleanField(default=True)
     concepto = models.CharField(max_length=100)
     fecha_emision = models.DateField(verbose_name="Fecha de emision")
     fecha_vencimiento = models.DateField()
@@ -17,7 +18,6 @@ class CuentaCobrar(models.Model):
     cliente = models.ForeignKey('core.Persona', on_delete=models.PROTECT, related_name='clientes')
     numero_titulo = models.CharField(max_length=10)
     titulo = models.FileField(upload_to='tesoreria/')
-   # cliente = models.CharField(max_length=100)
 
 
     class Meta:
@@ -55,29 +55,6 @@ class Comentario(models.Model):
         verbose_name_plural = "Providencias"
     def __str__(self):
         return "{0} {1}".format(self.fecha_creacion, self.concepto)
-
-
-
-#class TituloCredito(models.Model):
- #   numero = models.CharField(max_length=10)
-  #  titulo = models.FileField(upload_to='tesoreria/')
-
-
-   # cuenta_cobrar = models.ForeignKey(CuentaCobrar, null=False, blank=False, on_delete=models.CASCADE)
-    #fecha_emision = models.DateField(default= date.today() ,verbose_name="Fecha de emision")
-   # total = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-    #cliente = models.CharField(max_length=100)
-   # cliente = models.ForeignKey('core.Persona', on_delete=models.PROTECT)
-   # concepto = models.CharField(max_length=100)
-    #interes= models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-
-
-    # class Meta:
-    #     verbose_name = "Titulo de Credito"
-    #     verbose_name_plural = "Titulos de Credito"
-    #
-    # def __str__(self):
-    #     return "{0}".format(self.numero)
 
 class TasaInteres(models.Model):
     tasa=models.DecimalField(max_digits=4, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])

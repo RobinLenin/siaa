@@ -21,7 +21,7 @@
                 <div class="panel-footer">
                     <a
                             {% if perms.tesoreria.view_asignatura %}
-                                href="{% url 'tesoreria:cuenta_cobrar.listar' %}"
+                                href="{% url 'tesoreria:cuenta_cobrar_listar' %}"
                                 class="btn btn-primary"
                             {% else %}
                                 class="btn btn-primary disabled"
@@ -43,7 +43,7 @@
                 <div class="panel-footer">
                     <a
                             {% if perms.academico.view_facultad %}
-                                href="{% url 'tesoreria:tasa_interes.listar' %}"
+                                href="{% url 'tesoreria:tasa_interes_listar' %}"
                                 class="btn btn-primary"
                             {% else %}
                                 class="btn btn-primary disabled"

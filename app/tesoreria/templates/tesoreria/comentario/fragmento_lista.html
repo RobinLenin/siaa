@@ -2,23 +2,26 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>Fecha creación</th>
             <th>Concepto</th>
-            <th>Detalle</th>
+             <th>Detalle</th>
+            <th>Fecha creación</th>
+
             <th>Acción</th>
             </tr>
         </thead>
         <tbody>
         {% for comentario in comentarios %}
             <tr>
-                <td>{{ comentario.fecha_creacion|default:"" }}</td>
+
                 <td>
                     <a {% if perms.academico.view_comentario %}
-                        href="{% url 'tesoreria:comentario.detalle' comentario.id %}?next={{ request.path }}"
+                        href="{% url 'tesoreria:comentario_detalle' comentario.id %}?next={{ request.path }}"
                     {% endif %}>
                         {{ comentario.concepto }}
                     </a>
                 <td>{{ comentario.detalle }}</td>
+                <td>{{ comentario.fecha_creacion|default:"" }}</td>
+
                 <td>
                     <a title="Eliminar"
                             {% if perms.tesoreria.delete_comentario %}

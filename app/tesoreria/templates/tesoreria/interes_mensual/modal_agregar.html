@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-interes_mensual-guardar">
-    <form action="{% url 'tesoreria:interes_mensual.guardar' %}" method="POST" role="form" id="formInteresMensual">
+    <form action="{% url 'tesoreria:interes_mensual_guardar' %}" method="POST" role="form" id="formInteresMensual">
         {% csrf_token %}
         <input type="hidden" id="id" name="id" value="{{ abono.id }}"/>
         <input type="hidden" id="id_cuenta" name="cuenta_cobrar"  value="{{ cuenta_cobrar.id }}"/>

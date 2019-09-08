@@ -12,16 +12,19 @@ function initDataTable(){
             "url": "/tesoreria/cuenta_cobrar/lista-paginador",
             "type": "POST",
             "error": function (error) {
-                mensaje_error(error.responseText, segundos=5 );
+                mensaje_error(error.responseText, segundos=50 );
             }
         },
+
         "columns": [
-            {"data": "id", render: function ( data, type, row ) {
+        {"data": "id",},
+        {"data": "ci", render: function ( data, type, row ) {
                 return '<a href="/tesoreria/cuenta_cobrar/detalle/' + row.id +'">' + data + '</a>';
             }},
-            {"data": "cliente"},
+          {"data": "cliente"},
             {"data": "monto"},
             {"data": "saldo"},
+            {"data":"estado"},
         ],
         "language": {"url": "/static/plugins/datatables/es.js"}
     });

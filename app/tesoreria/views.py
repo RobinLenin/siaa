@@ -52,8 +52,16 @@ def cuenta_cobrar_lista_paginador(request):
     try:
         params = DataTableParams(request, **request.POST)
         DatatableBuscar.cuenta_cobrar(params)
-        data = params.items.values('id', 'cliente','monto', 'saldo').all()
-        result = params.result(list(data))
+        data = [{
+            'id': it.id,
+            'ci': it.cliente.numero_documento,
+            'cliente': it.cliente.get_nombres_completos(),
+            'monto': it.monto,
+            'saldo': it.saldo,
+            'estado': it.estado
+        } for it in
+            params.items]
+        result = params.result(data)
         return JsonResponse(result)
 
     except Exception as e:
@@ -120,10 +128,10 @@ def cuenta_cobrar_eliminar(request, id):
     try:
         if cuenta_cobrar.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar.listar')
+            return redirect('tesoreria:cuenta_cobrar_listar')
         else:
             messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:cuenta_cobrar.detalle', id)
+            return redirect('tesoreria:cuenta_cobrar_detalle', id)
 
     except Exception as e:
         messages.warning(request, str(e))
@@ -138,8 +146,8 @@ def cuenta_cobrar_detalle(request, id):
 
     navegacion = ('Modulo financiero',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
-                   ('Cuentas por Cobrar', 'tesoreria:cuenta_cobrar.listar'),
-                   (cuenta_cobrar.cliente.primer_nombre, None)])
+                   ('Cuentas por Cobrar', reverse('tesoreria:cuenta_cobrar_listar')),
+                   (cuenta_cobrar.cliente.get_nombres, None)])
     CHOICE_FORMAPAGO = Abono.FORMAPAGO
     return render(request, 'tesoreria/cuenta_cobrar/detalle.html', locals())
 
@@ -215,10 +223,10 @@ def comentario_eliminar(request, id):
     try:
         if comentario.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar.detalle', comentario.cuenta_cobrar_id)
+            return redirect('tesoreria:cuenta_cobrar_detalle', comentario.cuenta_cobrar_id)
         else:
             messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:cuenta_cobrar.detalle', id)
+            return redirect('tesoreria:cuenta_cobrar_detalle', id)
     except Exception as e:
         messages.warning(request, str(e))
         return HttpResponseServerError(render(request, '500.html'))
@@ -232,7 +240,7 @@ def comentario_detalle(request, id):
 
     navegacion = ('Módulo Académico',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
-                   ('Cuentas por Cobrar', reverse('tesoreria:cuenta_cobrar.listar')),
+                   ('Cuentas por Cobrar', reverse('tesoreria:cuenta_cobrar_listar')),
                    (comentario.concepto, None)])
 
     return render(request, 'tesoreria/comentario/detalle.html', locals())
@@ -295,10 +303,10 @@ def abono_eliminar(request, id):
     try:
         if abono.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar.detalle', abono.cuenta_cobrar_id)
+            return redirect('tesoreria:cuenta_cobrar_detalle', abono.cuenta_cobrar_id)
         else:
             messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:cuenta_cobrar.detalle', id)
+            return redirect('tesoreria:cuenta_cobrar_detalle', id)
 
     except Exception as e:
         messages.warning(request, str(e))
@@ -409,10 +417,10 @@ def tasa_interes_eliminar(request, id):
     try:
         if tasa_interes.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:tasa_interes.listar')
+            return redirect('tesoreria:tasa_interes_listar')
         else:
             messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:tasa_interes.listar', id)
+            return redirect('tesoreria:tasa_interes_listar', id)
 
     except Exception as e:
         messages.warning(request, str(e))
@@ -453,10 +461,10 @@ def interes_mensual_eliminar(request, id):
     try:
         if interes_mensual.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar.detalle')
+            return redirect('tesoreria:cuenta_cobrar_detalle')
         else:
             messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:cuenta_cobrar.detaller', id)
+            return redirect('tesoreria:cuenta_cobrar_detaller', id)
 
     except Exception as e:
         messages.warning(request, str(e))
