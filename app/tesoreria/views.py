@@ -37,10 +37,29 @@ def cuenta_cobrar_listar(request):
     if not usuario.is_member('tesoreria'):
         raise PermissionDenied
 
+    filtro = request.GET.get('filtro', '')
+    page = request.GET.get('pagina')
+    numero_items = request.GET.get('numero_items', '25')
+
+
     navegacion = ('Modulo financiero',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
                    ('Cuentas por Cobrar', None)])
     # ver planificacion /pedi/resultado detalle
+    cuenta_cobrar = CuentaCobrar.objects.all()
+
+    if filtro:
+        lista_de_cuentas = CuentaCobrar.buscar(filtro)
+    else:
+        lista_de_cuentas = CuentaCobrar.objects.all()
+
+    paginator = Paginator(lista_de_cuentas, numero_items)
+    try:
+        cuenta_cobrar = paginator.page(page)
+    except PageNotAnInteger:
+        cuenta_cobrar = paginator.page(1)
+    except EmptyPage:
+        cuenta_cobrar = paginator.page(paginator.num_pages)
     return render(request, 'tesoreria/cuenta_cobrar/lista.html', locals())
 
 

@@ -6,6 +6,7 @@ from decimal import Decimal
 
 # Create your models here.
 #from rest_framework.fields import CharField
+from django.db.models import Q
 
 
 class CuentaCobrar(models.Model):
@@ -26,6 +27,24 @@ class CuentaCobrar(models.Model):
 
     def __str__(self):
         return "%s" % self.concepto
+
+    @staticmethod
+    def buscar(criterio):
+        """
+        Buscar registros por criterios
+        :param criterio:
+        :return:
+        """
+        if criterio:
+            p_criterio = criterio.split(" ")
+            qset = Q()
+            for i in p_criterio:
+                qset = qset & (Q(cliente__primer_apellido__icontains=i) | Q(
+                    cliente__segundo_apellido__icontains=i) | Q(
+                    cliente__primer_nombre__icontains=i) | Q(
+                    cliente__segundo_nombre__icontains=i) | Q(
+                    cliente__numero_documento__icontains=i))
+        return CuentaCobrar.objects.filter(qset).distinct()
 
 class Abono(models.Model):
     FORMA_PAGO_EFECTIVO = "E"
