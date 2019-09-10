@@ -20,7 +20,7 @@ Cuentas por Cobrar
         <header>{{ 'tesoreria.CuentaCobrar'|verbose_name_plural|capfirst }}</header>
         <div class="tools">
             <div class="pull-right">
-                <button class="btn btn-info btn-xs"
+                <button class="btn btn-circle btn-info btn-xs"
                         data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
                         {% if not perms.tesoreria.add_cuentacobrar %} disabled {% endif %}>
                     <i class="fa fa-plus-circle"></i>Nuevo
@@ -51,6 +51,89 @@ Cuentas por Cobrar
 
 </div>
 {% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
+
+  <div class="card card-box">
+        <div class="card-head">
+        <header>{{ 'tesoreria.CuentaCobrar'|verbose_name_plural }}</header>
+        <div class="tools">
+            <div class="pull-right">
+                <button class="btn btn-circle btn-info btn-xs"
+                        data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
+                        {% if not perms.tesoreria.add_tasainteres %} disabled {% endif %}>
+                    <i class="fa fa-plus-circle"></i>Nuevo
+                </button>
+            </div>
+        </div>
+    </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="table-scrollable">
+                    <div id="usuarios_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                        <form action="{% url 'tesoreria:cuenta_cobrar_listar' %}" method="get">
+                            {% with total_items=paginator.count numero_items=numero_items filtro=filtro %}
+                                {% include 'tabla_encabezado.html' %}
+                            {% endwith %}
+                        </form>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                  <table class="table table-hover">
+                <thead>
+                <tr>
+                     <th>ID</th>
+                    <th>CI</th>
+                    <th>Cliente</th>
+                    <th>Monto</th>
+                    <th>Saldo</th>
+                    <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for cuentacobrar in cuenta_cobrar %}
+                <tr>
+                    <td>
+                        {{ cuentacobrar.id }}
+
+                    </td>
+                    <td>
+
+                        <a href="{% url 'tesoreria:cuenta_cobrar_detalle' cuentacobrar.id %}">
+                            {{ cuentacobrar.cliente.numero_documento }}</a>
+
+                    </td>
+                    <td>
+                        {{ cuentacobrar.cliente.get_nombres_completos }}
+
+                    </td>
+                    <td>
+                        {{ cuentacobrar.monto }}
+
+                    </td>
+                    <td>
+                        {{ cuentacobrar.saldo }}
+
+                    </td>
+                    <td>
+                        {% if cuentacobrar.estado %}
+                        <span class="label label-success">Activo</span>
+                        {% else %}
+                        <span class="label label-danger">Inactivo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+                            </div>
+                        </div>
+                        {% with lista=cuenta_cobrar filtro=filtro %}
+                            {% include 'tabla_paginacion.html' %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% include 'tesoreria/tasa_interes/modal_agregar.html' %}
 {% endblock %}
 
 {% block javascript %}
