@@ -6,6 +6,7 @@
             <th>Fecha de pago</th>
             <th>Monto</th>
             <th>Interes</th>
+            <th>Referencia</th>
              <th>Acción</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                 <td>{{ abono.fecha_pago|default:"" }}</td>
                 <td>{{ abono.monto }}</td>
                 <td>{{ abono.interes }}</td>
+                <td>{{ abono.referencia }}</td>
                 <td>
                     <a title="Eliminar"
                             {% if perms.tesoreria.delete_abono %}

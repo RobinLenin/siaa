@@ -9,12 +9,15 @@ class CuentaCobrarForm(forms.ModelForm):
 
 
 class ComentarioForm(forms.ModelForm):
+    detalle = forms.CharField(required=False)
     class Meta:
         model = Comentario
         fields = '__all__'
 
 
 class AbonoForm(forms.ModelForm):
+    observacion = forms.CharField(required=False)
+    referencia = forms.CharField(required=False)
     class Meta:
         model = Abono
         fields = '__all__'

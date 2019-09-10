@@ -53,6 +53,7 @@ class Abono(models.Model):
     FORMAPAGO = ((FORMA_PAGO_EFECTIVO, "Efectivo"), (FORMA_PAGO_CHEQUE, "Cheque"), (FORMA_PAGO_DEPOSITO, "Deposito"),)
 
     forma_pago=models.CharField(max_length=1, choices=FORMAPAGO, default=FORMA_PAGO_EFECTIVO)
+    referencia = models.CharField(max_length=100, default="")
     concepto = models.CharField(max_length=100)
     monto = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     interes = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
