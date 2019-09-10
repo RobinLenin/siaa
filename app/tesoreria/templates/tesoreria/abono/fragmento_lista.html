@@ -33,6 +33,16 @@
                             {% endif %}>
                         <i class="fa fa-trash-o"></i>
                     </a>
+                    <a title="Eliminar"
+                            {% if perms.tesoreria.delete_abono %}
+                       class="btn btn-outline-info"
+                       onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                       href="{% url 'tesoreria:abono_eliminar' abono.id %}"
+                            {% else %}
+                       class="btn btn-outline-danger disabled"
+                            {% endif %}>
+                        <i class="fa fa-print"></i>
+                    </a>
                 </td>
 
             </tr>

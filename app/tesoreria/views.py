@@ -312,26 +312,23 @@ def abono_eliminar(request, id):
         messages.warning(request, str(e))
         return HttpResponseServerError(render(request, '500.html'))
 
+@login_required
+def abono_imprimir(request, id):
 
-"""@login_required
-def abono_listar(request):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
-
-    lista_abono = Comentario.objects.filter(activo=True)
-    paginator = Paginator(lista_abono, 25)
-    page = request.GET.get('pagina')
+    abono = get_object_or_404(Abono, id=id)
 
     try:
-        abono = paginator.page(page)
-    except PageNotAnInteger:
-        abono = paginator.page(1)
-    except EmptyPage:
-        abono = paginator.page(paginator.num_pages)
+        if abono.delete():
+            messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
+            return redirect('tesoreria:cuenta_cobrar_detalle', abono.cuenta_cobrar_id)
+        else:
+            messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
+            return redirect('tesoreria:cuenta_cobrar_detalle', id)
 
-    return render(request, 'tesoreria/cuenta_cobrar/detalle.html', locals())
-"""
+    except Exception as e:
+        messages.warning(request, str(e))
+        return HttpResponseServerError(render(request, '500.html'))
+
 # ////////////////////////Tasa interes//////////////
 @login_required
 @permission_required('tesoreria', raise_exception=True, )
