@@ -162,55 +162,17 @@ def cuenta_cobrar_eliminar(request, id):
 def cuenta_cobrar_detalle(request, id):
 
     cuenta_cobrar = get_object_or_404(CuentaCobrar, id=id)
+    cuenta_id=id
 
     navegacion = ('Modulo financiero',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
                    ('Cuentas por Cobrar', reverse('tesoreria:cuenta_cobrar_listar')),
-                   (cuenta_cobrar.cliente.get_nombres, None)])
+                   (cuenta_cobrar.cliente.get_nombres_completos, None)])
     CHOICE_FORMAPAGO = Abono.FORMAPAGO
     return render(request, 'tesoreria/cuenta_cobrar/detalle.html', locals())
 
 
-# ////////////////////////Titulo de Credito//////////////
-"""@login_required
-def titulo_credito_agregar(request):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
-    form = TituloCreditoForm()
-    if request.method == 'POST':
-        form = TituloCreditoForm(request.POST)
-        if form.is_valid():
-            titulo_credito = form.save()
-            return HttpResponseRedirect(reverse('tesoreria:cuenta_cobrar/detalle', args=(titulo_credito.id,)))
-    return render(request, 'tesoreria/titulo_credito/agregar.html', locals())
 
-
-@login_required
-def titulo_credito_editar(request, id_titulo_credito):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
-    titulo_credito = get_object_or_404(TituloCredito, id=id_titulo_credito)
-    form = TituloCreditoForm(instance=titulo_credito)
-    if request.method == 'POST':
-        form = TituloCreditoForm(request.POST, instance=titulo_credito)
-        if form.is_valid():
-            titulo_credito = form.save()
-            return HttpResponseRedirect(reverse('tesoreria:cuenta_cobrar/detalle', args=(titulo_credito.id,)))
-    return render(request, 'tesoreria/titulo_credito/agregar.html', locals())
-
-
-@login_required
-def titulo_credito_eliminar(request, id_titulo_credito):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
-    titulo_credito = get_object_or_404(CuentaCobrar, id=id_titulo_credito)
-    titulo_credito.delete()
-    return HttpResponseRedirect(reverse('tesoreria:cuenta_cobrar/detalle', args=(id_titulo_credito,)))
-
-"""
 # ////////////////////////Comentario//////////////
 
 @login_required
@@ -256,10 +218,13 @@ def comentario_eliminar(request, id):
 def comentario_detalle(request, id):
 
     comentario = get_object_or_404(Comentario, id=id)
+    cuenta_id=comentario.cuenta_cobrar.id
 
     navegacion = ('Módulo Académico',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
                    ('Cuentas por Cobrar', reverse('tesoreria:cuenta_cobrar_listar')),
+                   (comentario.cuenta_cobrar.cliente.get_nombres_completos, reverse('tesoreria:cuenta_cobrar_detalle',
+                                                                                    args=[cuenta_id])),
                    (comentario.concepto, None)])
 
     return render(request, 'tesoreria/comentario/detalle.html', locals())
@@ -331,23 +296,26 @@ def abono_eliminar(request, id):
         messages.warning(request, str(e))
         return HttpResponseServerError(render(request, '500.html'))
 
-@login_required
-def abono_imprimir(request, id):
 
-    abono = get_object_or_404(Abono, id=id)
+"""@login_required
+def abono_listar(request):
+    usuario = request.user
+    if not usuario.is_member('tesoreria'):
+        raise PermissionDenied
+
+    lista_abono = Comentario.objects.filter(activo=True)
+    paginator = Paginator(lista_abono, 25)
+    page = request.GET.get('pagina')
 
     try:
-        if abono.delete():
-            messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar_detalle', abono.cuenta_cobrar_id)
-        else:
-            messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:cuenta_cobrar_detalle', id)
+        abono = paginator.page(page)
+    except PageNotAnInteger:
+        abono = paginator.page(1)
+    except EmptyPage:
+        abono = paginator.page(paginator.num_pages)
 
-    except Exception as e:
-        messages.warning(request, str(e))
-        return HttpResponseServerError(render(request, '500.html'))
-
+    return render(request, 'tesoreria/cuenta_cobrar/detalle.html', locals())
+"""
 # ////////////////////////Tasa interes//////////////
 @login_required
 @permission_required('tesoreria', raise_exception=True, )

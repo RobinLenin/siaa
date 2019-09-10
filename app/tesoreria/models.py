@@ -65,9 +65,9 @@ class Abono(models.Model):
 
 class Comentario(models.Model):
     cuenta_cobrar = models.ForeignKey('CuentaCobrar', on_delete=models.CASCADE, related_name='comentarios')
-    fecha_creacion= models.DateTimeField( verbose_name="Fecha de creacion")
+    fecha_creacion= models.DateTimeField(auto_now=True, verbose_name="Fecha de creacion")
     concepto = models.CharField(max_length=100)
-    detalle= models.TextField()
+    detalle= models.CharField(max_length=255)
 
     class Meta:
         verbose_name="Providencia"

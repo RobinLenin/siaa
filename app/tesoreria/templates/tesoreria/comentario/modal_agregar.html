@@ -2,28 +2,16 @@
     <form action="{% url 'tesoreria:comentario_guardar' %}" method="POST" role="form" id="formComentario">
         {% csrf_token %}
         <input type="hidden" id="id" name="id" value="{{ comentario.id }}"/>
-        <input type="hidden" id="id_cuenta" name="cuenta_cobrar"  value="{{ cuenta_cobrar.id }}"/>
+        <input type="hidden" id="id_cuenta" name="cuenta_cobrar" value="{{ cuenta_id}}"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">{{ 'tesoreria.Comentario'|verbose_name|capfirst  }}</h4>
+                    <h4 class="modal-title">{{ 'tesoreria.Comentario'|verbose_name|capfirst }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        {% now "Y-m-d" as ahora %}
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <label for="fecha_creacion">Fecha de Creación:</label>
-                                <input type="date"
-                                       class="form-control"
-                                       placeholder="Fecha de emisión.."
-                                       name="fecha_creacion"
-                                       id="fecha_creacion"
-                                       value="{{ comentario.fecha_creacion|date:"Y-m-d"|default:ahora }}"
-                                       required">
-                            </div>
-                        </div>
+
                         <div class="form-group col-md-12">
                             <label for="concepto">Concepto:</label>
                             <input type="text"
@@ -39,17 +27,16 @@
                         <div class="form-group col-md-12">
                             <label for="detalle">Detalle:</label>
                             <textarea name="detalle"
-                                      ows="10"
-                                      ols="40"
+                                      rows="10"
+                                      cols="40"
                                       class="form-control letras_man_min"
-                                      placeholder="Detalle.."
+                                      placeholder="Detalle"
                                       id="detalle"
-                                      name="detalle"
-                                      value="{{ comentario.detalle }}"
                                       minlength="3"
                                       maxlength="255"
                                       onresize="false"
-                                   required>
+                                      required>
+                                {{ comentario.detalle }}
                             </textarea>
                         </div>
                     </div>
