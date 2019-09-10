@@ -15,6 +15,7 @@ $(document).ready(function () {
 });
 
 
+
 function oferta_pensum_guardar(evento) {
     /**
      * llamado ajax para guardar una oferta pensum
