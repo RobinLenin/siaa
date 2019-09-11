@@ -383,7 +383,7 @@ def tasa_interes_guardar(request):
         tasa_interes.save()
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
     else:
-        messages.warning(request, tasa_interes.errors)
+        messages.warning(request, MensajesEnum.ACCION_NUEVO_TASA.value)
 
     return redirect(next)
 def validar_tasa_interes(anio, mes):

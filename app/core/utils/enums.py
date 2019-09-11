@@ -1,6 +1,7 @@
 from enum import Enum
 
 class MensajesEnum(Enum):
+    ACCION_NUEVO_TASA = "Tasa ya creada"
     ACCION_GUARDAR = "Datos actualizados correctamente..."
     ACCION_ELIMINAR= "Datos eliminados correctamente..."
     ACCION_ELIMINAR_ERROR = "No se puede eliminar el registro..."
