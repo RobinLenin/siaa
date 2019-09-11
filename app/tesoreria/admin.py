@@ -27,7 +27,7 @@ class ComentarioAdmin(admin.ModelAdmin):
 class TasaInteresAdmin(admin.ModelAdmin):
     #fields = ('codigo', 'descripcion', 'definicion', 'updated_by', 'created_by', 'created_at', 'updated_at',)
     #search_fields = ('descripcion', 'codigo',)
-    list_display = ('fecha', 'tasa',)
+    list_display = ('anio', 'mes', 'tasa',)
     #raw_id_fields = ('cliente',)
 
 admin.site.register(CuentaCobrar, CuentaCobrarAdmin)

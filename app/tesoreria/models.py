@@ -78,14 +78,15 @@ class Comentario(models.Model):
 
 class TasaInteres(models.Model):
     tasa=models.DecimalField(max_digits=4, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-    fecha=models.DateField()
+    anio = models.DecimalField(max_digits=4, decimal_places=0, default=0)
+    mes = models.DecimalField(max_digits=2, decimal_places=0, default=0)
 
     class Meta:
         verbose_name = "Tasa de Interes"
         verbose_name_plural = "Tasas de Interes"
 
     def __str__(self):
-        return "{0} {1}".format(self.tasa, self.fecha)
+        return "{0} {1}".format(self.tasa, self.anio, self.mes)
 
 class InteresMensual(models.Model):
     cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')

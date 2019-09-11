@@ -12,19 +12,32 @@
                     <div class="row">
                         {% now "Y-m" as ahora %}
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <label for="fecha">Fecha:</label>
-                                <input type="date"
-                                       class="form-control"
-                                       placeholder="Fecha.."
-                                       name="fecha"
-                                       id="fecha"
-                                       value="{{ tasa_interes.fecha|date:"Y-m-d"|default:ahora }}"
-                                       required>
-                            </div>
+                            <label for="anio">Año:</label>
+                            <input type="number"
+                                   placeholder="1990"
+                                   class="form-control"
+                                   id="anio"
+                                   name="anio"
+                                   value="{{ tasa_interes.anio }}"
+                                   min="1990"
+                                   max="2200"
+                                   required>
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <label for="mes">Mes:</label>
+                            <input type="number"
+                                   placeholder="0"
+                                   class="form-control"
+                                   id="mes"
+                                   name="mes"
+                                   value="{{ tasa_interes.mes }}"
+                                   min="0"
+                                   max="12"
+                                   required>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <label for="tasa">Tasa:</label>
                             <input type="number"
                                    placeholder="0.00"
