@@ -377,21 +377,25 @@ def tasa_interes_buscar(request):
 @require_http_methods(['POST'])
 def tasa_interes_guardar(request):
     next = request.POST.get('next')
-    id = request.POST.get('id')
-    if id:
-        tasa_interes = get_object_or_404(TasaInteres, id=id)
-    else:
-        tasa_interes = TasaInteres()
-
+    tasa_interes = TasaInteres()
     tasa_interes = TasaInteresForm(request.POST, instance=tasa_interes)
-    if tasa_interes.is_valid():
+    if tasa_interes.is_valid() and validar_tasa_interes(request.POST.get('anio'), request.POST.get('mes')):
         tasa_interes.save()
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
     else:
         messages.warning(request, tasa_interes.errors)
 
     return redirect(next)
+def validar_tasa_interes(anio, mes):
+    print("Primero: " + anio, mes)
+    val = True
+    tasa_interes = TasaInteres.objects.all()
+    for tasa in tasa_interes:
+        print(tasa.anio, tasa.mes)
+        if str(tasa.anio) == str(anio) and str(tasa.mes) == str(mes):
+            val = False
 
+    return val
 
 @login_required
 @permission_required('tesoreria.delete_tasainteres', raise_exception=True, )
