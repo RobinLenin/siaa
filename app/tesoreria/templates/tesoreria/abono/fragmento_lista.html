@@ -35,11 +35,10 @@
                             {% endif %}>
                         <i class="fa fa-trash-o"></i>
                     </a>
-                    <a title="Eliminar"
+                    <a title="Imprimir"
                             {% if perms.tesoreria.delete_abono %}
                        class="btn btn-outline-info"
-                       onclick="return confirm('¿Está seguro de eliminar el registro?')"
-                       href="{% url 'tesoreria:abono_eliminar' abono.id %}"
+                       href="{% url 'tesoreria:abono_imprimir' abono.id %}"
                             {% else %}
                        class="btn btn-outline-danger disabled"
                             {% endif %}>

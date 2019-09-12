@@ -22,7 +22,8 @@ urlpatterns = [
 
     path('cuenta_cobrar/abonos/guardar', views.abono_guardar, name='abono_guardar'),
     path('cuenta_cobrar/abonos/eliminar/<int:id>', views.abono_eliminar, name='abono_eliminar'),
-    # path('cuenta_cobrar/abonos/listar', views.abono_listar, name='abonos_listar'),
+    path('cuenta_cobrar/abonos/imprimir/<int:id>', views.abono_imprimir, name='abono_imprimir'),
+
 
     path('tasa_interes/guardar', views.tasa_interes_guardar, name='tasa_interes_guardar'),
     path('tasa_interes/eliminar/<int:id>', views.tasa_interes_eliminar, name='tasa_interes_eliminar'),

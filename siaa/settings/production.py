@@ -28,5 +28,17 @@ DATABASES = {
         'PASSWORD': 'siaaf',
         'HOST': 'localhost',
         'PORT': '5432',
+    },
+
+    'reporte': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'OPTIONS': {
+            'options': '-c search_path=reporte'
+        },
+        'NAME': 'siaaf',
+        'USER': 'siaaf',
+        'PASSWORD': 'siaaf',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }

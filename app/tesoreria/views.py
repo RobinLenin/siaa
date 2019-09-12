@@ -12,6 +12,7 @@ from app.core.utils.enums import MensajesEnum
 from app.tesoreria.forms import CuentaCobrarForm, ComentarioForm, AbonoForm, TasaInteresForm, \
     InteresMensualForm
 from app.tesoreria.models import CuentaCobrar, Comentario, Abono, TasaInteres, InteresMensual
+from app.reporte.utils import pdf as pdfUtil
 
 
 # ////////////////////////Cuenta por cobrar//////////////
@@ -297,25 +298,29 @@ def abono_eliminar(request, id):
         return HttpResponseServerError(render(request, '500.html'))
 
 
-"""@login_required
-def abono_listar(request):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
+@login_required
+@permission_required('tesoreria.imprimir_abono', raise_exception=True, )
+def abono_imprimir(request, id):
 
-    lista_abono = Comentario.objects.filter(activo=True)
-    paginator = Paginator(lista_abono, 25)
-    page = request.GET.get('pagina')
+    abono = get_object_or_404(Abono, id=id)
 
-    try:
-        abono = paginator.page(page)
-    except PageNotAnInteger:
-        abono = paginator.page(1)
-    except EmptyPage:
-        abono = paginator.page(paginator.num_pages)
+    datos = dict(
 
-    return render(request, 'tesoreria/cuenta_cobrar/detalle.html', locals())
-"""
+        cliente=abono.cuenta_cobrar.cliente.get_nombres_completos(),
+        fecha_pago=abono.fecha_pago,
+        forma_pago=abono.forma_pago,
+        referencia=abono.referencia,
+        concepto=abono.concepto,
+        monto=abono.monto,
+        interes=abono.interes,
+        saldo=abono.cuenta_cobrar.saldo,
+        observacion=abono.observacion
+
+    )
+
+
+    return pdfUtil.generar_reporte('tesoreria_abono', datos, 'pdf', request)
+
 # ////////////////////////Tasa interes//////////////
 @login_required
 @permission_required('tesoreria', raise_exception=True, )

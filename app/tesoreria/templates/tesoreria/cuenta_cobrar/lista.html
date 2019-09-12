@@ -15,42 +15,6 @@ Cuentas por Cobrar
 {% endblock %}
 
 {% block contenido %}
-<div class="card card-box">
-    <div class="card-head">
-        <header>{{ 'tesoreria.CuentaCobrar'|verbose_name_plural|capfirst }}</header>
-        <div class="tools">
-            <div class="pull-right">
-                <button class="btn btn-circle btn-info btn-xs"
-                        data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
-                        {% if not perms.tesoreria.add_cuentacobrar %} disabled {% endif %}>
-                    <i class="fa fa-plus-circle"></i>Nuevo
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="card-body ">
-        <div class="table-responsive">
-            <table class="table table-hover" id="cuenta_cobrar">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>CI</th>
-                    <th>Cliente</th>
-                    <th>Monto</th>
-                    <th>Saldo</th>
-                    <th>Estado</th>
-
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</div>
-{% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
 
   <div class="card card-box">
         <div class="card-head">
@@ -144,3 +108,41 @@ Cuentas por Cobrar
 <script src="{% static 'js/tesoreria/cuentacobrar_lista.js' %}"></script>
 
 {% endblock %}
+
+ <!--  <div class="card card-box">
+    <div class="card-head">
+        <header>{{ 'tesoreria.CuentaCobrar'|verbose_name_plural|capfirst }}</header>
+        <div class="tools">
+            <div class="pull-right">
+                <button class="btn btn-circle btn-info btn-xs"
+                        data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
+                        {% if not perms.tesoreria.add_cuentacobrar %} disabled {% endif %}>
+                    <i class="fa fa-plus-circle"></i>Nuevo
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body ">
+        <div class="table-responsive">
+            <table class="table table-hover" id="cuenta_cobrar">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CI</th>
+                    <th>Cliente</th>
+                    <th>Monto</th>
+                    <th>Saldo</th>
+                    <th>Estado</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
+-->
