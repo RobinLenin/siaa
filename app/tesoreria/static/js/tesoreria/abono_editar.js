@@ -8,12 +8,13 @@ $(document).ready(function(){
     $("#forma_pago").change(function(){
 
     var selectedCountry = $(this).children("option:selected").val();
-    if(selectedCountry == "E"){
-    $("#referencia").hide();
-    $("#labelreferencia").hide();
-    }else{
+    if(selectedCountry != "Efectivo"){
     $("#referencia").show();
     $("#labelreferencia").show();
+    }else{
+    $("#referencia").hide();
+    $("#labelreferencia").hide();
+
     }
     });
 
