@@ -46,7 +46,7 @@ def cuenta_cobrar_listar(request):
     navegacion = ('Modulo financiero',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
                    ('Cuentas por Cobrar', None)])
-    # ver planificacion /pedi/resultado detalle
+
     cuenta_cobrar = CuentaCobrar.objects.all()
 
     if filtro:
