@@ -16,6 +16,7 @@ Cuentas por Cobrar
 
 {% block contenido %}
 
+{% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
   <div class="card card-box">
         <div class="card-head">
         <header>{{ 'tesoreria.CuentaCobrar'|verbose_name_plural }}</header>
@@ -97,7 +98,6 @@ Cuentas por Cobrar
             </div>
         </div>
     </div>
-{% include 'tesoreria/tasa_interes/modal_agregar.html' %}
 {% endblock %}
 
 {% block javascript %}
