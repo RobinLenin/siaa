@@ -1,6 +1,6 @@
 from datetime import date, timezone
 
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from decimal import Decimal
 
@@ -15,10 +15,10 @@ class CuentaCobrar(models.Model):
     estado = models.BooleanField(default=True)
     concepto = models.CharField(max_length=100)
     fecha_emision = models.DateField(verbose_name="Fecha de emision")
-    fecha_vencimiento = models.DateField()
+    fecha_vencimiento = models.DateField(verbose_name="Fecha de vencimiento")
     monto = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     saldo = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-    cliente = models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='clientes')
+    cliente = models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='cuentas_cobrar')
     numero_titulo = models.CharField(max_length=10)
     titulo = models.FileField(upload_to='tesoreria/')
 
@@ -67,10 +67,11 @@ class Abono(models.Model):
         return "{0} {1} {2}".format(self.fecha_pago, self.monto, self.interes)
 
 class Comentario(models.Model):
-    cuenta_cobrar = models.ForeignKey('CuentaCobrar', on_delete=models.CASCADE, related_name='comentarios')
     fecha_creacion= models.DateTimeField(auto_now=True, verbose_name="Fecha de creacion")
     concepto = models.CharField(max_length=100)
     detalle= models.CharField(max_length=255)
+
+    cuenta_cobrar = models.ForeignKey('CuentaCobrar', on_delete=models.CASCADE, related_name='comentarios')
 
     class Meta:
         verbose_name="Providencia"
@@ -80,8 +81,8 @@ class Comentario(models.Model):
 
 class TasaInteres(models.Model):
     tasa=models.DecimalField(max_digits=4, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-    anio = models.DecimalField(max_digits=4, decimal_places=0, default=0)
-    mes = models.DecimalField(max_digits=2, decimal_places=0, default=0)
+    anio = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(Decimal('2200'))])
+    mes = models.PositiveSmallIntegerField(default=1, validators=[MaxValueValidator(Decimal('12'))])
 
     class Meta:
         verbose_name = "Tasa de Interes"
@@ -91,10 +92,11 @@ class TasaInteres(models.Model):
         return "{0} {1}".format(self.tasa, self.anio, self.mes)
 
 class InteresMensual(models.Model):
-    cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')
-    tasa = models.ForeignKey('TasaInteres', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')
     fecha = models.DateField()
     valor=models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
+
+    tasa = models.ForeignKey('TasaInteres', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')
+    cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')
 
     def __str__(self):
         return str(self.valor)

@@ -23,7 +23,7 @@ from app.tesoreria.utils.datatable import DatatableBuscar
 @login_required
 def index_tesoreria(request):
     """
-    Index de la sección curricular del académico
+    Index de la sección tesoreria
     :param request:
     :return:
     """
@@ -32,12 +32,190 @@ def index_tesoreria(request):
     return render(request, 'tesoreria/index_tesoreria.html', locals())
 
 
+# ////////////////////////Abono//////////////
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.change_abono', raise_exception=True, )
+@require_http_methods(['POST'])
+def abono_guardar(request):
+    next = request.POST.get('next')
+    id = request.POST.get('id')
+    if id:
+        abono = get_object_or_404(Abono, id=id)
+    else:
+        abono = Abono()
+
+    abono_form = AbonoForm(request.POST, instance=abono)
+    if abono_form.is_valid():
+        abono_form.save()
+        messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
+
+    else:
+        messages.warning(request, abono_form.errors)
+
+    return redirect(next)
+
+
+@login_required
+@permission_required('tesoreria.delete_abono', raise_exception=True, )
+def abono_eliminar(request, id):
+
+    abono = get_object_or_404(Abono, id=id)
+
+    try:
+        if abono.delete():
+            messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
+            return redirect('tesoreria:cuenta_cobrar_detalle', abono.cuenta_cobrar_id)
+        else:
+            messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
+            return redirect('tesoreria:cuenta_cobrar_detalle', id)
+
+    except Exception as e:
+        messages.warning(request, str(e))
+        return HttpResponseServerError(render(request, '500.html'))
+
+
+@login_required
+@permission_required('tesoreria.print_abono', raise_exception=True, )
+def abono_imprimir(request, id):
+
+    abono = get_object_or_404(Abono, id=id)
+
+    datos = dict(
+
+        cliente=abono.cuenta_cobrar.cliente.get_nombres_completos(),
+        fecha_pago=abono.fecha_pago,
+        forma_pago=abono.forma_pago,
+        referencia=abono.referencia,
+        concepto=abono.concepto,
+        monto=abono.monto,
+        interes=abono.interes,
+        saldo=abono.cuenta_cobrar.saldo,
+        observacion=abono.observacion
+
+    )
+
+
+    return pdfUtil.generar_reporte('tesoreria_abono', datos, 'pdf', request)
+
+# ////////////////////////Cliente//////////////
+
+@login_required
+@permission_required('tesoreria.view_persona', raise_exception=True)
+def cliente_lista(request):
+    """
+    Lista las clientes
+    :param request:
+    :return:
+    """
+    navegacion = ('Modulo financiero',
+                  [('Tesorería', reverse('tesoreria:index_tesoreria')),
+                   ('Clientes', None)])
+
+    return render(request, 'tesoreria/cliente/lista.html', locals())
+
+
+@login_required
+@require_http_methods(["POST"])
+@permission_required('tesoreria.view_persona', raise_exception=True, )
+def cliente_lista_paginador(request):
+    """
+    Lista los clientes con la paginación de datatable
+    :param request:
+    :return:
+    """
+    try:
+        params = DataTableParams(request, **request.POST)
+        DatatableBuscar.cliente(params)
+        data = params.items.values('id', 'numero_documento', 'primer_apellido', 'segundo_apellido', 'primer_nombre',
+                                   'segundo_nombre',
+                                   'correo_electronico').all()
+        result = params.result(list(data))
+        return JsonResponse(result)
+
+    except Exception as e:
+        return HttpResponseServerError(e)
+
+
+@login_required
+@permission_required('tesoreria.view_persona', raise_exception=True)
+def cliente_informacion_detallada(request, id):
+    """
+    Presenta la información de un determinado cliente
+    :param request:
+    :param id_funcionario: El identificador del funcionario
+    :return: La página principal del funcionario
+    """
+    cliente = Persona.objects.get(id=id)
+
+    navegacion = ('Módulo financiero',
+                  [('Tesorería', reverse('tesoreria:index_tesoreria')),
+                   ('Clientes', reverse('tesoreria:cliente_lista')),
+                   (cliente.primer_nombre, None)])
+
+    return render(request, 'tesoreria/cliente/informacion_detallada.html', locals())
+
+# ////////////////////////Comentario//////////////
+
+@login_required
+@permission_required('tesoreria.change_comentario', raise_exception=True, )
+@require_http_methods(['POST'])
+def comentario_guardar(request):
+    next = request.POST.get('next')
+    id = request.POST.get('id')
+    if id:
+        comentario = get_object_or_404(Comentario, id=id)
+    else:
+        comentario = Comentario()
+
+    comentario_form = ComentarioForm(request.POST, instance=comentario)
+    if comentario_form.is_valid():
+        comentario_form.save()
+        messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
+    else:
+        messages.warning(request, comentario_form.errors)
+
+    return redirect(next)
+
+
+@login_required
+@permission_required('tesoreria.delete_comentario', raise_exception=True, )
+def comentario_eliminar(request, id):
+
+    comentario = get_object_or_404(Comentario, id=id)
+    try:
+        if comentario.delete():
+            messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
+            return redirect('tesoreria:cuenta_cobrar_detalle', comentario.cuenta_cobrar_id)
+        else:
+            messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
+            return redirect('tesoreria:cuenta_cobrar_detalle', id)
+    except Exception as e:
+        messages.warning(request, str(e))
+        return HttpResponseServerError(render(request, '500.html'))
+
+
+@login_required
+@permission_required('tesoreria.view_comentario', raise_exception=True, )
+def comentario_detalle(request, id):
+
+    comentario = get_object_or_404(Comentario, id=id)
+    cuenta_id=comentario.cuenta_cobrar.id
+
+    navegacion = ('Módulo Académico',
+                  [('Tesoreria', reverse('tesoreria:index_tesoreria')),
+                   ('Cuentas por Cobrar', reverse('tesoreria:cuenta_cobrar_listar')),
+                   (comentario.cuenta_cobrar.cliente.get_nombres_completos, reverse('tesoreria:cuenta_cobrar_detalle',
+                                                                                    args=[cuenta_id])),
+                   (comentario.concepto, None)])
+
+    return render(request, 'tesoreria/comentario/detalle.html', locals())
+
+
+# ////////////////////////Cuenta por Cobrar//////////////
+
+@login_required
+@permission_required('tesoreria.view_cuentacobrar', raise_exception=True, )
 def cuenta_cobrar_listar(request):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
 
     filtro = request.GET.get('filtro', '')
     page = request.GET.get('pagina')
@@ -47,8 +225,6 @@ def cuenta_cobrar_listar(request):
     navegacion = ('Modulo financiero',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
                    ('Cuentas por Cobrar', None)])
-
-    cuenta_cobrar = CuentaCobrar.objects.all()
 
     if filtro:
         lista_de_cuentas = CuentaCobrar.buscar(filtro)
@@ -66,7 +242,7 @@ def cuenta_cobrar_listar(request):
 
 
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.view_cuentacobrar', raise_exception=True, )
 @require_http_methods(["POST"])
 def cuenta_cobrar_lista_paginador(request):
 
@@ -90,11 +266,8 @@ def cuenta_cobrar_lista_paginador(request):
 
 
 @login_required
+@permission_required('tesoreria.view_cuentacobrar', raise_exception=True, )
 def cuenta_cobrar_buscar(request):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
-
     filtro = request.GET.get('filtro')
     numero_items = request.GET.get('numero_items', '25')
     page = request.GET.get('pagina')
@@ -175,160 +348,10 @@ def cuenta_cobrar_detalle(request, id):
 
 
 
-# ////////////////////////Comentario//////////////
-
-@login_required
-@permission_required('tesoreria.change_comentario', raise_exception=True, )
-@require_http_methods(['POST'])
-def comentario_guardar(request):
-    next = request.POST.get('next')
-    id = request.POST.get('id')
-    if id:
-        comentario = get_object_or_404(Comentario, id=id)
-    else:
-        comentario = Comentario()
-
-    comentario_form = ComentarioForm(request.POST, instance=comentario)
-    if comentario_form.is_valid():
-        comentario_form.save()
-        messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
-    else:
-        messages.warning(request, comentario_form.errors)
-
-    return redirect(next)
-
-
-@login_required
-@permission_required('tesoreria.delete_comentario', raise_exception=True, )
-def comentario_eliminar(request, id):
-
-    comentario = get_object_or_404(Comentario, id=id)
-    try:
-        if comentario.delete():
-            messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar_detalle', comentario.cuenta_cobrar_id)
-        else:
-            messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:cuenta_cobrar_detalle', id)
-    except Exception as e:
-        messages.warning(request, str(e))
-        return HttpResponseServerError(render(request, '500.html'))
-
-
-@login_required
-@permission_required('tesoreria', raise_exception=True, )
-def comentario_detalle(request, id):
-
-    comentario = get_object_or_404(Comentario, id=id)
-    cuenta_id=comentario.cuenta_cobrar.id
-
-    navegacion = ('Módulo Académico',
-                  [('Tesoreria', reverse('tesoreria:index_tesoreria')),
-                   ('Cuentas por Cobrar', reverse('tesoreria:cuenta_cobrar_listar')),
-                   (comentario.cuenta_cobrar.cliente.get_nombres_completos, reverse('tesoreria:cuenta_cobrar_detalle',
-                                                                                    args=[cuenta_id])),
-                   (comentario.concepto, None)])
-
-    return render(request, 'tesoreria/comentario/detalle.html', locals())
-
-
-
-
-
-
-
-"""@login_required
-def comentario_listar(request):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
-
-    lista_comentario = Comentario.objects.filter(activo=True)
-    paginator = Paginator(lista_comentario, 25)
-    page = request.GET.get('pagina')
-
-    try:
-        comentario = paginator.page(page)
-    except PageNotAnInteger:
-        comentario = paginator.page(1)
-    except EmptyPage:
-        comentario = paginator.page(paginator.num_pages)
-
-    return render(request, 'tesoreria/cuenta_cobrar/detalle.html', locals())
-
-"""""
-# ////////////////////////Abono//////////////
-@login_required
-@permission_required('tesoreria.change_abono', raise_exception=True, )
-@require_http_methods(['POST'])
-def abono_guardar(request):
-    next = request.POST.get('next')
-    id = request.POST.get('id')
-    if id:
-        abono = get_object_or_404(Abono, id=id)
-    else:
-        abono = Abono()
-
-    abono_form = AbonoForm(request.POST, instance=abono)
-    if abono_form.is_valid():
-        abono_form.save()
-        messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
-
-    else:
-        messages.warning(request, abono_form.errors)
-
-    return redirect(next)
-
-
-@login_required
-@permission_required('tesoreria.delete_abono', raise_exception=True, )
-def abono_eliminar(request, id):
-
-    abono = get_object_or_404(Abono, id=id)
-
-    try:
-        if abono.delete():
-            messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar_detalle', abono.cuenta_cobrar_id)
-        else:
-            messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:cuenta_cobrar_detalle', id)
-
-    except Exception as e:
-        messages.warning(request, str(e))
-        return HttpResponseServerError(render(request, '500.html'))
-
-
-@login_required
-@permission_required('tesoreria.imprimir_abono', raise_exception=True, )
-def abono_imprimir(request, id):
-
-    abono = get_object_or_404(Abono, id=id)
-
-    datos = dict(
-
-        cliente=abono.cuenta_cobrar.cliente.get_nombres_completos(),
-        fecha_pago=abono.fecha_pago,
-        forma_pago=abono.forma_pago,
-        referencia=abono.referencia,
-        concepto=abono.concepto,
-        monto=abono.monto,
-        interes=abono.interes,
-        saldo=abono.cuenta_cobrar.saldo,
-        observacion=abono.observacion
-
-    )
-
-
-    return pdfUtil.generar_reporte('tesoreria_abono', datos, 'pdf', request)
-
 # ////////////////////////Tasa interes//////////////
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.view_tasainteres', raise_exception=True, )
 def tasa_interes_listar(request):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
 
     navegacion = ('Modulo financiero',
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
@@ -338,7 +361,7 @@ def tasa_interes_listar(request):
 
 
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.view_tasainteres', raise_exception=True, )
 @require_http_methods(["POST"])
 def tasa_interes_lista_paginador(request):
 
@@ -352,30 +375,6 @@ def tasa_interes_lista_paginador(request):
     except Exception as e:
         return HttpResponseServerError(e)
 
-
-@login_required
-def tasa_interes_buscar(request):
-    usuario = request.user
-    if not usuario.is_member('tesoreria'):
-        raise PermissionDenied
-
-    filtro = request.GET.get('filtro')
-    numero_items = request.GET.get('numero_items', '12')
-    page = request.GET.get('pagina')
-
-    if filtro:
-        lista_tasa_interes= TasaInteres.buscar(filtro)
-    else:
-        lista_tasa_interes = TasaInteres.objects.all()
-    paginator = Paginator(lista_tasa_interes, numero_items)
-
-    try:
-        tasa_interes = paginator.page(page)
-    except PageNotAnInteger:
-        tasa_interes = paginator.page(1)
-    except EmptyPage:
-        tasa_interes = paginator.page(paginator.num_pages)
-    return render(request, 'tesoreria/tasa_interes/lista.html', locals())
 
 
 @login_required
@@ -392,6 +391,8 @@ def tasa_interes_guardar(request):
         messages.warning(request, MensajesEnum.ACCION_NUEVO_TASA.value)
 
     return redirect(next)
+
+
 def validar_tasa_interes(anio, mes):
     print("Primero: " + anio, mes)
     val = True
@@ -422,18 +423,16 @@ def tasa_interes_eliminar(request, id):
 
 # ////////////////////////Interes Mensual//////////////
 @login_required
+@permission_required('tesoreria.change_interesmensual', raise_exception=True, )
 @require_http_methods(['POST'])
 def interes_mensual_guardar(request):
     next = request.POST.get('next')
     id = request.POST.get('id')
     if id:
         interes_mensual = get_object_or_404(InteresMensual, id=id)
-        if not (request.user.has_perm("tesoreria") or request.user.has_perm(
-                "tesoreria", TasaInteres)):
-            raise PermissionDenied
+
     else:
-        if not request.user.has_perm("tesoreria"):
-            raise PermissionDenied
+
         interes_mensual = InteresMensual()
 
     interes_mensual = InteresMensualForm(request.POST, instance=interes_mensual)
@@ -448,7 +447,7 @@ def interes_mensual_guardar(request):
 
 
 @login_required
-@permission_required('tesoreria', raise_exception=True, )
+@permission_required('tesoreria.delete_interesmensual', raise_exception=True, )
 def interes_mensual_eliminar(request, id):
 
     interes_mensual = get_object_or_404(InteresMensual, id=id)
@@ -465,57 +464,3 @@ def interes_mensual_eliminar(request, id):
         return HttpResponseServerError(render(request, '500.html'))
 
 
-@login_required
-@permission_required('tesoreria.view_persona', raise_exception=True)
-def cliente_lista(request):
-    """
-    Lista las clientes
-    :param request:
-    :return:
-    """
-    navegacion = ('Modulo financiero',
-                  [('Tesorería', reverse('tesoreria:index_tesoreria')),
-                   ('Clientes', None)])
-
-    return render(request, 'tesoreria/cliente/lista.html', locals())
-
-
-@login_required
-@require_http_methods(["POST"])
-@permission_required('tesoreria.view_persona', raise_exception=True, )
-def cliente_lista_paginador(request):
-    """
-    Lista los clientes con la paginación de datatable
-    :param request:
-    :return:
-    """
-    try:
-        params = DataTableParams(request, **request.POST)
-        DatatableBuscar.cliente(params)
-        data = params.items.values('id', 'numero_documento', 'primer_apellido', 'segundo_apellido', 'primer_nombre',
-                                   'segundo_nombre',
-                                   'correo_electronico').all()
-        result = params.result(list(data))
-        return JsonResponse(result)
-
-    except Exception as e:
-        return HttpResponseServerError(e)
-
-
-@login_required
-@permission_required('poliza.view_persona', raise_exception=True)
-def cliente_informacion_detallada(request, id):
-    """
-    Presenta la información de un determinado cliente
-    :param request:
-    :param id_funcionario: El identificador del funcionario
-    :return: La página principal del funcionario
-    """
-    cliente = Persona.objects.get(id=id)
-
-    navegacion = ('Módulo financiero',
-                  [('Tesorería', reverse('tesoreria:index_tesoreria')),
-                   ('Clientes', reverse('tesoreria:cliente_lista')),
-                   (cliente.primer_nombre, None)])
-
-    return render(request, 'tesoreria/cliente/informacion_detallada.html', locals())
