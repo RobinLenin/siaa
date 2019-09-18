@@ -16,7 +16,8 @@
 {% endblock %}
 
 {% block contenido %}
-
+<div id='message'>
+</div>
 <div class="card card-box">
     <div class="card-head">
         <header>Gestión de Clientes</header>
@@ -65,4 +66,5 @@
 <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static 'js/tesoreria/cliente_lista.js' %}"></script>
+<script src="{% static 'js/core/persona_guardar.js' %}"></script>
 {% endblock %}

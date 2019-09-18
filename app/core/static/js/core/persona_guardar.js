@@ -42,7 +42,7 @@ function savePerson(){
     operation = isGood ? 'success' : 'danger';
     
     $('#modal-persona-editar').modal('hide');
-    $('#message').append(`<div class='alert alert-${operation}' id='current_message' role='alert'> ${message} </div>`);               
+    $('#message').append(`<div class='alert alert-${operation}' id='current_message' role='alert'> ${message} </div>`);
  
     setTimeout(function(){
         $('#current_message').remove();
