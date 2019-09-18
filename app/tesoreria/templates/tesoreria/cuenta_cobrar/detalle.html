@@ -43,7 +43,10 @@
                         <span class="label label-danger">Inactivo</span>
                         {% endif %}</h5>
                 </div>
-
+                    <span class="col-sm-2">Numero de Identificación:</span>
+                <div class="col-sm-3">
+                    <h5>{{ cuenta_cobrar.cliente.numero_documento}}</h5>
+                </div>
             </div>
              <div class="form-group form-inline text-left">
                 <span class="col-sm-2">Concepto:</span>
@@ -56,9 +59,9 @@
                 </div>
             </div>
                <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Monto:</span>
+                <span class="col-sm-2">Titulo de Credito:</span>
                 <div class="col-sm-3">
-                    <h5>{{ cuenta_cobrar.monto }}</h5>
+                    <h5>{{ cuenta_cobrar.numero_titulo }}</h5>
                 </div>
                     <span class="col-sm-2">Fecha de vencimiento:</span>
                 <div class="col-sm-5">
@@ -66,12 +69,17 @@
                 </div>
             </div>
              <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Titulo de Credito:</span>
+                 <span class="col-sm-2">Monto:</span>
                 <div class="col-sm-3">
-                    <h5>{{ cuenta_cobrar.numero_titulo }}</h5>
+                    <h5>{{ cuenta_cobrar.monto }}</h5>
                 </div>
-
+                 <span class="col-sm-2">Saldo:</span>
+                <div class="col-sm-5">
+                    <h5>{{ cuenta_cobrar.saldo }}</h5>
+                </div>
             </div>
+
+
             <div class="card">
                 <div class="card-header">
                     <h4>{{ 'tesoreria.Abono'|verbose_name_plural|capfirst  }}
@@ -111,4 +119,6 @@
 {% block javascript %}
     {% load staticfiles %}
     <script src="{% static 'js/tesoreria/abono_editar.js' %}"></script>
+    <script src="{% static 'js/core/persona_guardar.js' %}"></script>
+    <script src="{% static 'js/tesoreria/cuentacobrar_opciones_select.js' %}"></script>
 {% endblock %}

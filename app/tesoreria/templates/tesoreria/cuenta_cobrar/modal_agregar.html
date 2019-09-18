@@ -1,7 +1,7 @@
 <div class="modal fade" id="modal-cuenta_cobrar-guardar">
     <form action="{% url 'tesoreria:cuenta_cobrar_guardar' %}" method="POST" role="form" id="formCuentaCobrar">
         {% csrf_token %}
-        <input type="hidden" id="id" name="id" value="{{ CuentaCobrar.id }}"/>
+        <input type="hidden" id="id" name="id" value="{{cuenta_cobrar.id }}"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>
         <div class="modal-dialog">
             <div class="modal-content">
@@ -21,17 +21,20 @@
                                    minlength="3"
                                    maxlength="255"
                                    required>
+                            <input type="checkbox"
+                                   id="estado"
+                                   name="estado"
+                                   value="true"
+                                   checked
+                            >
+
+                            <label for="estado">Estado</label>
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group">
                                 <label for="cliente">Cliente:</label>
                                 <select id="cliente" name="cliente" class="form-control select2" required>
-                                    <option value="" selected="selected">-- Seleccione --</option>
-                                    {% for persona in personas %}
-                                    <option value="{{ persona.id }}"
-                                        {% if cuentacobrar.cliente.id == persona.id %}selected{% endif %}>
-                                        {{ persona.primer_nombre }} {{ persona.primer_apellido }}</option>
-                                    {% endfor %}
+                                    <option value="{{ cuenta_cobrar.cliente.id}}" selected>{{ cuenta_cobrar.cliente.get_nombres_completos}}</option>
                                 </select>
                             </div>
                         </div>
@@ -70,6 +73,7 @@
                                    class="form-control"
                                    id="monto"
                                    name="monto"
+                                   step="0.01"
                                    value="{{ cuenta_cobrar.monto }}"
                                    minlength="0"
                                    maxlength="10"
@@ -81,6 +85,7 @@
                                    class="form-control"
                                    id="saldo"
                                    name="saldo"
+                                   step="0.01"
                                    value="{{ cuenta_cobrar.saldo }}"
                                    minlength="0"
                                    maxlength="10"
@@ -91,7 +96,7 @@
                             <input type="number"
                                    class="form-control"
                                    id="numero_titulo"
-                                   name="saldo"
+                                   name="numero_titulo"
                                    value="{{ cuenta_cobrar.numero_titulo }}"
                                    minlength="0"
                                    maxlength="10"
@@ -104,7 +109,7 @@
                                    id="titulo"
                                    name="titulo"
                                    value="{{ cuenta_cobrar.titulo }}"
-                                   value="" accept=".pdf"
+                                   accept="image/png,image/jpeg,.pdf"
                                    required>
                         </div>
                     </div>

@@ -329,7 +329,16 @@ def persona_listar_momentaneo(request):
     """
     search = request.GET.get('search', None)
     if not search == None:
-        personas_list = Persona.objects.filter(primer_nombre__contains=search).values()
+        p_criterio = search.split(" ")
+        qset = Q()
+        for i in p_criterio:
+            qset = qset & (Q(primer_apellido__icontains=i) | Q(
+              #  segundo_apellido__icontains=i) | Q(
+                primer_nombre__icontains=i) | Q(
+                segundo_nombre__icontains=i) | Q(
+                numero_documento__icontains=i))
+        #personas_list = Persona.objects.filter(primer_nombre__contains=search).values()
+        personas_list = Persona.objects.filter(qset).values().distinct()
     else:
         personas_list = Persona.objects.all().values()
 
