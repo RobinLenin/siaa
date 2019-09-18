@@ -133,6 +133,26 @@ class PersonaForm(ModelForm):
             raise forms.ValidationError("Campo obligatorio")
         return nacionalidad_indigena
 
+class PersonaFormClienteEditar(ModelForm):
+    class Meta:
+        model = Persona
+        fields = ('primer_apellido','segundo_apellido','primer_nombre', 'segundo_nombre', 'correo_electronico')
+        labels = {
+            'primer_apellido': 'Primer apellido',
+            'primer_nombre': 'Primer nombre',
+            'correo_electronico': 'Correo electrónico'
+        }
+        help_texts = {
+            'correo_electronico': 'Por favor ingrese su correo electrónico personal'
+        }
+        widgets = dict(primer_apellido=forms.TextInput(attrs={'class': 'form-control required'}),
+                       segundo_apellido=forms.TextInput(attrs={'class': 'form-control'}),
+                       primer_nombre=forms.TextInput(attrs={'class': 'form-control required'}),
+                       segundo_nombre=forms.TextInput(attrs={'class': 'form-control'}),
+                       correo_electronico=forms.TextInput(attrs={'class': 'form-control required email'}))
+
+
+
 class RelacionForm(ModelForm):
 
     class Meta:

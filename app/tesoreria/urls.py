@@ -5,6 +5,10 @@ app_name = 'tesoreria'
 urlpatterns = [
     path('index', views.index_tesoreria, name='index_tesoreria'),
 
+    path('cliente/informacion_detallada/<int:id>', views.cliente_informacion_detallada, name='cliente_informacion_detallada'),
+    path('cliente/lista', views.cliente_lista, name='cliente_lista'),
+    path('cliente/lista-paginador', views.cliente_lista_paginador, name='cliente_lista_paginador'),
+
     path('cuenta_cobrar/listar', views.cuenta_cobrar_listar, name='cuenta_cobrar_listar'),
     path('cuenta_cobrar/lista-paginador', views.cuenta_cobrar_lista_paginador, name='cuenta_cobrar_lista_paginador'),
     path('cuenta_cobrar/buscar', views.cuenta_cobrar_buscar, name='cuenta_cobrar_buscar'),

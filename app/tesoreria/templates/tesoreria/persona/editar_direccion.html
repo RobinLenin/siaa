@@ -1,0 +1,90 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Crear Dirección
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Datos de la dirección</header>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <form id="frmDireccion" action="{% url 'core:direccion_guardar_momentaneo' persona.id %}"
+                          class="form-horizontal auto-validate" method="POST" name="form">
+                        {% csrf_token %}
+                        <table class="table table-hover">
+                            {% if direccion %}
+                                <tr>
+                                    <td><span class="error">(*) </span>Parroquia</td>
+                                    <td>
+                                        <select class="form-control select2" id="parroquia_id" name="parroquia" value="{% if  direccion.parroquia %} {{ direccion.parroquia.id }} {% else %} '' {% endif %}" required>
+                                            <option value="" selected="selected">---------</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td><span class="error">(*) </span> País</td>
+                                    <td>
+                                        <select class="form-control select2" id="pais_id" name="pais" required>
+                                            <option value="" selected="selected">---------</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="error">(*) </span> Provincia</td>
+                                    <td>
+                                        <select class="form-control" id="provincia_id" name="provincia" required>
+                                            <option value="" selected="selected">---------</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="error">(*) </span> Cantón</td>
+                                    <td>
+                                        <select class="form-control" id="canton_id" name="canton" required>
+                                            <option value="" selected="selected">---------</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="error">(*) </span> Parroquia</td>
+                                    <td>
+                                        <select class="form-control" id="parroquia_id" name="parroquia" required>
+                                            <option value="" selected="selected">---------</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                            <input type="hidden" name="next" value="{{ next }}">
+                            <input type="hidden" name="id" value="{{ direccion.id }}"/>
+                            {{ direccion_form }}
+
+                        </table>
+                        <div class="text-center">
+                            <button type='submit' class='btn btn-primary m-r-20'>
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                            <a class='btn btn-default' href="{{ next }}#tab_direccion">
+                                <i class="fa fa-ban"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}
+
+{% block javascript %}
+    {% load staticfiles %}
+    <script src="{% static 'js/core/direccion_detalle.js' %}"></script>
+{% endblock %}

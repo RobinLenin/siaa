@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Perfil de Partner
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html'  with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+
+    <div class="panel tab-border card-box">
+        <header class="panel-heading panel-heading-gray custom-tab ">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active">
+                    <a href="#tab_informacion_personal"
+                       class="active"
+                       role="tab"
+                       data-toggle="tab">Información Personal</a>
+                </li>
+                <li><a href="#tab_direccion"
+                       role="tab"
+                       data-toggle="tab">Dirección y Teléfonos</a>
+                </li>
+            </ul>
+        </header>
+        <div class="panel-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_informacion_personal">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Datos personales
+                                        <a href="{% url 'core:persona_editar_momentaneo' cliente.id %}?next={{ request.path }}"
+                                           class="btn btn-info btn-circle btn-xs pull-right" role="button">
+                                            <i class="fa fa-edit"></i> Editar
+                                        </a>
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {% include 'tesoreria/persona/fragmento_detalle.html' with persona=cliente %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tab_direccion">
+                    {% include 'tesoreria/persona/fragmento_lista.html' with persona=cliente %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}

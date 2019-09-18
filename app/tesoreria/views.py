@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.http import require_http_methods
 from app.core.dto.datatable import DataTableParams
+from app.core.models import Persona
 from app.core.utils.enums import MensajesEnum
 from app.tesoreria.forms import CuentaCobrarForm, ComentarioForm, AbonoForm, TasaInteresForm, \
     InteresMensualForm
@@ -462,3 +463,59 @@ def interes_mensual_eliminar(request, id):
     except Exception as e:
         messages.warning(request, str(e))
         return HttpResponseServerError(render(request, '500.html'))
+
+
+@login_required
+@permission_required('tesoreria.view_persona', raise_exception=True)
+def cliente_lista(request):
+    """
+    Lista las clientes
+    :param request:
+    :return:
+    """
+    navegacion = ('Modulo financiero',
+                  [('Tesorería', reverse('tesoreria:index_tesoreria')),
+                   ('Clientes', None)])
+
+    return render(request, 'tesoreria/cliente/lista.html', locals())
+
+
+@login_required
+@require_http_methods(["POST"])
+@permission_required('tesoreria.view_persona', raise_exception=True, )
+def cliente_lista_paginador(request):
+    """
+    Lista los clientes con la paginación de datatable
+    :param request:
+    :return:
+    """
+    try:
+        params = DataTableParams(request, **request.POST)
+        DatatableBuscar.cliente(params)
+        data = params.items.values('id', 'numero_documento', 'primer_apellido', 'segundo_apellido', 'primer_nombre',
+                                   'segundo_nombre',
+                                   'correo_electronico').all()
+        result = params.result(list(data))
+        return JsonResponse(result)
+
+    except Exception as e:
+        return HttpResponseServerError(e)
+
+
+@login_required
+@permission_required('poliza.view_persona', raise_exception=True)
+def cliente_informacion_detallada(request, id):
+    """
+    Presenta la información de un determinado cliente
+    :param request:
+    :param id_funcionario: El identificador del funcionario
+    :return: La página principal del funcionario
+    """
+    cliente = Persona.objects.get(id=id)
+
+    navegacion = ('Módulo financiero',
+                  [('Tesorería', reverse('tesoreria:index_tesoreria')),
+                   ('Clientes', reverse('tesoreria:cliente_lista')),
+                   (cliente.primer_nombre, None)])
+
+    return render(request, 'tesoreria/cliente/informacion_detallada.html', locals())

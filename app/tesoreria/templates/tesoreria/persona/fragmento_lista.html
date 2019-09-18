@@ -1,0 +1,81 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    {% if usuario.estudiante %}
+    {% include 'info_mensaje.html' with title="Estimado Usuario" text="Por favor ingrese la dirección de DOMICILIO Y NACIMIENTO" %}
+    {% else %}
+    {% include 'info_mensaje.html' with title="Estimado Usuario" text="Por favor ingrese la dirección de DOMICILIO Y TRABAJO obligatorio. El número de teléfono (ejm: 072547252), celular (ejm: 0912345678) y parroquia es obligatorio." %}
+    {% endif %}
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Direciones
+                <a href="{% url 'core:direccion_crear_momentaneo' persona.id %}?next={{request.path}}"
+                   class="btn btn-info btn-circle btn-xs pull-right"
+                   role="button">
+                    <i class="fa fa-plus-circle"></i>Nuevo
+                </a>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Tipo de Dirección</th>
+                        <th>Calle Principal</th>
+                        <th>Nro. de Casa</th>
+                        <th>Calle Secundaria</th>
+                        <th>Referencia</th>
+                        <th>Teléfono Fijo</th>
+                        <th>Teléfono Celular</th>
+                        <th>Parroquia</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for direccion in persona.direccion_set.all %}
+                    <tr>
+                        <td>{{ direccion.tipo_direccion }}</td>
+                        <td>{{ direccion.calle_principal| default:"" }}</td>
+                        <td>{{ direccion.numero| default:"" }}</td>
+                        <td>{{ direccion.calle_secundaria| default:"" }}</td>
+                        <td>{{ direccion.referencia| default:"" }}</td>
+                        <td>
+                            {% if direccion.validar_telefono %}
+                                {{ direccion.telefono| default:"" }}
+                            {% else %}
+                                <span class="text-danger">{{ direccion.telefono| default:"" }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if direccion.validar_celular %}
+                                {{ direccion.celular| default:"" }}
+                            {% else %}
+                                 <span class="text-danger"> {{ direccion.celular| default:"" }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ direccion.parroquia | default:"" }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-outline-info"
+                                   title="Editar"
+                                   href="{% url 'core:direccion_editar_momentaneo' direccion.id %}?next={{request.path}}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <!--
+                                <a class="btn btn-outline-danger"
+                                   title="Eliminar"
+                                   onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                                   href="{% url 'core:direccion_eliminar' direccion.id %}?next={{request.path}}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                                -->
+                            </div>
+                        <td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

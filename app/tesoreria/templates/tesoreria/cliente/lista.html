@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+        Clientes
+{% endblock %}
+
+{% block estilos %}
+{% load staticfiles %}
+<!-- data tables -->
+<link href="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.css' %}" rel="stylesheet"
+    type="text/css" />
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+
+<div class="card card-box">
+    <div class="card-head">
+        <header>Gestión de Clientes</header>
+        <div class="tools">
+            <div class="pull-right">
+                <button class="btn btn-circle btn-info btn-xs"
+                        data-toggle="modal" data-target="#modal-persona-editar"
+                        {% if not perms.tesoreria.add_tasainteres %} disabled {% endif %}>
+                    <i class="fa fa-plus-circle"></i>Nuevo
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="cliente">
+                            <thead>
+                                <tr>
+                                    <th>Número de Documento</th>
+                                    <th>Apellidos</th>
+                                    <th>Nombres</th>
+                                    <th>Correo electronico</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'core/persona/modal_editar.html'%}
+{% endblock %}
+
+{% block javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/js_cookie.js' %}"></script>
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'js/tesoreria/cliente_lista.js' %}"></script>
+{% endblock %}

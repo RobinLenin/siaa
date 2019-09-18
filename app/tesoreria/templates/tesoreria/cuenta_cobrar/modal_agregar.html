@@ -25,13 +25,12 @@
                         <div class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group">
                                 <label for="cliente">Cliente:</label>
-                                <select id="cliente" name="cliente" class="form-control" required>
+                                <select id="cliente" name="cliente" class="form-control select2" required>
                                     <option value="" selected="selected">-- Seleccione --</option>
-                                    {% for item in CHOICE_TIPO %}
-                                        <option value="{{ item.0 }}"
-                                                {% if asignatura.tipo == item.0 %}selected{% endif %}>
-                                            {{ item.1 }}
-                                        </option>
+                                    {% for persona in personas %}
+                                    <option value="{{ persona.id }}"
+                                        {% if cuentacobrar.cliente.id == persona.id %}selected{% endif %}>
+                                        {{ persona.primer_nombre }} {{ persona.primer_apellido }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -105,6 +104,7 @@
                                    id="titulo"
                                    name="titulo"
                                    value="{{ cuenta_cobrar.titulo }}"
+                                   value="" accept=".pdf"
                                    required>
                         </div>
                     </div>

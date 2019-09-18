@@ -8,6 +8,8 @@ from decimal import Decimal
 #from rest_framework.fields import CharField
 from django.db.models import Q
 
+from app.core.models import Persona
+
 
 class CuentaCobrar(models.Model):
     estado = models.BooleanField(default=True)
@@ -16,7 +18,7 @@ class CuentaCobrar(models.Model):
     fecha_vencimiento = models.DateField()
     monto = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     saldo = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-    cliente = models.ForeignKey('core.Persona', on_delete=models.PROTECT, related_name='clientes')
+    cliente = models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='clientes')
     numero_titulo = models.CharField(max_length=10)
     titulo = models.FileField(upload_to='tesoreria/')
 
