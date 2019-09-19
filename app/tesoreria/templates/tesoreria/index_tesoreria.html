@@ -20,7 +20,7 @@
                 </div>
                 <div class="panel-footer">
                     <a
-                            {% if perms.tesoreria.view_asignatura %}
+                            {% if perms.tesoreria.view_cuentacobrar %}
                                 href="{% url 'tesoreria:cuenta_cobrar_listar' %}"
                                 class="btn btn-primary"
                             {% else %}
@@ -42,7 +42,7 @@
                 </div>
                 <div class="panel-footer">
                     <a
-                            {% if perms.academico.view_facultad %}
+                            {% if perms.tesoreria.view_tasainteres %}
                                 href="{% url 'tesoreria:tasa_interes_listar' %}"
                                 class="btn btn-primary"
                             {% else %}
@@ -64,7 +64,7 @@
                 </div>
                 <div class="panel-footer">
                     <a
-                            {% if perms.academico.view_facultad %}
+                            {% if perms.tesoreria.view_cliente %}
                                 href="{% url 'tesoreria:cliente_lista' %}"
                                 class="btn btn-primary"
                             {% else %}

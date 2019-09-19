@@ -7,56 +7,54 @@
             <th>Monto</th>
             <th>Interes</th>
             <th>Referencia</th>
-             <th>Acción</th>
-            </tr>
+            <th>Acción</th>
+        </tr>
         </thead>
         <tbody>
         {% for abono in abonos %}
-            <tr>
-                <td>
-                    <a {% if perms.tesoreria.view_abono %}
+        <tr>
+            <td>
+                {{ abono.concepto }}
 
-                    {% endif %}>
-                        {{ abono.concepto }}
-                    </a>
-                </td>
-                <td>{{ abono.fecha_pago|default:"" }}</td>
-                <td>{{ abono.monto }}</td>
-                <td>{{ abono.interes }}</td>
-                <td>{{ abono.referencia }}</td>
-                <td>
-                    <a title="Eliminar"
-                            {% if perms.tesoreria.delete_abono %}
-                       class="btn btn-outline-danger"
-                       onclick="return confirm('¿Está seguro de eliminar el registro?')"
-                       href="{% url 'tesoreria:abono_eliminar' abono.id %}"
-                            {% else %}
-                       class="btn btn-outline-danger disabled"
-                            {% endif %}>
-                        <i class="fa fa-trash-o"></i>
-                    </a>
-                    <a title="Imprimir"
-                            {% if perms.tesoreria.delete_abono %}
-                       class="btn btn-outline-info"
-                       href="{% url 'tesoreria:abono_imprimir' abono.id %}"
-                            {% else %}
-                       class="btn btn-outline-danger disabled"
-                            {% endif %}>
-                        <i class="fa fa-print"></i>
-                    </a>
-                </td>
+            </td>
+            <td>{{ abono.fecha_pago|default:"" }}</td>
+            <td>{{ abono.monto }}</td>
+            <td>{{ abono.interes }}</td>
+            <td>{{ abono.referencia }}</td>
+            <td>
+                <a title="Eliminar"
+                   {% if perms.tesoreria.delete_abono %}
+                   class="btn btn-outline-danger"
+                   onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                   href="{% url 'tesoreria:abono_eliminar' abono.id %}"
+                   {% else %}
+                   class="btn btn-outline-danger disabled"
+                   {% endif %}>
+                    <i class="fa fa-trash-o"></i>
+                </a>
+                <a title="Imprimir"
+                   {% if perms.tesoreria.print_abono %}
+                   class="btn btn-outline-info"
+                   href="{% url 'tesoreria:abono_imprimir' abono.id %}"
+                   {% else %}
+                   class="btn btn-outline-danger disabled"
+                   {% endif %}>
+                    <i class="fa fa-file-pdf-o"></i>
+                </a>
+            </td>
 
-            </tr>
+        </tr>
         {% endfor %}
         </tbody>
-         <thead>
+        <thead>
         <tr>
             <th>Total</th>
             <th></th>
             <th>Monto</th>
             <th>Interes</th>
-             <th></th>
-            </tr>
+            <th></th>
+            <th></th>
+        </tr>
         </thead>
     </table>
 </div>

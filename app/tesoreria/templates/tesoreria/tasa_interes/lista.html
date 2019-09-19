@@ -27,7 +27,8 @@
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th>Fecha</th>
+                        <th>Mes</th>
+                         <th>Año</th>
                         <th>Tasa %</th>
                         <th>Acción</th>
                     </tr>
@@ -36,17 +37,19 @@
                     {% for tasainteres in tasa_interes %}
                         <tr>
                             <td>
-                                    {{ tasainteres.mes }} - {{ tasainteres.anio }}
-                                </a>
+                                    {{ tasainteres.mes }}
+                            </td>
+                            <td>
+                                   {{ tasainteres.anio }}
                             </td>
                             <td>
                                     {{ tasainteres.tasa }}
-                                </a>
+
                             </td>
                             <td>
                                 <a title="Eliminar"
                                         {% if perms.tesoreria.delete_tasainteres %}
-                                   class="btn btn-outline-danger"
+                                   class="btn btn-circle btn-outline-danger"
                                    onclick="return confirm('¿Está seguro de eliminar el registro?')"
                                    href="{% url 'tesoreria:tasa_interes_eliminar' tasainteres.id %}"
                                         {% else %}
@@ -64,6 +67,7 @@
     </div>
 
     {% include 'tesoreria/tasa_interes/modal_agregar.html' %}
+
 {% endblock %}
 
 
@@ -72,4 +76,5 @@
     <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'js/datatable.js' %}"></script>
+<script src="{% static 'js/tesoreria/tasainteres_lista.js' %}"></script>
 {% endblock %}

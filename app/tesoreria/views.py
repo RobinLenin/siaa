@@ -369,7 +369,13 @@ def tasa_interes_lista_paginador(request):
         params = DataTableParams(request, **request.POST)
       #  DatatableBuscar.asignatura(params)
         data = params.items.values('id', 'Tasa','Fecha').all()
-        result = params.result(list(data))
+        data = [{
+            'id': it.id,
+            'tasa': it.tasa,
+            'fecha': it.fecha
+        } for it in
+            params.items]
+        result = params.result(data)
         return JsonResponse(result)
 
     except Exception as e:

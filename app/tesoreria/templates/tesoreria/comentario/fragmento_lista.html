@@ -14,7 +14,7 @@
             <tr>
 
                 <td>
-                    <a {% if perms.academico.view_comentario %}
+                    <a {% if perms.tesoreria.view_comentario %}
                         href="{% url 'tesoreria:comentario_detalle' comentario.id %}?next={{ request.path }}"
                     {% endif %}>
                         {{ comentario.concepto }}
@@ -25,7 +25,7 @@
                 <td>
                     <a title="Eliminar"
                             {% if perms.tesoreria.delete_comentario %}
-                       class="btn btn-outline-danger"
+                       class="btn btn-circle btn-outline-danger"
                        onclick="return confirm('¿Está seguro de eliminar el registro?')"
                        href="{% url 'tesoreria:comentario_eliminar' comentario.id %}"
                             {% else %}

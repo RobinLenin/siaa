@@ -19,7 +19,7 @@
                         {% if not perms.tesoreria.change_comentario %} disabled {% endif %}>
                     <i class="fa fa-edit"></i>Editar
                 </button>
-                <a {% if perms.academico.delete_asignatura %}
+                <a {% if perms.tesoreria.delete_comentario %}
                     class="btn btn-danger"
                     href="{% url 'tesoreria:comentario_eliminar' comentario.id %}"
                     onclick="return confirm('¿Está seguro de eliminar el registro?')"

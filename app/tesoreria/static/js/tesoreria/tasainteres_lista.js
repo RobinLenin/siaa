@@ -12,13 +12,11 @@ function initDataTable(){
             "url": "/tesoreria/tasa_interes/lista-paginador",
             "type": "POST",
             "error": function (error) {
-                mensaje_error(error.responseText, segundos=5 );
+                mensaje_error(error.responseText, segundos=20 );
             }
         },
         "columns": [
-            {"data": "id", render: function ( data, type, row ) {
-                return '<a href="/tesoreria/tasa_interes/detalle/' + row.id +'">' + data + '</a>';
-            }},
+            {"data": "id"},
             {"data": "fecha"},
             {"data": "tasa"},
         ],
