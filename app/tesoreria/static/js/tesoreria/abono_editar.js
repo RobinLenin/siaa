@@ -1,7 +1,3 @@
-
-
-
-
 $(document).ready(function(){
     $("#referencia").hide();
     $("#labelreferencia").hide();

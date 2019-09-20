@@ -1,3 +1,14 @@
+
+$("#saldo").click(function() {
+    var monto = $("#monto").val();
+    $("#saldo").val(monto)
+});
+
+$("#enviar").mouseenter(function( event ) {
+  var monto = $("#monto").val();
+   $("#saldo").val(monto)
+});
+
 $(function () {
     initDataTable();
 });

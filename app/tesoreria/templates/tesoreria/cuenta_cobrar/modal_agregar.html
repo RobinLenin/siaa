@@ -2,6 +2,7 @@
     <form action="{% url 'tesoreria:cuenta_cobrar_guardar' %}" method="POST" role="form" id="formCuentaCobrar">
         {% csrf_token %}
         <input type="hidden" id="id" name="id" value="{{cuenta_cobrar.id }}"/>
+        <input type="hidden" name="estado" value="true"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>
         <div class="modal-dialog">
             <div class="modal-content">
@@ -21,12 +22,7 @@
                                    minlength="3"
                                    maxlength="255"
                                    required>
-                            <input type="checkbox"
-                                   id="estado"
-                                   name="estado"
-                                   value="true"
-                                   checked>
-                            <label for="estado">Estado</label>
+
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group">
@@ -71,10 +67,8 @@
                                    class="form-control"
                                    id="monto"
                                    name="monto"
-                                   step="0.01"
                                    value="{{ cuenta_cobrar.monto }}"
-                                   minlength="0"
-                                   maxlength="10"
+                                   min="0"
                                    required>
                         </div>
                         <div class="form-group col-md-6">
@@ -83,10 +77,9 @@
                                    class="form-control"
                                    id="saldo"
                                    name="saldo"
-                                   step="0.01"
                                    value="{{ cuenta_cobrar.saldo }}"
-                                   minlength="0"
-                                   maxlength="10"
+                                   min="0"
+                                   readonly
                                    required>
                         </div>
                         <div class="form-group col-md-6">
@@ -96,8 +89,7 @@
                                    id="numero_titulo"
                                    name="numero_titulo"
                                    value="{{ cuenta_cobrar.numero_titulo }}"
-                                   minlength="0"
-                                   maxlength="10"
+                                   min="0"
                                    required>
                         </div>
                         <div class="form-group col-md-6">

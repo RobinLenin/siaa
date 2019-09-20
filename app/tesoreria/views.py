@@ -1,3 +1,6 @@
+from _decimal import Decimal
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
@@ -293,6 +296,20 @@ def cuenta_cobrar_buscar(request):
 def cuenta_cobrar_guardar(request):
     next = request.POST.get('next')
     id = request.POST.get('id')
+    fecha_emision = request.POST.get('fecha_emision')
+    saldo = int(calcular_saldo(int(request.POST.get('monto')), int(datetime(fecha_emision).year), int(datetime(fecha_emision).month)))
+
+    request.POST._mutable = True
+    request.POST['saldo'] = saldo
+    request.POST._mutable = False
+
+     #if (Decimal(request.POST.get('monto')) < Decimal(request.POST.get('saldo'))):
+     #   request.POST._mutable = True
+     #   request.POST['estado'] = False
+     #   request.POST._mutable = False
+
+    #fecha_emision = request.POST.get('estado')
+    #fecha_vencimiento = request.POST.get('estado')
     if id:
         cuenta_cobrar = get_object_or_404(CuentaCobrar, id=id)
         if not (request.user.has_perm("tesoreria") or request.user.has_perm(
@@ -313,6 +330,21 @@ def cuenta_cobrar_guardar(request):
 
     return redirect(next)
 
+
+def calcular_saldo(monto, anio, mes):
+    fecha_actual = datetime.now()
+    interes_total = 0.0
+    tasa_interes = TasaInteres.objects.all()
+    for tasa in tasa_interes:
+
+        if int(tasa.anio) >= int(anio) and int(tasa.mes) >= int(mes)\
+                and int(tasa.anio) <= int(fecha_actual.year) and int(tasa.mes) <= int(fecha_actual.month):
+
+            interes = (monto * tasa.tasa)/100
+            interes_total = interes_total + interes
+
+    saldo= monto + interes_total
+    return saldo
 
 @login_required
 @permission_required('tesoreria.delete_cuentacobrar', raise_exception=True, )
@@ -400,7 +432,6 @@ def tasa_interes_guardar(request):
 
 
 def validar_tasa_interes(anio, mes):
-    print("Primero: " + anio, mes)
     val = True
     tasa_interes = TasaInteres.objects.all()
     for tasa in tasa_interes:
@@ -451,6 +482,52 @@ def interes_mensual_guardar(request):
 
     return redirect(next)
 
+
+@login_required
+def interes_mensual_guardar_static(id_cli, tasa, fecha):
+    """
+    Guarda una nueva asignatura o actualiza
+    :param request:
+    :return:
+    """
+    valor = 0
+
+    tasa_interes_mensual = InteresMensual()
+
+    tasa_interes_mensual.cuenta_cobrar = id_cli
+    tasa_interes_mensual.tasa = tasa
+    tasa_interes_mensual.fecha = fecha
+    tasa_interes_mensual.valor = valor
+
+
+    try:
+        tasa_interes_mensual.save()
+        message = MensajesEnum.ACCION_GUARDAR.value,
+
+    except NameError:
+        message = 'Solicitud incorrecta'
+
+    return JsonResponse({'mensaje': message})
+
+def interes_mensual_guardar_static(request):
+    next = request.POST.get('next')
+    id = request.POST.get('id')
+    if id:
+        interes_mensual = get_object_or_404(InteresMensual, id=id)
+
+    else:
+
+        interes_mensual = InteresMensual()
+
+    interes_mensual = InteresMensualForm(request.POST, instance=interes_mensual)
+    if interes_mensual.is_valid():
+        interes_mensual.save()
+        messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
+
+    else:
+        messages.warning(request, interes_mensual.errors)
+
+    return redirect(next)
 
 @login_required
 @permission_required('tesoreria.delete_interesmensual', raise_exception=True, )
