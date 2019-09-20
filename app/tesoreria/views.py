@@ -9,6 +9,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponseServerError
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.utils.dateparse import parse_date
 from django.views.decorators.http import require_http_methods
 from app.core.dto.datatable import DataTableParams
 from app.core.models import Persona
@@ -42,10 +43,21 @@ def index_tesoreria(request):
 def abono_guardar(request):
     next = request.POST.get('next')
     id = request.POST.get('id')
+    id_cli = request.POST.get('cuenta_cobrar')
+    cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
+    saldo = cuenta_cobrar.saldo
+    monto = Decimal(request.POST.get('monto'))
+    total = saldo - monto
+    CuentaCobrar.objects.values('saldo').filter(id=id_cli).update(saldo=total)
+
     if id:
         abono = get_object_or_404(Abono, id=id)
+
     else:
         abono = Abono()
+
+
+
 
     abono_form = AbonoForm(request.POST, instance=abono)
     if abono_form.is_valid():
@@ -63,7 +75,11 @@ def abono_guardar(request):
 def abono_eliminar(request, id):
 
     abono = get_object_or_404(Abono, id=id)
-
+    cuenta_cobrar = CuentaCobrar.objects.get(id=str(abono.cuenta_cobrar_id))
+    saldo = cuenta_cobrar.saldo
+    monto = Decimal(abono.monto)
+    total = saldo + monto
+    CuentaCobrar.objects.values('saldo').filter(id=abono.cuenta_cobrar_id).update(saldo=total)
     try:
         if abono.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
@@ -297,19 +313,13 @@ def cuenta_cobrar_guardar(request):
     next = request.POST.get('next')
     id = request.POST.get('id')
     fecha_emision = request.POST.get('fecha_emision')
-    saldo = int(calcular_saldo(int(request.POST.get('monto')), int(datetime(fecha_emision).year), int(datetime(fecha_emision).month)))
+    date = parse_date(fecha_emision)
+    saldo = Decimal(calcular_saldo(Decimal(request.POST.get('monto')), int(date.year), int(date.month)))
 
     request.POST._mutable = True
-    request.POST['saldo'] = saldo
+    request.POST['saldo'] = round(saldo, 2)
     request.POST._mutable = False
 
-     #if (Decimal(request.POST.get('monto')) < Decimal(request.POST.get('saldo'))):
-     #   request.POST._mutable = True
-     #   request.POST['estado'] = False
-     #   request.POST._mutable = False
-
-    #fecha_emision = request.POST.get('estado')
-    #fecha_vencimiento = request.POST.get('estado')
     if id:
         cuenta_cobrar = get_object_or_404(CuentaCobrar, id=id)
         if not (request.user.has_perm("tesoreria") or request.user.has_perm(
@@ -337,11 +347,12 @@ def calcular_saldo(monto, anio, mes):
     tasa_interes = TasaInteres.objects.all()
     for tasa in tasa_interes:
 
-        if int(tasa.anio) >= int(anio) and int(tasa.mes) >= int(mes)\
+        if int(tasa.anio) >= anio and int(tasa.mes) >= mes\
                 and int(tasa.anio) <= int(fecha_actual.year) and int(tasa.mes) <= int(fecha_actual.month):
 
             interes = (monto * tasa.tasa)/100
-            interes_total = interes_total + interes
+            print(interes)
+            interes_total = Decimal(interes_total) + Decimal(interes)
 
     saldo= monto + interes_total
     return saldo
@@ -486,7 +497,6 @@ def interes_mensual_guardar(request):
 @login_required
 def interes_mensual_guardar_static(id_cli, tasa, fecha):
     """
-    Guarda una nueva asignatura o actualiza
     :param request:
     :return:
     """
