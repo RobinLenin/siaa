@@ -2,39 +2,19 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>Tasa</th>
             <th>Fecha</th>
             <th>Valor</th>
+            <th>Tasa</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
-        {% for autoridad_facultad in autoridades_facultad %}
-            <tr>
-                <td>
-                    <a {% if perms.academico.view_autoridadfacultad %}
-                        href="{% url 'academico:autoridad_facultad_detalle' autoridad_facultad.id %}?next={{ request.path }}"
-                    {% endif %}>
-                        {{ autoridad_facultad.funcionario.usuario.persona.get_nombres_completos }}
-                    </a>
-                    {% if autoridad_facultad.activo %}
-                        <span class="text-success"><i class="fa fa-check"></i></span>
-                    {% endif %}
-                <td>{{ autoridad_facultad.get_tipo_display }}</td>
-                <td>{{ autoridad_facultad.fecha_inicio }}</td>
-                <td>{{ autoridad_facultad.fecha_fin|default:"" }}</td>
-                <td>
-                    <a title="Eliminar"
-                            {% if perms.academico.delete_autoridadfacultad %}
-                       class="btn btn-outline-danger"
-                       onclick="return confirm('¿Está seguro de eliminar el registro?')"
-                       href="{% url 'academico:autoridad_facultad_eliminar' autoridad_facultad.id %}"
-                            {% else %}
-                       class="btn btn-outline-danger disabled"
-                            {% endif %}>
-                        <i class="fa fa-trash-o"></i>
-                    </a>
-                </td>
-            </tr>
+        {% for interes_mensual in interesesmensuales %}
+        <tr>
+            <td>{{ interes_mensual.fecha }}</td>
+            <td>{{ interes_mensual.valor }}</td>
+            <td>{{ interes_mensual.tasa }}</td>
+        </tr>
         {% endfor %}
         </tbody>
     </table>

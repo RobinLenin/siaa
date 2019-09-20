@@ -110,6 +110,16 @@
                 </div>
             </div>
 
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ 'tesoreria.InteresMensual'|verbose_name_plural|capfirst  }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% include 'tesoreria/interes_mensual/fragmento_lista.html' with interesesmensuales=cuenta_cobrar.interesesmensuales.all %}
+                </div>
+            </div>
+
         </div>
     </div>
     {% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
