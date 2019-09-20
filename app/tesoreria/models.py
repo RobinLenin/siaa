@@ -18,6 +18,7 @@ class CuentaCobrar(models.Model):
     fecha_vencimiento = models.DateField(verbose_name="Fecha de vencimiento")
     monto = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     saldo = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
+    interes = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))],default=0.00)
     cliente = models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='cuentas_cobrar')
     numero_titulo = models.CharField(max_length=10)
     titulo = models.FileField(upload_to='tesoreria/')
@@ -26,6 +27,7 @@ class CuentaCobrar(models.Model):
     class Meta:
         verbose_name = "Cuenta por Cobrar"
         verbose_name_plural = "Cuentas por Cobrar"
+        ordering = ['id']
 
     def __str__(self):
         return "%s" % self.concepto
@@ -98,6 +100,9 @@ class InteresMensual(models.Model):
     tasa = models.ForeignKey('TasaInteres', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')
     cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')
 
+    class Meta:
+        verbose_name = "Interes mensual"
+        verbose_name_plural = "Intereses mensuales"
     def __str__(self):
         return str(self.valor)
 
