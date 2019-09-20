@@ -7,3 +7,4 @@ class MensajesEnum(Enum):
     ACCION_ELIMINAR_ERROR = "No se puede eliminar el registro..."
     DATOS_INCOMPLETOS = "Por favor ingrese todos los datos..."
     METODO_NO_VALIDO = "Método no válido..."
+    ABONO_MAYOR_SALDO = "Tienes un abonoo que supera tu saldo por cobrar"

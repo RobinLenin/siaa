@@ -48,7 +48,7 @@ def abono_guardar(request):
     saldo = cuenta_cobrar.saldo
     monto = Decimal(request.POST.get('monto'))
     total = saldo - monto
-    CuentaCobrar.objects.values('saldo').filter(id=id_cli).update(saldo=total)
+
 
     if id:
         abono = get_object_or_404(Abono, id=id)
@@ -56,16 +56,21 @@ def abono_guardar(request):
     else:
         abono = Abono()
 
-
-
-
     abono_form = AbonoForm(request.POST, instance=abono)
-    if abono_form.is_valid():
+    if abono_form.is_valid() and abono.monto <= cuenta_cobrar.saldo:
+        CuentaCobrar.objects.values('saldo').filter(id=id_cli).update(saldo=total)
         abono_form.save()
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
 
     else:
         messages.warning(request, abono_form.errors)
+
+    if abono.monto > cuenta_cobrar.saldo:
+        messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
+
+    if total == 0:
+        print(total)
+        CuentaCobrar.objects.values('estado').filter(id=id_cli).update(estado=False)
 
     return redirect(next)
 
