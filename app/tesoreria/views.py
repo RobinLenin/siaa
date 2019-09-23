@@ -48,6 +48,7 @@ def abono_guardar(request):
     saldo = cuenta_cobrar.saldo
     interes = cuenta_cobrar.interes
     monto = Decimal(request.POST.get('monto'))
+    aux_abo_int = 0.00
     if interes > 0:
         aux_abo_int = interes - monto
 
@@ -60,7 +61,7 @@ def abono_guardar(request):
         request.POST._mutable = True
         request.POST['interes'] = Decimal(round(aux, 2))
         request.POST._mutable = False
-        total = saldo - monto
+    total = saldo - monto
     if id:
         abono = get_object_or_404(Abono, id=id)
 
@@ -81,7 +82,6 @@ def abono_guardar(request):
         messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
 
     if total == 0:
-        print(total)
         CuentaCobrar.objects.values('estado').filter(id=id_cli).update(estado=False)
 
     return redirect(next)
