@@ -92,10 +92,12 @@ def abono_eliminar(request, id):
 
     abono = get_object_or_404(Abono, id=id)
     cuenta_cobrar = CuentaCobrar.objects.get(id=str(abono.cuenta_cobrar_id))
+    interes_cc = cuenta_cobrar.interes
     saldo = cuenta_cobrar.saldo
     monto = Decimal(abono.monto)
     total = saldo + monto
-    CuentaCobrar.objects.values('saldo').filter(id=abono.cuenta_cobrar_id).update(saldo=total)
+    interes = interes_cc + Decimal(abono.interes)
+    CuentaCobrar.objects.values('saldo','interes').filter(id=abono.cuenta_cobrar_id).update(saldo=total, interes=interes)
     try:
         if abono.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
