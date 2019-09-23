@@ -46,10 +46,21 @@ def abono_guardar(request):
     id_cli = request.POST.get('cuenta_cobrar')
     cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
     saldo = cuenta_cobrar.saldo
+    interes = cuenta_cobrar.interes
     monto = Decimal(request.POST.get('monto'))
-    total = saldo - monto
+    if interes > 0:
+        aux_abo_int = interes - monto
 
+        if aux_abo_int < 0:
+            aux = interes
+            aux_abo_int = 0
+        else:
+            aux = monto
 
+        request.POST._mutable = True
+        request.POST['interes'] = Decimal(round(aux, 2))
+        request.POST._mutable = False
+        total = saldo - monto
     if id:
         abono = get_object_or_404(Abono, id=id)
 
@@ -58,7 +69,8 @@ def abono_guardar(request):
 
     abono_form = AbonoForm(request.POST, instance=abono)
     if abono_form.is_valid() and abono.monto <= cuenta_cobrar.saldo:
-        CuentaCobrar.objects.values('saldo').filter(id=id_cli).update(saldo=total)
+        CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes= aux_abo_int)
+
         abono_form.save()
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
 
@@ -73,7 +85,6 @@ def abono_guardar(request):
         CuentaCobrar.objects.values('estado').filter(id=id_cli).update(estado=False)
 
     return redirect(next)
-
 
 @login_required
 @permission_required('tesoreria.delete_abono', raise_exception=True, )
@@ -319,10 +330,11 @@ def cuenta_cobrar_guardar(request):
     id = request.POST.get('id')
     fecha_emision = request.POST.get('fecha_emision')
     date = parse_date(fecha_emision)
-    saldo = Decimal(calcular_saldo(Decimal(request.POST.get('monto')), int(date.year), int(date.month)))
+    saldo, interes = calcular_saldo(Decimal(request.POST.get('monto')), int(date.year), int(date.month))
 
     request.POST._mutable = True
-    request.POST['saldo'] = round(saldo, 2)
+    request.POST['saldo'] = Decimal(round(saldo, 2))
+    request.POST['interes'] = Decimal(round(interes, 2))
     request.POST._mutable = False
 
     if id:
@@ -348,7 +360,7 @@ def cuenta_cobrar_guardar(request):
 
 def calcular_saldo(monto, anio, mes):
     fecha_actual = datetime.now()
-    interes_total = 0.0
+    interes_total = 0.00
     tasa_interes = TasaInteres.objects.all()
     for tasa in tasa_interes:
 
@@ -360,7 +372,7 @@ def calcular_saldo(monto, anio, mes):
             interes_total = Decimal(interes_total) + Decimal(interes)
 
     saldo= monto + interes_total
-    return saldo
+    return saldo, interes_total
 
 @login_required
 @permission_required('tesoreria.delete_cuentacobrar', raise_exception=True, )

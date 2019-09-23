@@ -2,6 +2,7 @@
     <form action="{% url 'tesoreria:cuenta_cobrar_guardar' %}" method="POST" role="form" id="formCuentaCobrar">
         {% csrf_token %}
         <input type="hidden" id="id" name="id" value="{{cuenta_cobrar.id }}"/>
+        <input type="hidden" name="interes" value="0.0"/>
         <input type="hidden" name="estado" value="true"/>
         <input type="hidden" name="next" value="{{ request.path }}"/>
         <div class="modal-dialog">

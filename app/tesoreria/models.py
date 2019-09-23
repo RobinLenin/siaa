@@ -18,7 +18,7 @@ class CuentaCobrar(models.Model):
     fecha_vencimiento = models.DateField(verbose_name="Fecha de vencimiento")
     monto = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     saldo = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-    interes = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))],default=0.00)
+    interes = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     cliente = models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='cuentas_cobrar')
     numero_titulo = models.CharField(max_length=10)
     titulo = models.FileField(upload_to='tesoreria/')
