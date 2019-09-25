@@ -112,7 +112,7 @@ def abono_eliminar(request, id):
 
 
 @login_required
-@permission_required('tesoreria.print_abono', raise_exception=True, )
+@permission_required('tesoreria.view_abono', raise_exception=True, )
 def abono_imprimir(request, id):
 
     abono = get_object_or_404(Abono, id=id)
@@ -137,7 +137,7 @@ def abono_imprimir(request, id):
 # ////////////////////////Cliente//////////////
 
 @login_required
-@permission_required('tesoreria.view_persona', raise_exception=True)
+@permission_required('tesoreria.change_cuentacobrar', raise_exception=True)
 def cliente_lista(request):
     """
     Lista las clientes
@@ -153,7 +153,7 @@ def cliente_lista(request):
 
 @login_required
 @require_http_methods(["POST"])
-@permission_required('tesoreria.view_persona', raise_exception=True, )
+@permission_required('tesoreria.change_cuentacobrar', raise_exception=True, )
 def cliente_lista_paginador(request):
     """
     Lista los clientes con la paginación de datatable
@@ -174,7 +174,7 @@ def cliente_lista_paginador(request):
 
 
 @login_required
-@permission_required('tesoreria.view_persona', raise_exception=True)
+@permission_required('tesoreria.change_cuentacobrar', raise_exception=True)
 def cliente_informacion_detallada(request, id):
     """
     Presenta la información de un determinado cliente
@@ -405,7 +405,7 @@ def cuenta_cobrar_detalle(request, id):
                   [('Tesoreria', reverse('tesoreria:index_tesoreria')),
                    ('Cuentas por Cobrar', reverse('tesoreria:cuenta_cobrar_listar')),
                    (cuenta_cobrar.cliente.get_nombres_completos, None)])
-    CHOICE_FORMAPAGO = Abono.FORMAPAGO
+    CHOICE_FORMAPAGO = Abono.CHOICE_FORMAPAGO
     return render(request, 'tesoreria/cuenta_cobrar/detalle.html', locals())
 
 

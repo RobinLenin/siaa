@@ -33,7 +33,7 @@ class TasaInteresAdmin(admin.ModelAdmin):
 class InteresMensualAdmin(admin.ModelAdmin):
     # fields = ('codigo', 'descripcion', 'definicion', 'updated_by', 'created_by', 'created_at', 'updated_at',)
     # search_fields = ('descripcion', 'codigo',)
-    list_display = ('fecha', 'valor', 'tasa',)
+    list_display = ('fecha_inicio','fecha_fin', 'valor', 'tasa',)
     # raw_id_fields = ('cliente',)
 
 admin.site.register(CuentaCobrar, CuentaCobrarAdmin)

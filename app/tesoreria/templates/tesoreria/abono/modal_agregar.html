@@ -11,7 +11,19 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
+                         <div class="form-group col-md-12">
+                            <label for="concepto">Concepto:</label>
+                            <input type="text"
+                                   class="form-control letras_man_min"
+                                   placeholder="Concepto.."
+                                   id="concepto"
+                                   name="concepto"
+                                   value="{{ abono.concepto }}"
+                                   minlength="3"
+                                   maxlength="255"
+                                   required>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group">
                                 <label for="forma_pago">Forma de pago:</label>
                                 <select id="forma_pago" name="forma_pago" class="form-control" required>
@@ -26,7 +38,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                             <label id="labelreferencia" for="referencia">Referencia:</label>
                             <input type="text"
                                    class="form-control letras_man_min"
@@ -38,20 +50,7 @@
                                    maxlength="50">
                         </div>
 
-                        <div class="form-group col-md-12">
-                            <label for="concepto">Concepto:</label>
-                            <input type="text"
-                                   class="form-control letras_man_min"
-                                   placeholder="Concepto.."
-                                   id="concepto"
-                                   name="concepto"
-                                   value="{{ abono.concepto }}"
-                                   minlength="3"
-                                   maxlength="255"
-                                   required>
-                        </div>
-
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                             <label for="monto">Monto:</label>
                             <input type="number"
                                    class="form-control"
@@ -61,20 +60,9 @@
                                    min="0"
                                    required>
                         </div>
-                        <div class="form-group col-md-12">
-                            <label for="interes">Interes:</label>
-                            <input type="number"
-                                   class="form-control"
-                                   id="interes"
-                                   name="interes"
-                                   value="{{ abono.interes }}"
-                                   minlength="0"
-                                   maxlength="10"
-                                   required>
-                        </div>
 
-                        {% now "Y-m-d" as ahora %}
-                        <div class="col-md-12 col-sm-12 col-xs-12">
+                          {% now "Y-m-d" as ahora %}
+                        <div class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group">
                                 <label for="fecha_pago">Fecha de pago:</label>
                                 <input type="date"
@@ -86,6 +74,20 @@
                                        required>
                             </div>
                         </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="interes">Interes:</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="interes"
+                                   name="interes"
+                                   value="{{ abono.interes }}"
+                                   minlength="0"
+                                   maxlength="10"
+                                   required>
+                        </div>
+
+
 <!--
                         <div class="form-group col-md-6">
                             <label for="saldo">Saldo:</label>

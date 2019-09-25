@@ -33,7 +33,7 @@
                     <i class="fa fa-trash-o"></i>
                 </a>
                 <a title="Imprimir"
-                   {% if perms.tesoreria.print_abono %}
+                   {% if perms.tesoreria.view_abono %}
                    class="btn btn-outline-info"
                    href="{% url 'tesoreria:abono_imprimir' abono.id %}"
                    {% else %}

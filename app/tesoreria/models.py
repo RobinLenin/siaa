@@ -16,9 +16,10 @@ class CuentaCobrar(models.Model):
     concepto = models.CharField(max_length=100)
     fecha_emision = models.DateField(verbose_name="Fecha de emision")
     fecha_vencimiento = models.DateField(verbose_name="Fecha de vencimiento")
+    fecha_cancelacion = models.DateField(null=True, blank=True, verbose_name="Fecha de cancelacion")
     monto = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     saldo = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-    interes = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
+    interes = models.DecimalField(default=0, max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     cliente = models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='cuentas_cobrar')
     numero_titulo = models.CharField(max_length=10)
     titulo = models.FileField(upload_to='tesoreria/')
@@ -54,9 +55,9 @@ class Abono(models.Model):
     FORMA_PAGO_EFECTIVO = "Efectivo"
     FORMA_PAGO_CHEQUE = "Cheque"
     FORMA_PAGO_DEPOSITO = "Deposito"
-    FORMAPAGO = ((FORMA_PAGO_EFECTIVO, "Efectivo"), (FORMA_PAGO_CHEQUE, "Cheque"), (FORMA_PAGO_DEPOSITO, "Deposito"),)
+    CHOICE_FORMAPAGO = ((FORMA_PAGO_EFECTIVO, "Efectivo"), (FORMA_PAGO_CHEQUE, "Cheque"), (FORMA_PAGO_DEPOSITO, "Deposito"),)
 
-    forma_pago=models.CharField(max_length=10, choices=FORMAPAGO, default=FORMA_PAGO_EFECTIVO)
+    forma_pago=models.CharField(max_length=10, choices= CHOICE_FORMAPAGO, default=FORMA_PAGO_EFECTIVO)
     referencia = models.CharField(max_length=100, default="")
     concepto = models.CharField(max_length=100)
     monto = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
@@ -82,7 +83,7 @@ class Comentario(models.Model):
         return "{0} {1}".format(self.fecha_creacion, self.concepto)
 
 class TasaInteres(models.Model):
-    tasa=models.DecimalField(max_digits=4, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
+    tasa=models.DecimalField(max_digits=4, decimal_places=2, validators=[MinValueValidator(Decimal('0.00')), MaxValueValidator(Decimal('100'))])
     anio = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(Decimal('2200'))])
     mes = models.PositiveSmallIntegerField(default=1, validators=[MaxValueValidator(Decimal('12'))])
 
@@ -94,7 +95,8 @@ class TasaInteres(models.Model):
         return "{0} {1}".format(self.tasa, self.anio, self.mes)
 
 class InteresMensual(models.Model):
-    fecha = models.DateField()
+    fecha_inicio = models.DateField(null=True, blank=True, verbose_name="Fecha de inicio")
+    fecha_fin = models.DateField(null=True, blank=True, verbose_name="Fecha de inicio")
     valor=models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
 
     tasa = models.ForeignKey('TasaInteres', null=False, blank=False, on_delete=models.PROTECT, related_name='interesesmensuales')
@@ -106,7 +108,3 @@ class InteresMensual(models.Model):
     def __str__(self):
         return str(self.valor)
 
-# todo corregir el models
-# crear la url  -- metodo views -- html
-# lista - crear - detalle - editar - eliminar
-#

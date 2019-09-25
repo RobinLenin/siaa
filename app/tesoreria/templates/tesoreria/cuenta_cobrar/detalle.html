@@ -1,138 +1,149 @@
 {% extends 'layout.html' %}
 
 {% block titulo %}
-    Cuentas por Cobrar
+Cuentas por Cobrar
 {% endblock %}
 
 {% block migas %}
-    {% include 'navegacion.html' with navegacion=navegacion %}
+{% include 'navegacion.html' with navegacion=navegacion %}
 {% endblock %}
 
 {% block contenido %}
-    <div class="card card-box">
-        <div class="card-head">
-            <header>{{ 'tesoreria.CuentaCobrar'|verbose_name|capfirst  }}</header>
-            <div class="tools">
-                <button class="btn btn-info"
-                        data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
-                        {% if not perms.tesoreria.change_cuentacobrar %} disabled {% endif %}>
-                    <i class="fa fa-edit"></i> Editar
-                </button>
-                <a {% if perms.tesoreria.delete_cuentacobrar %}
-                    class="btn btn-danger"
-                    href="{% url 'tesoreria:cuenta_cobrar_eliminar' cuenta_cobrar.id %}"
-                    onclick="return confirm('¿Está seguro de eliminar el registro?')"
-                {% else %}
-                    class="btn btn-danger disabled"
-                {% endif %}>
-                    <i class="fa fa-trash-o"></i> Eliminar
-                </a>
-            </div>
-        </div>
-        <div class="card-body ">
-            <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Cliente:</span>
-                <div class="col-sm-3">
-                    <h5>{{ cuenta_cobrar.cliente.get_nombres_completos}}</h5>
-                </div>
-                  <span class="col-sm-2">Estado:</span>
-                <div class="col-sm-5">
-                    <h5> {% if cuenta_cobrar.estado %}
-                        <span class="label label-success">Activo</span>
-                        {% else %}
-                        <span class="label label-danger">Inactivo</span>
-                        {% endif %}</h5>
-                </div>
-                    <span class="col-sm-2">Numero de Identificación:</span>
-                <div class="col-sm-3">
-                    <h5>{{ cuenta_cobrar.cliente.numero_documento}}</h5>
-                </div>
-            </div>
-             <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Concepto:</span>
-                <div class="col-sm-3">
-                    <h5>{{ cuenta_cobrar.concepto }}</h5>
-                </div>
-                 <span class="col-sm-2">Fecha de creación:</span>
-                <div class="col-sm-5">
-                    <h5>{{ cuenta_cobrar.fecha_emision }}</h5>
-                </div>
-            </div>
-               <div class="form-group form-inline text-left">
-                <span class="col-sm-2">Titulo de Credito:</span>
-                <div class="col-sm-3">
-                    <h5>{{ cuenta_cobrar.numero_titulo }}</h5>
-                </div>
-                    <span class="col-sm-2">Fecha de vencimiento:</span>
-                <div class="col-sm-5">
-                    <h5>{{ cuenta_cobrar.fecha_vencimiento }}</h5>
-                </div>
-            </div>
-             <div class="form-group form-inline text-left">
-                 <span class="col-sm-1">Monto:</span>
-                <div class="col-sm-3">
-                    <h5>{{ cuenta_cobrar.monto }}</h5>
-                </div>
-                 <span class="col-sm-1">Saldo:</span>
-                <div class="col-sm-3">
-                    <h5>{{ cuenta_cobrar.saldo }}</h5>
-                </div>
-                  <span class="col-sm-1">Interes:</span>
-                <div class="col-sm-3">
-                    <h5>{{ cuenta_cobrar.interes }}</h5>
-                </div>
-            </div>
-
-
-            <div class="card">
-                <div class="card-header">
-                    <h4>{{ 'tesoreria.Abono'|verbose_name_plural|capfirst  }}
-                        <button class="btn btn-circle btn-info btn-sm pull-right"
-                                data-toggle="modal" data-target="#modal-abono-guardar"
-                                {% if not perms.tesoreria.add_abono %} disabled {% endif %}>
-                            <i class="fa fa-plus-circle"></i> Nuevo
-                        </button>
-                    </h4>
-                </div>
-                <div class="card-body">
-                    {% include 'tesoreria/abono/fragmento_lista.html' with abonos=cuenta_cobrar.abonos.all %}
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h4>{{ 'tesoreria.Comentario'|verbose_name_plural|capfirst  }}
-                        <button class="btn btn-circle btn-info btn-sm pull-right"
-                                data-toggle="modal" data-target="#modal-comentario-guardar"
-                                {% if not perms.tesoreria.add_comentario %} disabled {% endif %}>
-                            <i class="fa fa-plus-circle"></i> Nuevo
-                        </button>
-                    </h4>
-                </div>
-                <div class="card-body">
-                    {% include 'tesoreria/comentario/fragmento_lista.html' with comentarios=cuenta_cobrar.comentarios.all %}
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h4>{{ 'tesoreria.InteresMensual'|verbose_name_plural|capfirst  }}
-                    </h4>
-                </div>
-                <div class="card-body">
-                    {% include 'tesoreria/interes_mensual/fragmento_lista.html' with interesesmensuales=cuenta_cobrar.interesesmensuales.all %}
-                </div>
-            </div>
-
+<div class="card card-box">
+    <div class="card-head">
+        <header>{{ 'tesoreria.CuentaCobrar'|verbose_name|capfirst }}</header>
+        <div class="tools">
+            <button class="btn btn-info"
+                    data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
+                    {% if not perms.tesoreria.change_cuentacobrar %} disabled {% endif %}>
+                <i class="fa fa-edit"></i> Editar
+            </button>
+            <a {% if perms.tesoreria.delete_cuentacobrar %}
+               class="btn btn-danger"
+               href="{% url 'tesoreria:cuenta_cobrar_eliminar' cuenta_cobrar.id %}"
+               onclick="return confirm('¿Está seguro de eliminar el registro?')"
+               {% else %}
+               class="btn btn-danger disabled"
+               {% endif %}>
+                <i class="fa fa-trash-o"></i> Eliminar
+            </a>
         </div>
     </div>
-    {% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
-    {% include 'tesoreria/abono/modal_agregar.html' %}
-    {% include 'tesoreria/comentario/modal_agregar.html' %}
+    <div class="card-body ">
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Cliente:</span>
+            <div class="col-sm-3">
+                <h5>{{ cuenta_cobrar.cliente.get_nombres_completos}}</h5>
+            </div>
+            <span class="col-sm-2">Estado:</span>
+            <div class="col-sm-5">
+                <h5> {% if cuenta_cobrar.estado %}
+                    <span class="label label-success">Activo</span>
+                    {% else %}
+                    <span class="label label-danger">Inactivo</span>
+                    {% endif %}</h5>
+            </div>
+            <span class="col-sm-2">Numero de Identificación:</span>
+            <div class="col-sm-3">
+                <h5>{{ cuenta_cobrar.cliente.numero_documento}}</h5>
+            </div>
+        </div>
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-2">Concepto:</span>
+            <div class="col-sm-3">
+                <h5>{{ cuenta_cobrar.concepto }}</h5>
+            </div>
+            <span class="col-sm-2">Fecha de creación:</span>
+            <div class="col-sm-5">
+                <h5>{{ cuenta_cobrar.fecha_emision }}</h5>
+            </div>
+            <span class="col-sm-2">Titulo de Credito:</span>
+            <div class="col-sm-3">
+                <h5>{{ cuenta_cobrar.numero_titulo }}</h5>
+            </div>
+            <span class="col-sm-2">Fecha de vencimiento:</span>
+            <div class="col-sm-5">
+                <h5>{{ cuenta_cobrar.fecha_vencimiento }}</h5>
+            </div>
+            <span class="col-sm-2"></span>
+            <div class="col-sm-3">
+                <h5></h5>
+            </div>
+            <span class="col-sm-2">Fecha de cancelación:</span>
+            <div class="col-sm-5">
+                {% if cuentacobrar.fecha_cancelacion %}
+                <h5>{{ cuenta_cobrar.fecha_cancelacion }}</h5>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group form-inline text-left">
+            <span class="col-sm-1">Monto:</span>
+            <div class="col-sm-3">
+                <h5>{{ cuenta_cobrar.monto }}</h5>
+            </div>
+            <span class="col-sm-1">Saldo:</span>
+            <div class="col-sm-3">
+                <h5>{{ cuenta_cobrar.saldo }}</h5>
+            </div>
+            <span class="col-sm-1">Interes:</span>
+            <div class="col-sm-3">
+                <h5>{{ cuenta_cobrar.interes }}</h5>
+            </div>
+        </div>
+
+
+        <div class="card" {% if not perms.tesoreria.view_abono %} hidden {% endif %}>
+            <div class="card-header">
+                <h4>{{ 'tesoreria.Abono'|verbose_name_plural|capfirst }}
+                    <button class="btn btn-circle btn-info btn-sm pull-right"
+                            data-toggle="modal" data-target="#modal-abono-guardar"
+                            {% if not perms.tesoreria.add_abono %} disabled {% endif %}>
+                        <i class="fa fa-plus-circle"></i> Nuevo
+                    </button>
+                </h4>
+            </div>
+            <div class="card-body">
+                {% include 'tesoreria/abono/fragmento_lista.html' with abonos=cuenta_cobrar.abonos.all %}
+            </div>
+        </div>
+
+        <div class="card" {% if not perms.tesoreria.view_comentario %} hidden {% endif %}>
+            <div class="card-header">
+                <h4>{{ 'tesoreria.Comentario'|verbose_name_plural|capfirst }}
+                    <button class="btn btn-circle btn-info btn-sm pull-right"
+                            data-toggle="modal" data-target="#modal-comentario-guardar"
+                            {% if not perms.tesoreria.add_comentario %} disabled {% endif %}>
+                        <i class="fa fa-plus-circle"></i> Nuevo
+                    </button>
+                </h4>
+            </div>
+            <div class="card-body">
+                {% include 'tesoreria/comentario/fragmento_lista.html' with comentarios=cuenta_cobrar.comentarios.all %}
+            </div>
+        </div>
+
+        <div class="card" {% if not perms.tesoreria.view_interesmensual %} hidden {% endif %}>
+            <div class="card-header">
+                <h4>{{ 'tesoreria.InteresMensual'|verbose_name_plural|capfirst }}
+                </h4>
+            </div>
+            <div class="card-body">
+                {% include 'tesoreria/interes_mensual/fragmento_lista.html' with interesesmensuales=cuenta_cobrar.interesesmensuales.all %}
+            </div>
+        </div>
+
+        </div>
+
+    </div>
+</div>
+{% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
+{% include 'tesoreria/abono/modal_agregar.html' %}
+{% include 'tesoreria/comentario/modal_agregar.html' %}
 {% endblock contenido %}
 {% block javascript %}
-    {% load staticfiles %}
-    <script src="{% static 'js/tesoreria/abono_editar.js' %}"></script>
-    <script src="{% static 'js/core/persona_guardar.js' %}"></script>
-    <script src="{% static 'js/tesoreria/cuentacobrar_opciones_select.js' %}"></script>
+{% load staticfiles %}
+<script src="{% static 'js/tesoreria/abono_editar.js' %}"></script>
+<script src="{% static 'js/core/persona_guardar.js' %}"></script>
+<script src="{% static 'js/tesoreria/cuentacobrar_opciones_select.js' %}"></script>
 {% endblock %}

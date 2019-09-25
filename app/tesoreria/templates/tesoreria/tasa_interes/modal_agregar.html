@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <div class="row">
                         {% now "Y-m" as ahora %}
-                        <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
                             <label for="anio">Año:</label>
                             <input type="number"
                                    placeholder="1990"
@@ -24,7 +24,7 @@
                                    required>
                         </div>
 
-                        <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
                             <label for="mes">Mes:</label>
                             <input type="number"
                                    placeholder="0"
@@ -46,8 +46,8 @@
                                    id="tasa"
                                    name="tasa"
                                    value="{{ tasa_interes.tasa }}"
-                                   minlength="0"
-                                   maxlength="10"
+                                    min="0"
+                                   max="100"
                                    required>
                         </div>
                     </div>

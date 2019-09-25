@@ -2,18 +2,22 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>Fecha</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>
+             <th>Tasa</th>
             <th>Valor</th>
-            <th>Tasa</th>
+
             <th></th>
         </tr>
         </thead>
         <tbody>
         {% for interes_mensual in interesesmensuales %}
         <tr>
-            <td>{{ interes_mensual.fecha }}</td>
-            <td>{{ interes_mensual.valor }}</td>
+            <td>{{ interes_mensual.fecha_inicio }}</td>
+            <td>{{ interes_mensual.fecha_fin }}</td>
             <td>{{ interes_mensual.tasa }}</td>
+            <td>{{ interes_mensual.valor }}</td>
+
         </tr>
         {% endfor %}
         </tbody>

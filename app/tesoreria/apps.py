@@ -22,8 +22,17 @@ class TesoreriaConfig(AppConfig):
             'nombre': 'tesoreria_abogado',
             # para permisos especificos
             'perm_detalle': ['view_cuentacobrar'],
-            # permisos globales por modelo
             'perm_modelos': ['comentario'
+                             ],
+            'funcionalidades': [
+                'tesoreria_root',
+                'tesoreria_cuentas_cobrar',
+            ]
+        },
+        {
+            'nombre': 'tesoreria_asistente',
+            'perm_detalle': ['view_cuentacobrar'],
+            'perm_modelos': ['abono'
                              ],
             'funcionalidades': [
                 'tesoreria_root',
@@ -34,8 +43,8 @@ class TesoreriaConfig(AppConfig):
             'nombre': 'tesoreria_administrador',
             # para permisos especificos
             'perm_detalle': ['view_cuentacobrar'],
-            # permisos globales por modelo
-            'perm_modelos': ['abono','cuentacobrar','comentario','tasainteres','interesmensual','cliente'
+
+            'perm_modelos': ['abono','cuentacobrar','comentario','tasainteres','interesmensual',
                              ],
             'funcionalidades': [
                 'tesoreria_root',
@@ -46,21 +55,6 @@ class TesoreriaConfig(AppConfig):
             ]
         },
 
-        {
-            'nombre': 'tesoreria_asistente',
-            # para permisos especificos
-            'perm_detalle': ['view_cuentacobrar'],
-            # permisos globales por modelo
-            'perm_modelos': ['abono'
-                             ],
-            'funcionalidades': [
-                'tesoreria_root',
-                'tesoreria_cuentas_cobrar',
-                'tesoreria_tasas_interes',
-                'tesoreria_cliente',
-
-            ]
-        }
     ]
     funcionalidades = [
         {
@@ -110,7 +104,7 @@ class TesoreriaConfig(AppConfig):
             "padre": "tesoreria_root",
             "campos": {
                 "nombre": "Cliente",
-                "formulario": "/tesoreria/cliente/listar",
+                "formulario": "/tesoreria/cliente/lista",
                 "orden": 1,
                 "activo": True,
                 "mostrar": True,
