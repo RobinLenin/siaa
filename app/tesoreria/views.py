@@ -48,24 +48,28 @@ def abono_guardar(request):
     saldo = cuenta_cobrar.saldo
     interes = cuenta_cobrar.interes
     monto = Decimal(request.POST.get('monto'))
-    aux_abo_int = 0.00
+
+    aux_interes = 0.00
     if interes > 0:
         aux_abo_int = interes - monto
 
         if aux_abo_int < 0:
             aux_abo_int = aux_abo_int * -1
-            aux = monto
+            aux = monto - aux_abo_int
+            aux_interes = 0
 
         else:
-            aux = aux_abo_int + monto
+            aux = monto
+            aux_interes = aux_abo_int
             aux_abo_int = 0
-
 
         request.POST._mutable = True
         request.POST['interes'] = Decimal(round(aux, 2))
         request.POST._mutable = False
+    else:
+        aux_abo_int = monto
 
-    total = saldo - aux_abo_int
+    total = Decimal(saldo) - Decimal(aux_abo_int)
     if id:
         abono = get_object_or_404(Abono, id=id)
 
@@ -73,8 +77,12 @@ def abono_guardar(request):
         abono = Abono()
 
     abono_form = AbonoForm(request.POST, instance=abono)
-    if abono_form.is_valid() and abono.monto <= cuenta_cobrar.saldo:
-        CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes= aux_abo_int)
+    if abono_form.is_valid() and abono.monto <= (cuenta_cobrar.saldo +cuenta_cobrar.interes):
+        CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
+
+        if total == 0:
+            fecha_cancelacion = datetime.now()
+            CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False, fecha_cancelacion=fecha_cancelacion)
 
         abono_form.save()
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
@@ -82,12 +90,8 @@ def abono_guardar(request):
     else:
         messages.warning(request, abono_form.errors)
 
-    if abono.monto > cuenta_cobrar.saldo:
+    if abono.monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
         messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
-
-    if total == 0:
-        fecha_cancelacion = datetime.now()
-        CuentaCobrar.objects.values('estado, fecha_cancelacion').filter(id=id_cli).update(estado=False, fecha_cancelacion=fecha_cancelacion)
 
     return redirect(next)
 
