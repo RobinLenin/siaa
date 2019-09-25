@@ -45,7 +45,7 @@ Cuentas por Cobrar
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    
                                     <th>CI</th>
                                     <th>Cliente</th>
                                     <th>Monto</th>
@@ -57,9 +57,7 @@ Cuentas por Cobrar
                                 <tbody>
                                 {% for cuentacobrar in cuenta_cobrar %}
                                 <tr>
-                                    <td>
-                                        {{ cuentacobrar.id }}
-                                    </td>
+
                                     <td>
                                         <a href="{% url 'tesoreria:cuenta_cobrar_detalle' cuentacobrar.id %}">
                                             {{ cuentacobrar.cliente.numero_documento }}</a>
