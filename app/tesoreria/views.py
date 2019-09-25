@@ -374,7 +374,7 @@ def calcular_saldo(monto, anio, mes):
             print(interes)
             interes_total = Decimal(interes_total) + Decimal(interes)
 
-    saldo= monto + interes_total
+    saldo= monto + Decimal(interes_total)
     return saldo, interes_total
 
 @login_required

@@ -50,6 +50,7 @@ Cuentas por Cobrar
                                     <th>Cliente</th>
                                     <th>Monto</th>
                                     <th>Saldo</th>
+                                     <th>Interes</th>
                                     <th>Estado</th>
                                 </tr>
                                 </thead>
@@ -71,6 +72,9 @@ Cuentas por Cobrar
                                     </td>
                                     <td>
                                         {{ cuentacobrar.saldo }}
+                                    </td>
+                                     <td>
+                                        {{ cuentacobrar.interes }}
                                     </td>
                                     <td>
                                         {% if cuentacobrar.estado %}
