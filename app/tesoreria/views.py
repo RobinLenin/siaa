@@ -377,13 +377,7 @@ def calcular_saldo(monto, anio, mes):
             print(interes)
             interes_total = Decimal(interes_total) + Decimal(interes)
 
-
-    saldo= monto + Decimal(interes_total)
     return interes_total
-
-
-    return interes_total
-
 
 @login_required
 @permission_required('tesoreria.delete_cuentacobrar', raise_exception=True, )
