@@ -377,13 +377,13 @@ def calcular_saldo(monto, anio, mes):
             print(interes)
             interes_total = Decimal(interes_total) + Decimal(interes)
 
-<<<<<<< Updated upstream
+
     saldo= monto + Decimal(interes_total)
     return saldo, interes_total
-=======
+
 
     return interes_total
->>>>>>> Stashed changes
+
 
 @login_required
 @permission_required('tesoreria.delete_cuentacobrar', raise_exception=True, )
