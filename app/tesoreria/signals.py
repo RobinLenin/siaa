@@ -21,7 +21,7 @@ def abono_postsave_handler(sender, instance, **kwargs):
 
 
 
-"""@receiver(post_save, sender=CuentaCobrar)
+@receiver(post_save, sender=CuentaCobrar)
 def cuentacobrar_postsave_handler(sender, instance, **kwargs):
 
     if kwargs["created"]:
@@ -44,7 +44,8 @@ def cuentacobrar_postsave_handler(sender, instance, **kwargs):
 
                 interes_mensual.cuenta_cobrar = instance
                 interes_mensual.tasa = tasa
-                interes_mensual.fecha = datetime(int(tasa.anio), int(tasa.mes), 1).date()
+                interes_mensual.fecha_inicio = datetime(int(tasa.anio), int(tasa.mes), 1).date()
+                interes_mensual.fecha_fin = datetime(int(tasa.anio), int(tasa.mes), 1).date()
                 interes_mensual.valor = Decimal(round(interes, 2))
 
                 try:
@@ -53,7 +54,6 @@ def cuentacobrar_postsave_handler(sender, instance, **kwargs):
                 except NameError:
                     hh = 'Solicitud incorrecta'
 
-        return render('tesoreria/cuenta_cobrar/lista.html', locals())
 
 
-"""""
+
