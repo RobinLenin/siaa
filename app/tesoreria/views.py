@@ -101,21 +101,22 @@ def abono_eliminar(request, id):
 
     abono = get_object_or_404(Abono, id=id)
     cuenta_cobrar = CuentaCobrar.objects.get(id=str(abono.cuenta_cobrar_id))
-    interes_cc = Decimal(cuenta_cobrar.interes)
-    saldo = Decimal(cuenta_cobrar.saldo)
-    monto = Decimal(abono.monto)
-    interes_abono = Decimal(abono.interes)
+    interes_cc = cuenta_cobrar.interes
+    saldo = cuenta_cobrar.saldo
+    monto = abono.monto
+    interes_abono = abono.interes
     diferencia = monto - interes_abono
     total = saldo + diferencia
-    interes_nuevo = interes_cc + Decimal(abono.interes)
+    interes_nuevo = interes_cc + abono.interes
     print(saldo)
     print(monto)
     print(diferencia)
     print(total)
+
     CuentaCobrar.objects.values('saldo', 'interes').filter(id=abono.cuenta_cobrar_id).update(saldo=total, interes=interes_nuevo)
 
     if total > 0:
-        CuentaCobrar.objects.values('estado').filter(id=abono.cuenta_cobrar_id).update(saldo=True)
+        CuentaCobrar.objects.values('estado').filter(id=abono.cuenta_cobrar_id).update(estado=True)
 
     try:
         if abono.delete():
