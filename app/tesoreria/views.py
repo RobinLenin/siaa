@@ -80,7 +80,7 @@ def abono_guardar(request):
     if abono_form.is_valid() and abono.monto <= (cuenta_cobrar.saldo +cuenta_cobrar.interes):
         CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
 
-        if total == 0:
+        if total <= 0:
             fecha_cancelacion = datetime.now()
             CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False, fecha_cancelacion=fecha_cancelacion)
 
@@ -101,16 +101,21 @@ def abono_eliminar(request, id):
 
     abono = get_object_or_404(Abono, id=id)
     cuenta_cobrar = CuentaCobrar.objects.get(id=str(abono.cuenta_cobrar_id))
-    interes_cc = cuenta_cobrar.interes
-    saldo = cuenta_cobrar.saldo
+    interes_cc = Decimal(cuenta_cobrar.interes)
+    saldo = Decimal(cuenta_cobrar.saldo)
     monto = Decimal(abono.monto)
-    total = saldo + monto
-    interes = interes_cc + Decimal(abono.interes)
-
-    CuentaCobrar.objects.values('saldo', 'interes').filter(id=abono.cuenta_cobrar_id).update(saldo=total, interes=interes)
+    interes_abono = Decimal(abono.interes)
+    diferencia = monto - interes_abono
+    total = saldo + diferencia
+    interes_nuevo = interes_cc + Decimal(abono.interes)
+    print(saldo)
+    print(monto)
+    print(diferencia)
+    print(total)
+    CuentaCobrar.objects.values('saldo', 'interes').filter(id=abono.cuenta_cobrar_id).update(saldo=total, interes=interes_nuevo)
 
     if total > 0:
-        CuentaCobrar.objects.values('estado').filter(id=abono.cuenta_cobrar_id).update(saldo=False)
+        CuentaCobrar.objects.values('estado').filter(id=abono.cuenta_cobrar_id).update(saldo=True)
 
     try:
         if abono.delete():
