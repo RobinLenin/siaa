@@ -53,15 +53,19 @@ def abono_guardar(request):
         aux_abo_int = interes - monto
 
         if aux_abo_int < 0:
-            aux = interes
-            aux_abo_int = 0
-        else:
+            aux_abo_int = aux_abo_int * -1
             aux = monto
+
+        else:
+            aux = aux_abo_int + monto
+            aux_abo_int = 0
+
 
         request.POST._mutable = True
         request.POST['interes'] = Decimal(round(aux, 2))
         request.POST._mutable = False
-    total = saldo - monto
+
+    total = saldo - aux_abo_int
     if id:
         abono = get_object_or_404(Abono, id=id)
 
@@ -338,10 +342,9 @@ def cuenta_cobrar_guardar(request):
     id = request.POST.get('id')
     fecha_emision = request.POST.get('fecha_emision')
     date = parse_date(fecha_emision)
-    saldo, interes = calcular_saldo(Decimal(request.POST.get('monto')), int(date.year), int(date.month))
+    interes = calcular_saldo(Decimal(request.POST.get('monto')), int(date.year), int(date.month))
 
     request.POST._mutable = True
-    request.POST['saldo'] = Decimal(round(saldo, 2))
     request.POST['interes'] = Decimal(round(interes, 2))
     request.POST._mutable = False
 
@@ -374,8 +377,13 @@ def calcular_saldo(monto, anio, mes):
             print(interes)
             interes_total = Decimal(interes_total) + Decimal(interes)
 
+<<<<<<< Updated upstream
     saldo= monto + Decimal(interes_total)
     return saldo, interes_total
+=======
+
+    return interes_total
+>>>>>>> Stashed changes
 
 @login_required
 @permission_required('tesoreria.delete_cuentacobrar', raise_exception=True, )
