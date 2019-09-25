@@ -347,12 +347,7 @@ def cuenta_cobrar_guardar(request):
 
     if id:
         cuenta_cobrar = get_object_or_404(CuentaCobrar, id=id)
-        if not (request.user.has_perm("tesoreria") or request.user.has_perm(
-                "tesoreria", cuenta_cobrar)):
-            raise PermissionDenied
     else:
-        if not request.user.has_perm("tesoreria"):
-            raise PermissionDenied
         cuenta_cobrar = CuentaCobrar()
 
     cuenta_cobrar_form = CuentaCobrarForm(request.POST, instance=cuenta_cobrar)
