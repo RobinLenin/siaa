@@ -82,7 +82,8 @@ def abono_guardar(request):
         messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
 
     if total == 0:
-        CuentaCobrar.objects.values('estado').filter(id=id_cli).update(estado=False)
+        fecha_cancelacion = datetime.now()
+        CuentaCobrar.objects.values('estado, fecha_cancelacion').filter(id=id_cli).update(estado=False, fecha_cancelacion=fecha_cancelacion)
 
     return redirect(next)
 
@@ -97,7 +98,12 @@ def abono_eliminar(request, id):
     monto = Decimal(abono.monto)
     total = saldo + monto
     interes = interes_cc + Decimal(abono.interes)
-    CuentaCobrar.objects.values('saldo','interes').filter(id=abono.cuenta_cobrar_id).update(saldo=total, interes=interes)
+
+    CuentaCobrar.objects.values('saldo', 'interes').filter(id=abono.cuenta_cobrar_id).update(saldo=total, interes=interes)
+
+    if total > 0:
+        CuentaCobrar.objects.values('estado').filter(id=abono.cuenta_cobrar_id).update(saldo=False)
+
     try:
         if abono.delete():
             messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
