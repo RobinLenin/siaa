@@ -1,5 +1,7 @@
 from datetime import datetime
 from _decimal import Decimal
+import calendar
+
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -14,49 +16,35 @@ from app.tesoreria.models import TasaInteres
 
 @receiver(post_save, sender=Abono)
 def abono_postsave_handler(sender, instance, **kwargs):
-
     if kwargs["created"]:
         pass
-       # instance.cuentacobrar metodo de calcular
-
+    # instance.cuentacobrar metodo de calcular
 
 
 @receiver(post_save, sender=CuentaCobrar)
 def cuentacobrar_postsave_handler(sender, instance, **kwargs):
-
     if kwargs["created"]:
         fecha_actual = datetime.now()
-
-        fecha_emision = instance.fecha_emision
-
-
-        tasa_interes = TasaInteres.objects.all()
+        tasa_interes = TasaInteres.objects.filter(anio__gte=instance.fecha_emision.year,
+                                                  mes__gte=instance.fecha_emision.month,
+                                                 anio__lte=fecha_actual.year,
+                                                mes__lte=fecha_actual.month)
         # filtrar ver si le afecta a esta cuenta preguntar si hay fecha de cancelacion
-        # anio_inicio = instance.fecha inicio.year
-        # filter(anio__gte=instance.fecha inicio.year, mes__gte=instance.fecha inicio.mes)
-
         for tasa in tasa_interes:
             interes_mensual = InteresMensual()
-            if int(tasa.anio) >= int(fecha_emision.year) and int(tasa.mes) >= int(fecha_emision.month) \
-                    and int(tasa.anio) <= int(fecha_actual.year) and int(tasa.mes) <= int(fecha_actual.month):
-                interes = (instance.monto * tasa.tasa) / 100
+            interes = (instance.monto * tasa.tasa) / 100
 
-                #interes_total = Decimal(interes_total) + Decimal(interes)
+            # interes_total = Decimal(interes_total) + Decimal(interes)
+            # saldo = monto + interes_total
 
-                #saldo = monto + interes_total
+            interes_mensual.cuenta_cobrar = instance
+            interes_mensual.tasa = tasa
+            interes_mensual.fecha_inicio = datetime(int(tasa.anio), int(tasa.mes), 1).date()
+            interes_mensual.fecha_fin = datetime(int(tasa.anio), int(tasa.mes), calendar.monthrange(tasa.anio, tasa.mes)[1]).date()
+            interes_mensual.valor = Decimal(round(interes, 2))
 
-                interes_mensual.cuenta_cobrar = instance
-                interes_mensual.tasa = tasa
-                interes_mensual.fecha_inicio = datetime(int(tasa.anio), int(tasa.mes), 1).date()
-                interes_mensual.fecha_fin = datetime(int(tasa.anio), int(tasa.mes), 1).date()
-                interes_mensual.valor = Decimal(round(interes, 2))
+            try:
+                interes_mensual.save()
 
-                try:
-                    interes_mensual.save()
-
-                except NameError:
-                    hh = 'Solicitud incorrecta'
-
-
-
-
+            except NameError:
+                hh = 'Solicitud incorrecta'

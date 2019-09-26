@@ -1,3 +1,4 @@
+import calendar
 from datetime import date, timezone
 
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -92,15 +93,15 @@ class TasaInteres(models.Model):
     class Meta:
         verbose_name = "Tasa de Interes"
         verbose_name_plural = "Tasas de Interes"
-        ### unique_togheter   anio,mes
-
+        unique_together=['anio','mes']
+        ordering = ['anio']
     def __str__(self):
-        return "{0} {1}".format(self.tasa, self.anio, self.mes)
+        return "{0} - {1}".format(calendar.month_name[self.mes],self.anio)
 
 
-    #  metodo para calcular tasas
-    # buscar todos las cuentas de fecha inicio
-    #comprobar si ya tiene interes mensual   o crear
+    #  metodo para aplicar tasas
+    # buscar todos las cuentas afectadas
+    #comprobar si ya tiene interes mensual sino crear
 
 class InteresMensual(models.Model):
     fecha_inicio = models.DateField(null=True, blank=True, verbose_name="Fecha de inicio")
