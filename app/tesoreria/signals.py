@@ -31,6 +31,9 @@ def cuentacobrar_postsave_handler(sender, instance, **kwargs):
 
 
         tasa_interes = TasaInteres.objects.all()
+        # filtrar ver si le afecta a esta cuenta preguntar si hay fecha de cancelacion
+        # anio_inicio = instance.fecha inicio.year
+        # filter(anio__gte=instance.fecha inicio.year, mes__gte=instance.fecha inicio.mes)
 
         for tasa in tasa_interes:
             interes_mensual = InteresMensual()

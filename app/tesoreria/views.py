@@ -85,6 +85,9 @@ def abono_guardar(request):
             CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False, fecha_cancelacion=fecha_cancelacion)
 
         abono_form.save()
+        # preguntar si ya hay interes mensual eneste mes recalcular
+    # crear interes mensual de dias restantes
+        # import calendar, calendar.   obtener dias mes
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
 
     else:

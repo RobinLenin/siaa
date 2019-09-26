@@ -69,6 +69,8 @@ class Abono(models.Model):
     def __str__(self):
         return "{0} {1} {2}".format(self.fecha_pago, self.monto, self.interes)
 
+    # clean  para verificar que no hay abonos de fecha superior
+
 class Comentario(models.Model):
     fecha_creacion= models.DateTimeField(auto_now=True, verbose_name="Fecha de creacion")
     concepto = models.CharField(max_length=100)
@@ -90,9 +92,15 @@ class TasaInteres(models.Model):
     class Meta:
         verbose_name = "Tasa de Interes"
         verbose_name_plural = "Tasas de Interes"
+        ### unique_togheter   anio,mes
 
     def __str__(self):
         return "{0} {1}".format(self.tasa, self.anio, self.mes)
+
+
+    #  metodo para calcular tasas
+    # buscar todos las cuentas de fecha inicio
+    #comprobar si ya tiene interes mensual   o crear
 
 class InteresMensual(models.Model):
     fecha_inicio = models.DateField(null=True, blank=True, verbose_name="Fecha de inicio")
@@ -108,3 +116,6 @@ class InteresMensual(models.Model):
     def __str__(self):
         return str(self.valor)
 
+    def clean(self):
+        #Interes.objects.filter()
+        pass
