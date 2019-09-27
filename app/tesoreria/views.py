@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.dateparse import parse_date
 from django.views.decorators.http import require_http_methods
+
 from app.core.dto.datatable import DataTableParams
 from app.core.models import Persona
 from app.core.utils.enums import MensajesEnum
@@ -38,6 +39,66 @@ def index_tesoreria(request):
 
 
 # ////////////////////////Abono//////////////
+def recalculo(request):
+    id_cli = request.POST.get('cuenta_cobrar')
+    cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
+    saldo_aux = cuenta_cobrar.saldo
+    interes_cc_aux = cuenta_cobrar.interes
+    fecha_pago_str = request.POST.get('fecha_pago')
+    monto = request.POST.get('monto')
+    fecha_pago = parse_date(fecha_pago_str)
+    diferencia_dias = 0
+    interes_dias = 0.00
+
+    try:
+        interes_mensual = InteresMensual.objects.get(cuenta_cobrar=cuenta_cobrar,
+                                                     fecha_fin__year=fecha_pago.year,
+                                                     fecha_fin__month=fecha_pago.month)
+
+        intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar,
+                                                     fecha_fin__gt=fecha_pago)
+    except interes_mensual.DoesNotExist:
+        interes_mensual = None
+        intereses_mensuales = None
+
+    if not intereses_mensuales == None:
+        #puede haber una consulta que sume todos los saldos?
+        for interesmensual in intereses_mensuales:
+            # saldo_aux = saldo_aux - interesmensual.valor
+            print(interesmensual.valor)
+
+            interes_cc_aux = interes_cc_aux - interesmensual.valor
+
+            print(interes_cc_aux)
+
+            # interes_dias = monto * interesmensual.tasa.tasa /100)/calendar.monthrange(tasa.anio, tasa.mes)[1]).date() *NUMEROS DE DIAS QUE QUIERAS
+
+            interes_cc_aux = Decimal(interes_cc_aux) + Decimal(interes_dias)
+
+    if not interes_mensual == None:
+
+        dias = fecha_pago.day
+        diferencia_dias = calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
+                              1] - dias
+        interes_dias = (((Decimal(monto) * Decimal(interes_mensual.tasa.tasa)) / 100) /
+                        calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
+                            1]) * dias
+        interes_dias_diferencia = (((Decimal(monto) * Decimal(interes_mensual.tasa.tasa)) / 100) /
+                        calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
+                            1]) * diferencia_dias
+        suma_interes = interes_dias + interes_dias_diferencia
+        CuentaCobrar.objects.values('interes').filter(id=id_cli).update(interes=suma_interes + interes_cc_aux)
+
+        InteresMensual.objects.values('valor').filter(id=interes_mensual.id).update(valor=suma_interes)
+
+
+
+        #for interesmensual in intereses_mensuales:
+         #   InteresMensual.objects.values('interes').filter(id=interesmensual.id).update(interes=interes_cc_aux)
+
+    pass
+
+
 @login_required
 @permission_required('tesoreria.change_abono', raise_exception=True, )
 @require_http_methods(['POST'])
@@ -46,10 +107,15 @@ def abono_guardar(request):
     id = request.POST.get('id')
     id_cli = request.POST.get('cuenta_cobrar')
     cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
+
+
+    if InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar, fecha_fin__gte=request.POST.get('fecha_pago')).exists():
+        recalculo(request)
+        cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
+
     saldo = cuenta_cobrar.saldo
     interes = cuenta_cobrar.interes
     monto = Decimal(request.POST.get('monto'))
-
     aux_interes = 0.00
     if interes > 0:
         aux_abo_int = interes - monto
@@ -78,7 +144,7 @@ def abono_guardar(request):
         abono = Abono()
 
     abono_form = AbonoForm(request.POST, instance=abono)
-    if abono_form.is_valid() and abono.monto <= (cuenta_cobrar.saldo + cuenta_cobrar.interes) and not Abono.objects.filter(fecha_pago__gt=abono.fecha_pago).exists():
+    if abono_form.is_valid() and monto <= (cuenta_cobrar.saldo + cuenta_cobrar.interes) and not Abono.objects.filter(fecha_pago__gt=abono.fecha_pago).exists():
         CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
 
         if total <= 0:
@@ -94,7 +160,7 @@ def abono_guardar(request):
     else:
         messages.warning(request, MensajesEnum.ABONO_ERROR.value)
 
-    if abono.monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
+    if monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
         messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
 
     return redirect(next)
