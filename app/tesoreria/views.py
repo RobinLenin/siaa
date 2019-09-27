@@ -1,3 +1,4 @@
+import calendar
 from _decimal import Decimal
 from datetime import datetime
 
@@ -527,6 +528,56 @@ def tasa_interes_eliminar(request, id):
     except Exception as e:
         messages.warning(request, str(e))
         return HttpResponseServerError(render(request, '500.html'))
+
+
+@login_required
+@permission_required('tesoreria.change_cuentacobrar', raise_exception=True, )
+def tasa_interes_aplicar(request, id):
+    tasa_interes = get_object_or_404(TasaInteres, id=id)
+    anio = int(tasa_interes.anio)
+    mes = int(tasa_interes.mes)
+    cuentas_cobrar = CuentaCobrar.objects.filter(estado=True)
+
+    for cuenta in cuentas_cobrar:
+        if not InteresMensual.objects.filter(cuenta_cobrar=cuenta, fecha_inicio__year = anio, fecha_inicio__month = mes).exists():
+            mensaje = "Tasa aplicada correctamente"
+
+            interes_mensual = InteresMensual()
+            interes = (cuenta.saldo * tasa_interes.tasa) / 100
+
+            # interes_total = Decimal(interes_total) + Decimal(interes)
+            # saldo = monto + interes_total
+
+            interes_mensual.cuenta_cobrar = cuenta
+            interes_mensual.tasa = tasa_interes
+            interes_mensual.fecha_inicio = datetime(int(tasa_interes.anio), int(tasa_interes.mes), 1).date()
+            interes_mensual.fecha_fin = datetime(int(tasa_interes.anio), int(tasa_interes.mes),
+                                                 calendar.monthrange(tasa_interes.anio, tasa_interes.mes)[1]).date()
+            interes_mensual.valor = Decimal(round(interes, 2))
+            #saldo = cuenta.saldo + interes
+            interes_cuenta = cuenta.interes + interes
+            CuentaCobrar.objects.values('interes').filter(id=cuenta.id).update(interes=interes_cuenta)
+
+            try:
+                interes_mensual.save()
+            except NameError:
+                mensaje = 'INteres no se guardo'
+        else:
+            mensaje = "Tasa ya aplicada"
+
+
+
+
+
+
+
+
+    messages.success(request, mensaje)
+
+    #messages.warning(request, MensajesEnum.TASA_NO_APLICAR.value)
+
+
+    return redirect('tesoreria:tasa_interes_listar')
 
 # ////////////////////////Interes Mensual//////////////
 @login_required

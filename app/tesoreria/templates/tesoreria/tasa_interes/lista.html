@@ -49,12 +49,13 @@
                                 <a title="Aplicar"
                    {% if perms.tesoreria.change_cuentacobrar %}
                    class="btn btn-outline-info"
+                        href="{% url 'tesoreria:tasa_interes_aplicar' tasainteres.id %}"
 
                    {% else %}
                    class="btn btn-outline-danger disabled"
                    {% endif %}>
                     <i class="fa fa-check-square-o"></i>
-                </a>
+                                </a>
                                 <a title="Eliminar"
                                         {% if perms.tesoreria.delete_tasainteres %}
                                    class="btn btn-outline-danger"

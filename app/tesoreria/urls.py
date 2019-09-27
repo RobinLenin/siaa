@@ -34,6 +34,7 @@ urlpatterns = [
 
     path('tasa_interes/detalle/<int:id>', views.tasa_interes_detalle, name='tasa_interes_detalle'),
     path('tasa_interes/eliminar/<int:id>', views.tasa_interes_eliminar, name='tasa_interes_eliminar'),
+    path('tasa_interes/aplicar/<int:id>', views.tasa_interes_aplicar, name='tasa_interes_aplicar'),
     path('tasa_interes/guardar', views.tasa_interes_guardar, name='tasa_interes_guardar'),
     path('tasa_interes/listar', views.tasa_interes_listar, name='tasa_interes_listar'),
     path('tasa_interes/lista-paginador', views.tasa_interes_lista_paginador, name='tasa_interes_lista_paginador'),
