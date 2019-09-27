@@ -8,5 +8,4 @@ class MensajesEnum(Enum):
     DATOS_INCOMPLETOS = "Por favor ingrese todos los datos..."
     METODO_NO_VALIDO = "Método no válido..."
     ABONO_MAYOR_SALDO = "Tienes un abonoo que supera tu saldo por cobrar"
-    TASA_APLICAR = "Tasa de interés aplicada correctamente"
-    TASA_NO_APLICAR = "Tasa de interés ya aplicada"
+    ABONO_ERROR = "No puede ingresar este abono, fecha incorrecta"

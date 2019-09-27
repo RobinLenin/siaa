@@ -78,7 +78,7 @@ def abono_guardar(request):
         abono = Abono()
 
     abono_form = AbonoForm(request.POST, instance=abono)
-    if abono_form.is_valid() and abono.monto <= (cuenta_cobrar.saldo +cuenta_cobrar.interes):
+    if abono_form.is_valid() and abono.monto <= (cuenta_cobrar.saldo + cuenta_cobrar.interes) and not Abono.objects.filter(fecha_pago__gt=abono.fecha_pago).exists():
         CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
 
         if total <= 0:
@@ -92,7 +92,7 @@ def abono_guardar(request):
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
 
     else:
-        messages.warning(request, abono_form.errors)
+        messages.warning(request, MensajesEnum.ABONO_ERROR.value)
 
     if abono.monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
         messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
