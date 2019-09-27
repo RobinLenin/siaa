@@ -85,6 +85,9 @@ def abono_guardar(request):
             CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False, fecha_cancelacion=fecha_cancelacion)
 
         abono_form.save()
+    # preguntar si ya hay interes mensual en este mes recalcular
+    # crear interes mensual de dias restantes
+    # preguntar si existe abono con fecha posterior si existe mostrar error
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
 
     else:
@@ -424,6 +427,30 @@ def cuenta_cobrar_detalle(request, id):
 
 
 # ////////////////////////Tasa interes//////////////
+@login_required
+@permission_required('tesoreria.view_tasainteres', raise_exception=True, )
+def tasa_interes_detalle(request,id):
+    tasa = get_object_or_404(TasaInteres, id=id)
+    navegacion = ('Modulo financiero',
+                  [('Tesoreria', reverse('tesoreria:index_tesoreria')),
+                   ('Tasas de Interes',reverse('tesoreria:tasa_interes_listar')),
+                   (str(tasa),None)
+                   ])
+
+    page = request.GET.get('pagina')
+    numero_items = request.GET.get('numero_items', '25')
+    lista_de_cuentas = tasa.interesesmensuales.all()
+
+    paginator = Paginator(lista_de_cuentas, numero_items)
+    try:
+        cuenta_cobrar = paginator.page(page)
+    except PageNotAnInteger:
+        cuenta_cobrar = paginator.page(1)
+    except EmptyPage:
+        cuenta_cobrar = paginator.page(paginator.num_pages)
+    return render(request, 'tesoreria/tasa_interes/detalle.html', locals())
+
+
 @login_required
 @permission_required('tesoreria.view_tasainteres', raise_exception=True, )
 def tasa_interes_listar(request):

@@ -27,8 +27,7 @@
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th>Año</th>
-                        <th>Mes</th>
+                        <th>Fecha</th>
                         <th>Tasa</th>
                         <th>Acción</th>
                     </tr>
@@ -37,19 +36,28 @@
                     {% for tasainteres in tasa_interes %}
                         <tr>
                             <td>
-                                   {{ tasainteres.anio }}
+                                <a href="{% url 'tesoreria:tasa_interes_detalle' tasainteres.id %}">
+                                             {{ tasainteres}}</a>
+
                             </td>
-                            <td>
-                                    {{ tasainteres.mes }}
-                            </td>
+
                             <td>
                                 %  {{ tasainteres.tasa }}
 
                             </td>
                             <td>
+                                <a title="Aplicar"
+                   {% if perms.tesoreria.change_cuentacobrar %}
+                   class="btn btn-outline-info"
+
+                   {% else %}
+                   class="btn btn-outline-danger disabled"
+                   {% endif %}>
+                    <i class="fa fa-check-square-o"></i>
+                </a>
                                 <a title="Eliminar"
                                         {% if perms.tesoreria.delete_tasainteres %}
-                                   class="btn btn-circle btn-outline-danger"
+                                   class="btn btn-outline-danger"
                                    onclick="return confirm('¿Está seguro de eliminar el registro?')"
                                    href="{% url 'tesoreria:tasa_interes_eliminar' tasainteres.id %}"
                                         {% else %}
@@ -65,9 +73,6 @@
             </div>
         </div>
     </div>
-
-    {% include 'tesoreria/tasa_interes/modal_agregar.html' %}
-
 {% endblock %}
 
 
