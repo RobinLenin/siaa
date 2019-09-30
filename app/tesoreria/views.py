@@ -49,6 +49,7 @@ def recalculo(request):
     fecha_pago = parse_date(fecha_pago_str)
     diferencia_dias = 0
     interes_dias = 0.00
+    interes_dias_aux = 0.00
 
     try:
         interes_mensual = InteresMensual.objects.get(cuenta_cobrar=cuenta_cobrar,
@@ -56,7 +57,7 @@ def recalculo(request):
                                                      fecha_fin__month=fecha_pago.month)
 
         intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar,
-                                                     fecha_fin__gt=fecha_pago)
+                                                     fecha_fin__gt=fecha_pago).order_by('fecha_fin')
     except interes_mensual.DoesNotExist:
         interes_mensual = None
         intereses_mensuales = None
@@ -92,11 +93,15 @@ def recalculo(request):
                             1]) * dias
 
 
+        print(saldo_aux)
 
         if Decimal(monto) > Decimal(interes_dias):
             diferencia_saldo = Decimal(monto) - Decimal(interes_dias)
-            diferencia_saldo = diferencia_saldo * -1
-            saldo_aux = saldo_aux - diferencia_saldo
+            print(diferencia_saldo)
+            saldo_aux = Decimal(saldo_aux) - Decimal(diferencia_saldo)
+            interes_dias_aux = monto
+        else:
+            interes_dias_aux = interes_dias - monto
 
         interes_dias_diferencia = (((Decimal(saldo_aux) * Decimal(interes_mensual.tasa.tasa)) / 100) /
                                    calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
@@ -109,6 +114,7 @@ def recalculo(request):
         print(interes_cc_aux)
         print(interes_dias)
         interes_cc_aux = round(interes_cc_aux, 2)
+        print(saldo_aux)
         CuentaCobrar.objects.values('interes', 'saldo').filter(id=id_cli).update(interes=interes_cc_aux,
                                                                                  saldo=saldo_aux)
 
@@ -116,11 +122,21 @@ def recalculo(request):
 
 
 
+        saldo = saldo_aux
+        interes = interes_cc_aux
+
+        for interesmensual in intereses_mensuales:
+            if interesmensual.id != interes_mensual.id:
+                interes_mes = (saldo * interesmensual.tasa.tasa) / 100
+                interes = interes + interes_mes
+                print( interes_mes )
+                print(interes)
+                InteresMensual.objects.values('valor').filter(id=interesmensual.id).update(valor=interes_mes)
+
+        CuentaCobrar.objects.values('interes').filter(id=id_cli).update(interes=interes)
 
 
-        #for interesmensual in intereses_mensuales:
-         #   InteresMensual.objects.values('interes').filter(id=interesmensual.id).update(interes=interes_cc_aux)
-
+    return  Decimal(interes_dias_aux)
     pass
 
 
@@ -131,64 +147,92 @@ def abono_guardar(request):
     next = request.POST.get('next')
     id = request.POST.get('id')
     id_cli = request.POST.get('cuenta_cobrar')
+    monto = Decimal(request.POST.get('monto'))
     cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
-
-
-    if InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar, fecha_fin__gte=request.POST.get('fecha_pago')).exists():
-        #recalculo(request)
-        cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
-
     saldo = cuenta_cobrar.saldo
     interes = cuenta_cobrar.interes
-    monto = Decimal(request.POST.get('monto'))
-    aux_interes = 0.00
-    if interes > 0:
-        aux_abo_int = interes - monto
 
-        if aux_abo_int < 0:
-            aux_abo_int = aux_abo_int * -1
-            aux = monto - aux_abo_int
-            aux_interes = 0
-
-        else:
-            aux = monto
-            aux_interes = aux_abo_int
-            aux_abo_int = 0
-
+    if InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar, fecha_fin__gte=request.POST.get('fecha_pago')).exists():
+        aux = recalculo(request)
+        cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
+        total = Decimal(cuenta_cobrar.saldo) + Decimal(cuenta_cobrar.interes)
         request.POST._mutable = True
         request.POST['interes'] = Decimal(round(aux, 2))
         request.POST._mutable = False
-    else:
-        aux_abo_int = monto
-
-    total = Decimal(saldo) - Decimal(aux_abo_int)
-    if id:
-        abono = get_object_or_404(Abono, id=id)
-
-    else:
         abono = Abono()
 
-    abono_form = AbonoForm(request.POST, instance=abono)
-    if abono_form.is_valid() and monto <= (cuenta_cobrar.saldo + cuenta_cobrar.interes) and not Abono.objects.filter(fecha_pago__gt=abono.fecha_pago).exists():
-        CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
+        abono_form = AbonoForm(request.POST, instance=abono)
+        if abono_form.is_valid() and monto <= (cuenta_cobrar.saldo + cuenta_cobrar.interes) \
+                and not Abono.objects.filter(fecha_pago__gt=abono.fecha_pago).exists():
+            #CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
 
-        if total <= 0:
-            fecha_cancelacion = datetime.now()
-            CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False, fecha_cancelacion=fecha_cancelacion)
+            if total <= 0:
+                fecha_cancelacion = datetime.now()
+                CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False,
+                                                                                                    fecha_cancelacion=fecha_cancelacion)
 
-        abono_form.save()
+            abono_form.save()
+
+            messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
+
+        else:
+            messages.warning(request, MensajesEnum.ABONO_ERROR.value)
+
+        if monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
+            messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
+
+        return redirect(next)
+
+
+    else:
+        aux_interes = 0.00
+        if interes > 0:
+            aux_abo_int = interes - monto
+
+            if aux_abo_int < 0:
+                aux_abo_int = aux_abo_int * -1
+                aux = monto - aux_abo_int
+                aux_interes = 0
+
+            else:
+                aux = monto
+                aux_interes = aux_abo_int
+                aux_abo_int = 0
+
+            request.POST._mutable = True
+            request.POST['interes'] = Decimal(round(aux, 2))
+            request.POST._mutable = False
+        else:
+            aux_abo_int = monto
+
+        total = Decimal(saldo) - Decimal(aux_abo_int)
+        if id:
+            abono = get_object_or_404(Abono, id=id)
+
+        else:
+            abono = Abono()
+
+        abono_form = AbonoForm(request.POST, instance=abono)
+        if abono_form.is_valid() and monto <= (cuenta_cobrar.saldo + cuenta_cobrar.interes) and not Abono.objects.filter(fecha_pago__gt=abono.fecha_pago).exists():
+            CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
+
+            if total <= 0:
+                fecha_cancelacion = datetime.now()
+                CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False, fecha_cancelacion=fecha_cancelacion)
+
+            abono_form.save()
     # preguntar si ya hay interes mensual en este mes recalcular
     # crear interes mensual de dias restantes
     # preguntar si existe abono con fecha posterior si existe mostrar error
-        messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
+            messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
 
-    else:
-        messages.warning(request, MensajesEnum.ABONO_ERROR.value)
+        else:
+            messages.warning(request, MensajesEnum.ABONO_ERROR.value)
 
-    if monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
-        messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
+        if monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
+            messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
 
-    return redirect(next)
+        return redirect(next)
 
 @login_required
 @permission_required('tesoreria.delete_abono', raise_exception=True, )
