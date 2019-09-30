@@ -65,31 +65,56 @@ def recalculo(request):
         #puede haber una consulta que sume todos los saldos?
         for interesmensual in intereses_mensuales:
             # saldo_aux = saldo_aux - interesmensual.valor
+            print("fOR")
+            #if interesmensual.id  != interes_mensual.id:
+            print("fOR")
             print(interesmensual.valor)
+            print(interes_cc_aux)
 
-            interes_cc_aux = interes_cc_aux - interesmensual.valor
+            interes_cc_aux = Decimal(interes_cc_aux) - Decimal(interesmensual.valor)
 
             print(interes_cc_aux)
 
             # interes_dias = monto * interesmensual.tasa.tasa /100)/calendar.monthrange(tasa.anio, tasa.mes)[1]).date() *NUMEROS DE DIAS QUE QUIERAS
 
-            interes_cc_aux = Decimal(interes_cc_aux) + Decimal(interes_dias)
+
 
     if not interes_mensual == None:
 
+
+
         dias = fecha_pago.day
+        print(dias)
         diferencia_dias = calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
                               1] - dias
-        interes_dias = (((Decimal(monto) * Decimal(interes_mensual.tasa.tasa)) / 100) /
+        interes_dias = (((Decimal(saldo_aux) * Decimal(interes_mensual.tasa.tasa)) / 100) /
                         calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
                             1]) * dias
-        interes_dias_diferencia = (((Decimal(monto) * Decimal(interes_mensual.tasa.tasa)) / 100) /
-                        calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
-                            1]) * diferencia_dias
+
+
+
+        if Decimal(monto) > Decimal(interes_dias):
+            diferencia_saldo = Decimal(monto) - Decimal(interes_dias)
+            diferencia_saldo = diferencia_saldo * -1
+            saldo_aux = saldo_aux - diferencia_saldo
+
+        interes_dias_diferencia = (((Decimal(saldo_aux) * Decimal(interes_mensual.tasa.tasa)) / 100) /
+                                   calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
+                                       1]) * diferencia_dias
+
         suma_interes = interes_dias + interes_dias_diferencia
-        CuentaCobrar.objects.values('interes').filter(id=id_cli).update(interes=suma_interes + interes_cc_aux)
+        print(suma_interes)
+        print(interes_cc_aux)
+        interes_cc_aux = Decimal(interes_cc_aux) + Decimal(suma_interes)
+        print(interes_cc_aux)
+        print(interes_dias)
+        interes_cc_aux = round(interes_cc_aux, 2)
+        CuentaCobrar.objects.values('interes', 'saldo').filter(id=id_cli).update(interes=interes_cc_aux,
+                                                                                 saldo=saldo_aux)
 
         InteresMensual.objects.values('valor').filter(id=interes_mensual.id).update(valor=suma_interes)
+
+
 
 
 
@@ -110,7 +135,7 @@ def abono_guardar(request):
 
 
     if InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar, fecha_fin__gte=request.POST.get('fecha_pago')).exists():
-        recalculo(request)
+        #recalculo(request)
         cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
 
     saldo = cuenta_cobrar.saldo
