@@ -63,14 +63,14 @@ class Abono(models.Model):
     concepto = models.CharField(max_length=100)
     monto = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     interes = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-    fecha_pago= models.DateField()
+    fecha_pago= models.DateField(verbose_name="Fecha de de pago")
     observacion= models.TextField()
     cuenta_cobrar = models.ForeignKey('CuentaCobrar', on_delete=models.CASCADE, related_name='abonos')
 
     def __str__(self):
         return "{0} {1} {2}".format(self.fecha_pago, self.monto, self.interes)
 
-    # clean  para verificar que no hay abonos de fecha superior
+
 
 class Comentario(models.Model):
     fecha_creacion= models.DateTimeField(auto_now=True, verbose_name="Fecha de creacion")

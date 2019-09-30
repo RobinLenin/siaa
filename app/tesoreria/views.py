@@ -55,7 +55,7 @@ def recalculo(request):
         interes_mensual = InteresMensual.objects.get(cuenta_cobrar=cuenta_cobrar,
                                                      fecha_fin__year=fecha_pago.year,
                                                      fecha_fin__month=fecha_pago.month)
-
+#mayor o mayor igual? gt o gte
         intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar,
                                                      fecha_fin__gt=fecha_pago).order_by('fecha_fin')
     except interes_mensual.DoesNotExist:
@@ -63,18 +63,18 @@ def recalculo(request):
         intereses_mensuales = None
 
     if not intereses_mensuales == None:
-        #puede haber una consulta que sume todos los saldos?
+        #puede haber una consulta que sume todos los saldos? ----- hay un query sum para django
         for interesmensual in intereses_mensuales:
             # saldo_aux = saldo_aux - interesmensual.valor
             print("fOR")
             #if interesmensual.id  != interes_mensual.id:
             print("fOR")
-            print(interesmensual.valor)
-            print(interes_cc_aux)
+            print("interes mensual valor ",interesmensual.valor)
+            print("interes cuenta ",interes_cc_aux)
 
             interes_cc_aux = Decimal(interes_cc_aux) - Decimal(interesmensual.valor)
 
-            print(interes_cc_aux)
+            print("interes cuenta " , interes_cc_aux)
 
             # interes_dias = monto * interesmensual.tasa.tasa /100)/calendar.monthrange(tasa.anio, tasa.mes)[1]).date() *NUMEROS DE DIAS QUE QUIERAS
 
@@ -85,22 +85,26 @@ def recalculo(request):
 
 
         dias = fecha_pago.day
-        print(dias)
+        print("dias ",dias)
         diferencia_dias = calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
                               1] - dias
         interes_dias = (((Decimal(saldo_aux) * Decimal(interes_mensual.tasa.tasa)) / 100) /
                         calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
                             1]) * dias
-
-
-        print(saldo_aux)
-
+        print("interes dias ",interes_dias)
+        print("saldo cuenta ",saldo_aux)
+#se puede optimizar sin ese if?
         if Decimal(monto) > Decimal(interes_dias):
             diferencia_saldo = Decimal(monto) - Decimal(interes_dias)
-            print(diferencia_saldo)
+            print("monto.abono menos primeros dias ",diferencia_saldo)
+            diferencia_saldo = Decimal(diferencia_saldo) - Decimal(interes_cc_aux)
             saldo_aux = Decimal(saldo_aux) - Decimal(diferencia_saldo)
+            interes_cc_aux = 0
+            print("saldo cuenta luego de abonar", saldo_aux)
+            #para que?
             interes_dias_aux = monto
         else:
+            #para que?
             interes_dias_aux = interes_dias - monto
 
         interes_dias_diferencia = (((Decimal(saldo_aux) * Decimal(interes_mensual.tasa.tasa)) / 100) /
@@ -108,13 +112,13 @@ def recalculo(request):
                                        1]) * diferencia_dias
 
         suma_interes = interes_dias + interes_dias_diferencia
-        print(suma_interes)
-        print(interes_cc_aux)
-        interes_cc_aux = Decimal(interes_cc_aux) + Decimal(suma_interes)
-        print(interes_cc_aux)
+        print("suma interes",suma_interes)
+        print("interes cuenta " , interes_cc_aux)
+        interes_cc_aux =Decimal(interes_dias_diferencia)
+        print("interes cuenta " , interes_cc_aux)
         print(interes_dias)
         interes_cc_aux = round(interes_cc_aux, 2)
-        print(saldo_aux)
+        print("saldo cuenta ",saldo_aux)
         CuentaCobrar.objects.values('interes', 'saldo').filter(id=id_cli).update(interes=interes_cc_aux,
                                                                                  saldo=saldo_aux)
 
@@ -129,13 +133,13 @@ def recalculo(request):
             if interesmensual.id != interes_mensual.id:
                 interes_mes = (saldo * interesmensual.tasa.tasa) / 100
                 interes = interes + interes_mes
-                print( interes_mes )
-                print(interes)
+                print("interes mes ",interes_mes )
+                print("interes cuenta ",interes)
                 InteresMensual.objects.values('valor').filter(id=interesmensual.id).update(valor=interes_mes)
 
         CuentaCobrar.objects.values('interes').filter(id=id_cli).update(interes=interes)
 
-
+    # para que?
     return  Decimal(interes_dias_aux)
     pass
 
@@ -162,8 +166,10 @@ def abono_guardar(request):
         abono = Abono()
 
         abono_form = AbonoForm(request.POST, instance=abono)
-        if abono_form.is_valid() and monto <= (cuenta_cobrar.saldo + cuenta_cobrar.interes) \
+        if abono_form.is_valid() and abono.monto <= (cuenta_cobrar.saldo + cuenta_cobrar.interes) \
                 and not Abono.objects.filter(fecha_pago__gt=abono.fecha_pago).exists():
+            print("guardar abono - monto ",abono.monto)
+            print("guardar abono - cuenta ",cuenta_cobrar.saldo + cuenta_cobrar.interes)
             #CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
 
             if total <= 0:
@@ -177,6 +183,9 @@ def abono_guardar(request):
 
         else:
             messages.warning(request, MensajesEnum.ABONO_ERROR.value)
+            print("else")
+            print("guardar abono - monto ", abono.monto)
+            print("guardar abono - cuenta ", cuenta_cobrar.saldo + cuenta_cobrar.interes)
 
         if monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
             messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
@@ -221,9 +230,6 @@ def abono_guardar(request):
                 CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False, fecha_cancelacion=fecha_cancelacion)
 
             abono_form.save()
-    # preguntar si ya hay interes mensual en este mes recalcular
-    # crear interes mensual de dias restantes
-    # preguntar si existe abono con fecha posterior si existe mostrar error
             messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
 
         else:
