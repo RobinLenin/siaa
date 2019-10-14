@@ -25,21 +25,31 @@ def abono_postsave_handler(sender, instance, **kwargs):
 def cuentacobrar_postsave_handler(sender, instance, **kwargs):
     if kwargs["created"]:
         fecha_actual = datetime.now()
+        dia_fecha_emision = instance.fecha_emision.day
         tasa_interes = TasaInteres.objects.filter(anio__gte=instance.fecha_emision.year,
                                                   mes__gte=instance.fecha_emision.month,
                                                  anio__lte=fecha_actual.year,
-                                                mes__lte=fecha_actual.month)
+                                                mes__lte=fecha_actual.month).order_by('anio', 'mes')
         # filtrar ver si le afecta a esta cuenta preguntar si hay fecha de cancelacion
+
+
+
+
         for tasa in tasa_interes:
+
+
             interes_mensual = InteresMensual()
             interes = (instance.monto * tasa.tasa) / 100
 
-            # interes_total = Decimal(interes_total) + Decimal(interes)
-            # saldo = monto + interes_total
-
+            if dia_fecha_emision > 1:
+                diferencia_dias = calendar.monthrange(instance.fecha_emision.year, instance.fecha_emision.month)[
+                                  1] - dia_fecha_emision
+                interes = (((Decimal(instance.monto) * Decimal(tasa.tasa)) / 100) /
+                            calendar.monthrange(instance.fecha_emision.year, instance.fecha_emision.month)[
+                                1]) * diferencia_dias
             interes_mensual.cuenta_cobrar = instance
             interes_mensual.tasa = tasa
-            interes_mensual.fecha_inicio = datetime(int(tasa.anio), int(tasa.mes), 1).date()
+            interes_mensual.fecha_inicio = datetime(year=int(tasa.anio), month=int(tasa.mes), day=int(dia_fecha_emision))
             interes_mensual.fecha_fin = datetime(int(tasa.anio), int(tasa.mes), calendar.monthrange(tasa.anio, tasa.mes)[1]).date()
             interes_mensual.valor = Decimal(round(interes, 2))
 
@@ -48,3 +58,5 @@ def cuentacobrar_postsave_handler(sender, instance, **kwargs):
 
             except NameError:
                 hh = 'Solicitud incorrecta'
+
+            dia_fecha_emision = 1

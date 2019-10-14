@@ -515,7 +515,7 @@ def cuenta_cobrar_guardar(request):
     id = request.POST.get('id')
     fecha_emision = request.POST.get('fecha_emision')
     date = parse_date(fecha_emision)
-    interes = calcular_saldo(Decimal(request.POST.get('monto')), int(date.year), int(date.month))
+    interes = calcular_saldo(Decimal(request.POST.get('monto')), int(date.year), int(date.month), int(date.day))
 
     request.POST._mutable = True
     request.POST['interes'] = Decimal(round(interes, 2))
@@ -537,18 +537,24 @@ def cuenta_cobrar_guardar(request):
     return redirect(next)
 
 
-def calcular_saldo(monto, anio, mes):
+def calcular_saldo(monto, anio, mes, dia):
     fecha_actual = datetime.now()
     interes_total = 0.00
     tasa_interes = TasaInteres.objects.all()
+    diferencia_dias = calendar.monthrange(anio, mes)[
+                          1] - dia
     for tasa in tasa_interes:
 
         if int(tasa.anio) >= anio and int(tasa.mes) >= mes \
                 and int(tasa.anio) <= int(fecha_actual.year) and int(tasa.mes) <= int(fecha_actual.month):
             interes = (monto * tasa.tasa) / 100
+            if dia > 1:
+                interes = (((monto * tasa.tasa) / 100) /
+                           calendar.monthrange(anio, mes)[
+                               1]) * diferencia_dias
             print(interes)
             interes_total = Decimal(interes_total) + Decimal(interes)
-
+            dia = 0
     return interes_total
 
 
