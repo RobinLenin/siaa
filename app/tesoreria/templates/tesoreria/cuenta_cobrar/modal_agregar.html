@@ -75,16 +75,13 @@
                                    step="0.01"
                                    required>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="saldo">Saldo:</label>
-                            <input type="number"
+                            <input type="hidden"
                                    class="form-control"
                                    id="saldo"
                                    name="saldo"
                                    value="{{ cuenta_cobrar.saldo }}"
                                    min="0"
                                    required>
-                        </div>
                         {% endlocalize %}
                         <div class="form-group col-md-6">
                             <label for="numero_titulo">N° Título:</label>

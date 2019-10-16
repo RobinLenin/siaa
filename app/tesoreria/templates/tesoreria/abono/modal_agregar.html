@@ -50,7 +50,7 @@
                                    maxlength="50">
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label for="monto">Monto:</label>
                             <input type="number"
                                    class="form-control"
@@ -58,12 +58,14 @@
                                    name="monto"
                                    value="{{ abono.monto }}"
                                    min="0"
+                                   max= "{{ cuenta_cobrar.saldo|add:cuenta_cobrar.interes }}"
                                    step="0.01"
                                    required>
+
                         </div>
 
                           {% now "Y-m-d" as ahora %}
-                        <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
                             <div class="form-group">
                                 <label for="fecha_pago">Fecha de pago:</label>
                                 <input type="date"
@@ -71,7 +73,20 @@
                                        placeholder="Fecha de pago.."
                                        name="fecha_pago"
                                        id="fecha_pago"
+                                       max="date:"Y-m-d"|default:ahora "
                                        value="{{ abono.fecha_pago|date:"Y-m-d"|default:ahora }}"
+                                       required>
+                            </div>
+                        </div>
+                         <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="form-group">
+                                <label >Deuda a la fecha:</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="Deuda a la fecha"
+                                       id="deuda"
+                                       value="{{ cuenta_cobrar.saldo|add:cuenta_cobrar.interes }}"
+                                       disabled
                                        required>
                             </div>
                         </div>
