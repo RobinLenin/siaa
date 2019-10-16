@@ -73,22 +73,22 @@
                                        placeholder="Fecha de pago.."
                                        name="fecha_pago"
                                        id="fecha_pago"
-                                       max="date:"Y-m-d"|default:ahora "
+                                      max="{{ abono.fecha_pago|date:"Y-m-d"|default:ahora }}"
                                        value="{{ abono.fecha_pago|date:"Y-m-d"|default:ahora }}"
                                        required>
                             </div>
+
                         </div>
-                         <div class="col-md-4 col-sm-4 col-xs-4">
-                            <div class="form-group">
-                                <label >Deuda a la fecha:</label>
+                         <div class="form-group col-md-4">
+                                <label for="deuda">Deuda a la fecha:</label>
                                 <input type="text"
                                        class="form-control"
                                        placeholder="Deuda a la fecha"
                                        id="deuda"
+                                       name="deuda"
                                        value="{{ cuenta_cobrar.saldo|add:cuenta_cobrar.interes }}"
                                        disabled
                                        required>
-                            </div>
                         </div>
 
                         <div class="form-group col-md-6">
@@ -102,19 +102,6 @@
                                    required>
                         </div>
 
-
-<!--
-                        <div class="form-group col-md-6">
-                            <label for="saldo">Saldo:</label>
-                            <input type="number"
-                                   class="form-control"
-                                   id="saldo"
-                                   name="saldo"
-                                   value="{{ cuenta_cobrar.saldo }}"
-                                   minlength="0"
-                                   maxlength="10"
-                                   required>
-                        </div> -->
 
                         <div class="form-group col-md-12">
                             <label for="observacion">Observación:</label>

@@ -54,7 +54,6 @@ def recalculo(request):
         interes_mensual = InteresMensual.objects.get(cuenta_cobrar=cuenta_cobrar,
                                                      fecha_fin__year=fecha_pago.year,
                                                      fecha_fin__month=fecha_pago.month)
-        # mayor o mayor igual? gt o gte
         intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar,
                                                             fecha_fin__gt=fecha_pago).order_by('fecha_fin')
     except interes_mensual.DoesNotExist:
@@ -62,11 +61,7 @@ def recalculo(request):
         intereses_mensuales = None
 
     if not intereses_mensuales == None:
-        # puede haber una consulta que sume todos los saldos? ----- hay un query sum para django
         for interesmensual in intereses_mensuales:
-            # saldo_aux = saldo_aux - interesmensual.valor
-            print("fOR")
-            # if interesmensual.id  != interes_mensual.id:
             print("fOR")
             print("interes mensual valor ", interesmensual.valor)
             print("interes cuenta ", interes_cc_aux)
@@ -75,23 +70,21 @@ def recalculo(request):
 
             print("interes cuenta ", interes_cc_aux)
 
-            # interes_dias = monto * interesmensual.tasa.tasa /100)/calendar.monthrange(tasa.anio, tasa.mes)[1]).date() *NUMEROS DE DIAS QUE QUIERAS
 
     if not interes_mensual == None:
 
         dias = fecha_pago.day
-        print("dias ", dias)
+        print("dia pago", dias)
         diferencia_dias = calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
                               1] - dias
         interes_dias = (((Decimal(saldo_aux) * Decimal(interes_mensual.tasa.tasa)) / 100) /
                         calendar.monthrange(interes_mensual.tasa.anio, interes_mensual.tasa.mes)[
                             1]) * dias
-        print("interes dias ", interes_dias)
+        print("interes primeros dias ", interes_dias)
         print("saldo cuenta ", saldo_aux)
-        # se puede optimizar sin ese if?
         if Decimal(monto) > Decimal(interes_dias):
             diferencia_saldo = Decimal(monto) - Decimal(interes_dias)
-            print("monto.abono menos primeros dias ", diferencia_saldo)
+            print("monto.abono menos interes primeros dias ", diferencia_saldo)
             diferencia_saldo = Decimal(diferencia_saldo) - Decimal(interes_cc_aux)
             saldo_aux = Decimal(saldo_aux) - Decimal(diferencia_saldo)
             interes_dias_aux = Decimal(interes_cc_aux) + Decimal(interes_dias)
@@ -106,7 +99,7 @@ def recalculo(request):
                                        1]) * diferencia_dias
 
         suma_interes = interes_dias + interes_dias_diferencia
-        print("suma interes", suma_interes)
+        print("interes mes pagado", suma_interes)
         print("interes cuenta ", interes_cc_aux)
         interes_cc_aux = Decimal(interes_dias_diferencia)
         print("interes cuenta ", interes_cc_aux)
@@ -131,7 +124,7 @@ def recalculo(request):
 
         CuentaCobrar.objects.values('interes').filter(id=id_cli).update(interes=interes)
 
-    # para que?
+
     return Decimal(interes_dias_aux)
     pass
 
@@ -185,7 +178,6 @@ def abono_guardar(request):
             messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
 
         return redirect(next)
-
 
     else:
         aux_interes = 0.00
