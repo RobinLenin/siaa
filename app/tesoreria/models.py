@@ -111,6 +111,7 @@ class InteresMensual(models.Model):
     class Meta:
         verbose_name = "Interes mensual"
         verbose_name_plural = "Intereses mensuales"
+        ordering = ['fecha_inicio']
     def __str__(self):
         return str(self.valor)
 

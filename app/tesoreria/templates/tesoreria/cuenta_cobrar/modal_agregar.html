@@ -62,6 +62,8 @@
                                        data-msg-menora="Debe ser mayor a la fecha de emision">
                             </div>
                         </div>
+                        {% load l10n %}
+                        {% localize off %}
                         <div class="form-group col-md-6">
                             <label for="monto">Monto:</label>
                             <input type="number"
@@ -83,6 +85,7 @@
                                    min="0"
                                    required>
                         </div>
+                        {% endlocalize %}
                         <div class="form-group col-md-6">
                             <label for="numero_titulo">N° Título:</label>
                             <input type="number"
