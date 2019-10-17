@@ -14,5 +14,51 @@ $(document).ready(function(){
     }
     });
 
+    $("#fecha_pago").change(function(){
+    var fecha_pago = $("#fecha_pago").val();
+    var aux_f = String(fecha_pago).split("-");
+     var anio_f = aux_f[0]
+     var mes_f = aux_f[1]
+    var saldo = parseFloat($("#saldo").html());
+    //alert(saldo);
+    //alert("Fecha cambaida");
+    var interes = 0
+    /* Por cada columna */
+    $('#tabla tr').each(function(){
+
+        /* Obtener todas las celdas */
+        var celdas = $(this).find('td');
+        //alert("algo es"+ $(celdas[2].html()));
+
+        /* Mostrar el valor de cada celda */
+        //celdas.each(function(){ alert($(this).html()); });
+        fecha_int_mensual  =  $(celdas[1]).html();
+        aux = String(fecha_int_mensual).split("-");
+        anio = aux[0]
+        mes = aux[1]
+        valor = $(celdas[3]).html();
+        if (anio <= anio_f && mes < mes_f) {
+            interes = interes + parseFloat(valor);
+        }
+
+        /* Mostrar el valor de la celda 2 */
+
+
+    });
+    var saldo_total = interes + saldo;
+    $("input").attr({
+       "max" : saldo_total
+    });
+    $("#deuda").val(interes + saldo);
+
+
+
+    });
+
+
+
 });
+
+
+
 

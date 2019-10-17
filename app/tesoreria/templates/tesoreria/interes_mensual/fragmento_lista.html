@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover">
+    <table class="table table-hover" id="tabla">
         <thead>
         <tr>
             <th>Fecha inicio</th>
@@ -13,8 +13,8 @@
         <tbody>
         {% for interes_mensual in interesesmensuales %}
         <tr>
-            <td>{{ interes_mensual.fecha_inicio }}</td>
-            <td>{{ interes_mensual.fecha_fin }}</td>
+            <td>{{ interes_mensual.fecha_inicio | date:"Y-m-d"}}</td>
+            <td>{{ interes_mensual.fecha_fin | date:"Y-m-d"}}</td>
             <td>{{ interes_mensual.tasa.tasa }}</td>
             <td>{{ interes_mensual.valor }}</td>
 
