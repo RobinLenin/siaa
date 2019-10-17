@@ -250,55 +250,63 @@ def abono_eliminar(request, id):
     diferencia = monto - interes_abono
     saldo = cuenta_cobrar.saldo
     total = saldo + diferencia
+    ultimo_abono = Abono.objects.filter(cuenta_cobrar=cuenta_cobrar).last()
+    print(ultimo_abono.id)
+    print(id)
+    print(abono.id)
+    if ultimo_abono.id == abono.id:
 
-
-    try:
-        interes_mensual = InteresMensual.objects.get(cuenta_cobrar=cuenta_cobrar,
+        try:
+            interes_mensual = InteresMensual.objects.get(cuenta_cobrar=cuenta_cobrar,
                                                      fecha_fin__year=abono.fecha_pago.year,
                                                      fecha_fin__month=abono.fecha_pago.month)
-        # mayor o mayor igual? gt o gte
-        intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar,
+            # mayor o mayor igual? gt o gte
+            intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar,
                                                             fecha_fin__gt=abono.fecha_pago).order_by('fecha_fin')
-    except interes_mensual.DoesNotExist:
-        interes_mensual = None
-        intereses_mensuales = None
+        except interes_mensual.DoesNotExist:
+            interes_mensual = None
+            intereses_mensuales = None
 
 
-    if not interes_mensual == None:
+        if not interes_mensual == None:
 
-        interes = (((Decimal(total) * Decimal(interes_mensual.tasa.tasa)) / 100))
+            interes = (((Decimal(total) * Decimal(interes_mensual.tasa.tasa)) / 100))
 
-        InteresMensual.objects.values('valor').filter(id=interes_mensual.id).update(valor=interes)
+            InteresMensual.objects.values('valor').filter(id=interes_mensual.id).update(valor=interes)
 
-        interes_cuenta=0
-        for interesmensual in intereses_mensuales:
-            if interesmensual.id != interes_mensual.id:
-                interes_mes = (total * interesmensual.tasa.tasa) / 100
-                InteresMensual.objects.values('valor').filter(id=interesmensual.id).update(valor=interes_mes)
+            interes_cuenta=0
+            for interesmensual in intereses_mensuales:
+                if interesmensual.id != interes_mensual.id:
+                    interes_mes = (total * interesmensual.tasa.tasa) / 100
+                    InteresMensual.objects.values('valor').filter(id=interesmensual.id).update(valor=interes_mes)
 
-        intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar)
-        for interesmensual in intereses_mensuales:
+            intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar)
+            for interesmensual in intereses_mensuales:
                 interes_cuenta = interes_cuenta + interesmensual.valor
                 print("interes mes ", interesmensual.valor)
 
-        CuentaCobrar.objects.values('interes').filter(id=abono.cuenta_cobrar.id).update(saldo=total, interes=interes_cuenta)
+            CuentaCobrar.objects.values('interes').filter(id=abono.cuenta_cobrar.id).update(saldo=total, interes=interes_cuenta)
 
 
 
-    if total > 0:
-        CuentaCobrar.objects.values('estado').filter(id=abono.cuenta_cobrar_id).update(estado=True)
+        if total > 0:
+            CuentaCobrar.objects.values('estado').filter(id=abono.cuenta_cobrar_id).update(estado=True)
 
-    try:
-        if abono.delete():
-            messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
-            return redirect('tesoreria:cuenta_cobrar_detalle', abono.cuenta_cobrar_id)
-        else:
-            messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
-            return redirect('tesoreria:cuenta_cobrar_detalle', id)
+        try:
+            if abono.delete():
+                messages.success(request, MensajesEnum.ACCION_ELIMINAR.value)
+                return redirect('tesoreria:cuenta_cobrar_detalle', abono.cuenta_cobrar_id)
+            else:
+                messages.warning(request, MensajesEnum.ACCION_ELIMINAR_ERROR.value)
+                return redirect('tesoreria:cuenta_cobrar_detalle', id)
 
-    except Exception as e:
-        messages.warning(request, str(e))
-        return HttpResponseServerError(render(request, '500.html'))
+        except Exception as e:
+            messages.warning(request, str(e))
+            return HttpResponseServerError(render(request, '500.html'))
+
+    else:
+        messages.warning(request, "Solo puedes eliminar el úlmino abono")
+        return redirect('tesoreria:cuenta_cobrar_detalle', abono.cuenta_cobrar_id)
 
 
 @login_required
