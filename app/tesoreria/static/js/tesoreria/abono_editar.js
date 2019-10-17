@@ -17,13 +17,12 @@ $(document).ready(function(){
     $("#fecha_pago").change(function(){
     var fecha_pago = $("#fecha_pago").val();
     var aux_f = String(fecha_pago).split("-");
-     var anio_f = aux_f[0];
-     var mes_f = aux_f[1];
+    var anio_f = aux_f[0];
+    var mes_f = aux_f[1];
+    var dias_f = aux_f[2];
     var saldo = parseFloat($("#saldo").html());
-    //alert(saldo);
-    //alert("Fecha cambaida");
-    var interes = 0;
-    var dias_interes = 0;
+    var interes = 0.0;
+    var dias_interes = 0.0;
     /* Por cada columna */
     $('#tabla tr').each(function(){
 
@@ -37,16 +36,19 @@ $(document).ready(function(){
         aux = String(fecha_int_mensual).split("-");
         anio = aux[0];
         mes = aux[1];
-        dias = aux[2];
+
         valor = $(celdas[3]).html();
+
         if (anio <= anio_f && mes < mes_f) {
-            interes = interes + parseFloat(valor);
+            interes = parseFloat(interes) + parseFloat(valor);
+
         }
 
         if (anio == anio_f && mes == mes_f){
 
-                //alert(dias_mes);
-                dias_interes = (parseFloat(valor) / 31) * dias;
+
+                var dias_mes = daysInMonth(mes, anio);
+                dias_interes = (parseFloat(valor) / parseFloat(dias_mes)) *  parseFloat(dias_f);
                 dias_interes = parseFloat(dias_interes.toFixed(2));
          }
 
@@ -64,9 +66,15 @@ $(document).ready(function(){
 
     });
 
-
+    function daysInMonth(humanMonth, year) {
+    return new Date(year || new Date().getFullYear(), humanMonth, 0).getDate();
+    }
 
 });
+
+
+
+
 
 
 

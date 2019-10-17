@@ -18,6 +18,7 @@ from app.core.models import Persona
 from app.core.utils.enums import MensajesEnum
 from app.tesoreria.forms import CuentaCobrarForm, ComentarioForm, AbonoForm, TasaInteresForm, \
     InteresMensualForm
+from app.tesoreria.layer.application.cuenta_cobrar_app_service import CuentaCobrarAppService
 from app.tesoreria.models import CuentaCobrar, Comentario, Abono, TasaInteres, InteresMensual
 from app.reporte.utils import pdf as pdfUtil
 
@@ -828,3 +829,10 @@ def interes_mensual_eliminar(request, id):
     except Exception as e:
         messages.warning(request, str(e))
         return HttpResponseServerError(render(request, '500.html'))
+
+
+def cuenta_cobrar_get_saldo(request):
+    cuenta_cobrar = get_object_or_404(CuentaCobrar, request.GET.get('cuenta_cobrar_id'))
+    fecha = datetime.strptime('YYYY-mm-dd', request.GET.get('fecha'))
+    saldo = CuentaCobrarAppService.get_total_saldo(cuenta_cobrar,fecha)
+    return JsonResponse({'sa'})

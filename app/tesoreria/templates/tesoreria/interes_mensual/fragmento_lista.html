@@ -16,7 +16,7 @@
             <td>{{ interes_mensual.fecha_inicio | date:"Y-m-d"}}</td>
             <td>{{ interes_mensual.fecha_fin | date:"Y-m-d"}}</td>
             <td>{{ interes_mensual.tasa.tasa }}</td>
-            <td>{{ interes_mensual.valor }}</td>
+            <td class="valor-interes">{{ interes_mensual.valor }}</td>
 
         </tr>
         {% endfor %}
