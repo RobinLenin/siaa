@@ -12,7 +12,7 @@ class CuentaCobrarAppService:
         interes = 0.0
         dias_interes = 0.0
         for interesmensual in intereses_mensuales:
-            if interesmensual.fecha_fin.year <= fecha.year and interesmensual.fecha_fin.month < fecha.month:
+            if interesmensual.fecha_fin.year <= fecha.year and interesmensual.fecha_fin.month < fecha.month and interesmensual.pagado == False:
                 interes = Decimal(interes) + Decimal(interesmensual.valor)
             if interesmensual.fecha_fin.year == fecha.year and interesmensual.fecha_fin.month == fecha.month:
                 if interesmensual.fecha_inicio.day > 1:

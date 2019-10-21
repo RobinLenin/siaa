@@ -104,7 +104,7 @@ class InteresMensual(models.Model):
     fecha_inicio = models.DateField(null=True, blank=True, verbose_name="Fecha de inicio")
     fecha_fin = models.DateField(null=True, blank=True, verbose_name="Fecha de inicio")
     valor=models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
-
+    pagado = models.BooleanField(default=False)
     tasa = models.ForeignKey('TasaInteres', null=False, blank=False, on_delete=models.CASCADE, related_name='interesesmensuales')
     cuenta_cobrar = models.ForeignKey('CuentaCobrar', null=False, blank=False, on_delete=models.CASCADE, related_name='interesesmensuales')
 

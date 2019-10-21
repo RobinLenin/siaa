@@ -49,6 +49,7 @@ def cuentacobrar_postsave_handler(sender, instance, **kwargs):
                                 1]) * diferencia_dias
             interes_mensual.cuenta_cobrar = instance
             interes_mensual.tasa = tasa
+            interes_mensual.pagado = False
             interes_mensual.fecha_inicio = datetime(year=int(tasa.anio), month=int(tasa.mes), day=int(dia_fecha_emision))
             interes_mensual.fecha_fin = datetime(int(tasa.anio), int(tasa.mes), calendar.monthrange(tasa.anio, tasa.mes)[1]).date()
             interes_mensual.valor = Decimal(round(interes, 2))

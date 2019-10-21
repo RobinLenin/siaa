@@ -43,7 +43,7 @@ def recalculo(request):
     id_cli = request.POST.get('cuenta_cobrar')
     cuenta_cobrar = CuentaCobrar.objects.get(id=str(id_cli))
     saldo_aux = cuenta_cobrar.saldo
-
+    pagado = request.POST.get('monto')
     interes_cc_aux = cuenta_cobrar.interes
     fecha_pago_str = request.POST.get('fecha_pago')
     monto = request.POST.get('monto')
@@ -66,6 +66,19 @@ def recalculo(request):
     except intereses_mensuales.DoesNotExist:
         intereses_mensuales = None
 
+    try:
+        intereses_mensuales_menores = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar,
+                                                            fecha_fin__lte=fecha_pago).order_by('fecha_fin')
+    except intereses_mensuales_menores.DoesNotExist:
+        intereses_mensuales_menores = None
+
+    if intereses_mensuales_menores != None:
+
+        for interesmensual in intereses_mensuales_menores:
+            if Decimal(pagado) >= Decimal(interesmensual.valor):
+                InteresMensual.objects.values('pagado').filter(id=interesmensual.id).update(pagado=True)
+                pagado = Decimal(pagado) - Decimal(interesmensual.valor)
+
     if intereses_mensuales != None:
         print("Saldo 1no cuenta", saldo_aux)
         for interesmensual in intereses_mensuales:
@@ -74,7 +87,6 @@ def recalculo(request):
             print("interes cuenta ", interes_cc_aux)
 
             interes_cc_aux = Decimal(interes_cc_aux) - Decimal(interesmensual.valor)
-
         print("interes cuenta aux", interes_cc_aux)
 
 
@@ -245,6 +257,14 @@ def abono_guardar(request):
                 CuentaCobrar.objects.values('estado', 'fecha_cancelacion', 'interes', 'saldo').filter(id=id_cli).update(
                     estado=False,
                     fecha_cancelacion=fecha_cancelacion, interes=boll, saldo=boll)
+
+                try:
+                    intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar)
+                except intereses_mensuales.DoesNotExist:
+                    intereses_mensuales = None
+                if intereses_mensuales != None:
+                    for interesmensual in intereses_mensuales:
+                        InteresMensual.objects.values('pagado').filter(id=interesmensual.id).update(pagado=True)
             else:
                 CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total,
                                                                                          interes=aux_interes)
