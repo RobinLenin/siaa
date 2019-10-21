@@ -115,7 +115,21 @@ def recalculo(request):
         print(interes_dias)
         interes_cc_aux = round(interes_cc_aux, 2)
         print("saldo cuenta ", saldo_aux)
-        CuentaCobrar.objects.values('interes', 'saldo').filter(id=id_cli).update(interes=interes_cc_aux,
+
+        fecha_pago_abono = datetime.datetime.strptime(request.POST.get('fecha_pago'), '%Y-%m-%d')
+        saldo_total = CuentaCobrarAppService.get_total_saldo(cuenta_cobrar, fecha_pago_abono)
+        print("MONTO;", monto)
+        print("Saldo Total:", round(saldo_total, 2))
+        if Decimal(monto) == Decimal(round(saldo_total, 2)):
+            boll = 0
+            print("MONTO;", monto)
+            print("Saldo Total:", saldo_total)
+            fecha_cancelacion = datetime.datetime.now()
+            CuentaCobrar.objects.values('estado', 'fecha_cancelacion', 'interes', 'saldo').filter(id=id_cli).update(estado=False,
+                                                                                                                    fecha_cancelacion=fecha_cancelacion, interes=boll, saldo=boll)
+        else:
+            boll = 1
+            CuentaCobrar.objects.values('interes', 'saldo').filter(id=id_cli).update(interes=interes_cc_aux,
                                                                                  saldo=saldo_aux)
 
         InteresMensual.objects.values('valor').filter(id=interes_mensual.id).update(valor=suma_interes)
@@ -133,7 +147,9 @@ def recalculo(request):
                 print("interes cuenta ", interes)
                 InteresMensual.objects.values('valor').filter(id=interesmensual.id).update(valor=interes_mes)
 
-        CuentaCobrar.objects.values('interes').filter(id=id_cli).update(interes=interes)
+        interes_cambio = interes * boll
+
+        CuentaCobrar.objects.values('interes').filter(id=id_cli).update(interes=interes_cambio)
 
 
     return Decimal(interes_dias_aux)
@@ -170,11 +186,6 @@ def abono_guardar(request):
             print("guardar abono - cuenta ", cuenta_cobrar.saldo + cuenta_cobrar.interes)
             # CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
 
-            if total <= 0:
-                fecha_cancelacion = datetime.now()
-                CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False,
-                                                                                                    fecha_cancelacion=fecha_cancelacion)
-
             abono_form.save()
 
             messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
@@ -185,8 +196,6 @@ def abono_guardar(request):
             print("guardar abono - monto ", abono.monto)
             print("guardar abono - cuenta ", cuenta_cobrar.saldo + cuenta_cobrar.interes)
 
-        if monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
-            messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
 
         return redirect(next)
 
@@ -222,21 +231,28 @@ def abono_guardar(request):
         if abono_form.is_valid() and monto <= (
                 cuenta_cobrar.saldo + cuenta_cobrar.interes) and not Abono.objects.filter(
                 fecha_pago__gt=abono.fecha_pago).exists():
-            CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total, interes=aux_interes)
 
-            if total <= 0:
-                fecha_cancelacion = datetime.now()
-                CuentaCobrar.objects.values('estado', 'fecha_cancelacion').filter(id=id_cli).update(estado=False,
-                                                                                                    fecha_cancelacion=fecha_cancelacion)
 
+            fecha_pago_abono = datetime.datetime.strptime(request.POST.get('fecha_pago'), '%Y-%m-%d')
+            saldo_total = CuentaCobrarAppService.get_total_saldo(cuenta_cobrar, fecha_pago_abono)
+            print("MONTO;", monto)
+            print("Saldo Total:", round(saldo_total, 2))
+            if Decimal(monto) == Decimal(round(saldo_total, 2)):
+                boll = 0
+                print("MONTO;", monto)
+                print("Saldo Total:", saldo_total)
+                fecha_cancelacion = datetime.datetime.now()
+                CuentaCobrar.objects.values('estado', 'fecha_cancelacion', 'interes', 'saldo').filter(id=id_cli).update(
+                    estado=False,
+                    fecha_cancelacion=fecha_cancelacion, interes=boll, saldo=boll)
+            else:
+                CuentaCobrar.objects.values('saldo', 'interes').filter(id=id_cli).update(saldo=total,
+                                                                                         interes=aux_interes)
             abono_form.save()
             messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
 
         else:
             messages.warning(request, MensajesEnum.ABONO_ERROR.value)
-
-        if monto > (cuenta_cobrar.saldo + cuenta_cobrar.interes):
-            messages.success(request, MensajesEnum.ABONO_MAYOR_SALDO.value)
 
         return redirect(next)
 
