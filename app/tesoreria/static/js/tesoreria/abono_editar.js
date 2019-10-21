@@ -14,7 +14,7 @@ $(document).ready(function(){
     }
     });
 
-    $("#fecha_pago").change(function(){
+    /*$("#fecha_pago").change(function(){
     var fecha_pago = $("#fecha_pago").val();
     var aux_f = String(fecha_pago).split("-");
     var anio_f = aux_f[0];
@@ -23,15 +23,11 @@ $(document).ready(function(){
     var saldo = parseFloat($("#saldo").html());
     var interes = 0.0;
     var dias_interes = 0.0;
-    /* Por cada columna */
     $('#tabla tr').each(function(){
 
-        /* Obtener todas las celdas */
         var celdas = $(this).find('td');
         //alert("algo es"+ $(celdas[2].html()));
 
-        /* Mostrar el valor de cada celda */
-        //celdas.each(function(){ alert($(this).html()); });
         fecha_int_mensual  =  $(celdas[1]).html();
         aux = String(fecha_int_mensual).split("-");
         anio = aux[0];
@@ -52,7 +48,6 @@ $(document).ready(function(){
                 dias_interes = parseFloat(dias_interes.toFixed(2));
          }
 
-        /* Mostrar el valor de la celda 2 */
 
 
     });
@@ -69,6 +64,33 @@ $(document).ready(function(){
     function daysInMonth(humanMonth, year) {
     return new Date(year || new Date().getFullYear(), humanMonth, 0).getDate();
     }
+ */
+    $("#fecha_pago").change(function(){
+    var cuenta_cobrar_id = $("#id_cuenta").val();
+    var fecha = $("#fecha_pago").val();
+    var saldo = 0.0;
+
+        $.ajax({
+            method: "GET",
+            url: "/tesoreria/cuenta_cobrar/abonos/calcular",
+            data: {cuenta_cobrar_id: cuenta_cobrar_id,
+                    fecha : fecha}
+        }).done(function (msg) {
+            saldo = parseFloat(msg.saldo);
+            saldo = saldo.toFixed(2);
+            //alert(saldo);
+            $(".monto").attr({
+                "max" : saldo,
+                "placeholder"  : saldo
+            });
+            $("#deuda").val(saldo);
+
+
+         });
+
+
+
+    });
 
 });
 

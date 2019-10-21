@@ -1,6 +1,6 @@
 import calendar
 from _decimal import Decimal
-from datetime import datetime
+import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -549,7 +549,7 @@ def cuenta_cobrar_guardar(request):
 
 
 def calcular_saldo(monto, anio, mes, dia):
-    fecha_actual = datetime.now()
+    fecha_actual = datetime.datetime.now()
     interes_total = 0.00
     tasa_interes = TasaInteres.objects.all()
     diferencia_dias = calendar.monthrange(anio, mes)[
@@ -832,7 +832,7 @@ def interes_mensual_eliminar(request, id):
 
 
 def cuenta_cobrar_get_saldo(request):
-    cuenta_cobrar = get_object_or_404(CuentaCobrar, request.GET.get('cuenta_cobrar_id'))
-    fecha = datetime.strptime('YYYY-mm-dd', request.GET.get('fecha'))
+    cuenta_cobrar = get_object_or_404(CuentaCobrar, id=request.GET.get('cuenta_cobrar_id'))
+    fecha = datetime.datetime.strptime(request.GET.get('fecha'), '%Y-%m-%d')
     saldo = CuentaCobrarAppService.get_total_saldo(cuenta_cobrar,fecha)
-    return JsonResponse({'sa'})
+    return JsonResponse({'saldo':saldo})

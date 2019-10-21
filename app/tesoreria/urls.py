@@ -26,6 +26,8 @@ urlpatterns = [
     path('cuenta_cobrar/abonos/eliminar/<int:id>', views.abono_eliminar, name='abono_eliminar'),
     path('cuenta_cobrar/abonos/guardar', views.abono_guardar, name='abono_guardar'),
     path('cuenta_cobrar/abonos/imprimir/<int:id>', views.abono_imprimir, name='abono_imprimir'),
+    path('cuenta_cobrar/abonos/calcular', views.cuenta_cobrar_get_saldo, name='cuenta_cobrar_get_saldo'),
+
 
 
     path('interes_mensual/eliminar/<int:id>', views.interes_mensual_eliminar, name='interes_mensual_eliminar'),

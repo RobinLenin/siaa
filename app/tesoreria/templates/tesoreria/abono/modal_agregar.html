@@ -53,7 +53,7 @@
                         <div class="form-group col-md-4">
                             <label for="monto">Monto:</label>
                             <input type="number"
-                                   class="form-control"
+                                   class="form-control monto"
                                    id="monto"
                                    name="monto"
                                    value="{{ abono.monto }}"
@@ -73,8 +73,9 @@
                                        placeholder="Fecha de pago.."
                                        name="fecha_pago"
                                        id="fecha_pago"
-                                      max="{{ abono.fecha_pago|date:"Y-m-d"|default:ahora }}"
-                                       value="{{ abono.fecha_pago|date:"Y-m-d"|default:ahora }}"
+                                       min="{{ cuenta_cobrar.fecha_emision | date:'Y-m-d'|default:ahora  }}"
+                                      max="{{ abono.fecha_pago|date:'Y-m-d'|default:ahora }}"
+                                       value="{{ abono.fecha_pago|date:'Y-m-d'|default:ahora }}"
                                        required>
                             </div>
 
