@@ -27,7 +27,6 @@ $(document).ready(function(){
         }).done(function (msg) {
             saldo = parseFloat(msg.saldo);
             saldo = saldo.toFixed(2);
-            //alert(saldo);
             $(".monto").attr({
                 "max" : saldo,
                 "placeholder"  : saldo

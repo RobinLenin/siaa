@@ -18,8 +18,6 @@ from app.tesoreria.models import TasaInteres
 def abono_postsave_handler(sender, instance, **kwargs):
     if kwargs["created"]:
         pass
-    # instance.cuentacobrar metodo de calcular
-
 
 @receiver(post_save, sender=CuentaCobrar)
 def cuentacobrar_postsave_handler(sender, instance, **kwargs):
@@ -30,14 +28,8 @@ def cuentacobrar_postsave_handler(sender, instance, **kwargs):
                                                   mes__gte=instance.fecha_emision.month,
                                                  anio__lte=fecha_actual.year,
                                                 mes__lte=fecha_actual.month).order_by('anio', 'mes')
-        # filtrar ver si le afecta a esta cuenta preguntar si hay fecha de cancelacion
-
-
-
 
         for tasa in tasa_interes:
-
-
             interes_mensual = InteresMensual()
             interes = (instance.monto * tasa.tasa) / 100
 
@@ -58,6 +50,6 @@ def cuentacobrar_postsave_handler(sender, instance, **kwargs):
                 interes_mensual.save()
 
             except NameError:
-                hh = 'Solicitud incorrecta'
+                mensaje = 'Solicitud incorrecta'
 
             dia_fecha_emision = 1
