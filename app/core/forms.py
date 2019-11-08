@@ -60,9 +60,55 @@ class DireccionForm(ModelForm):
             raise forms.ValidationError("El celular debe contener mínimo 10 caracteres y solo digítos (0912345678)")
         return data
 
-class PersonaBuscarForm(forms.Form):
 
+class DireccionBasicoForm(ModelForm):
+    class Meta:
+        model = Direccion
+        fields = ('tipo_direccion',
+                  'calle_principal', 'calle_secundaria', 'numero', 'referencia',
+                  'telefono', 'celular')
+        labels = {
+            'tipo_direccion': 'Tipo de dirección',
+            'calle_principal': 'Calle principal',
+            'calle_secundaria': 'Calle secundaria',
+            'numero': 'Número de casa',
+            'referencia': 'Referencia',
+            'telefono': 'Teléfono',
+            'celular': 'Celular'
+        }
+        widgets = {
+            'tipo_direccion': forms.Select(attrs={'class': 'form-control required'}),
+            'calle_principal': forms.TextInput(attrs={'class': 'form-control required'}),
+            'calle_secundaria': forms.TextInput(attrs={'class': 'form-control'}),
+            'numero': forms.TextInput(attrs={'class': 'form-control'}),
+            'referencia': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefono': forms.TextInput(
+                attrs={'class': 'form-control telefono', 'required': 'true', 'minlength': 9, 'maxlength': 15}),
+            'celular': forms.TextInput(attrs={'class': 'form-control celular', 'minlength': 10, 'maxlength': 15}),
+        }
+
+
+class PersonaBuscarForm(forms.Form):
     criterio = forms.CharField(label='Buscar ', max_length=200)
+
+
+class PersonaBasicoForm(ModelForm):
+    '''
+    Solamente se puede editar el correo electrónico.
+    '''
+
+    class Meta:
+        model = Persona
+        fields = ('correo_electronico',)
+        help_texts = {
+            'correo_electronico': 'Por favor ingrese su correo electrónico personal'
+        }
+        widgets = dict(primer_apellido=forms.TextInput(attrs={'class': 'form-control'}),
+                       segundo_apellido=forms.TextInput(attrs={'class': 'form-control'}),
+                       primer_nombre=forms.TextInput(attrs={'class': 'form-control'}),
+                       segundo_nombre=forms.TextInput(attrs={'class': 'form-control'}),
+                       correo_electronico=forms.TextInput(attrs={'class': 'form-control required email'}))
+
 
 class PersonaForm(ModelForm):
     class Meta:

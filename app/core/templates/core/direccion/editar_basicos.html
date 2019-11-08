@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Crear Dirección
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html' with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+    <div class="card card-box">
+        <div class="card-head">
+            <header>Datos Direccion</header>
+            <div class="tools">
+                <button class="btn btn-info btn-circle btn-xs pull-right" data-toggle="modal" data-target="#modal-direccion-editar">
+                    <i class="ffa fa-plus-circle"></i> Editar
+                </button>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Tipo de Direccion:</span>
+                <div class="col-sm-10">
+                    <h5>{{ direccion.tipo_direccion }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Calle Principal:</span>
+                <div class="col-sm-10">
+                    <h5>{{ direccion.calle_principal| default:"" }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Calle Secundaria:</span>
+                <div class="col-sm-10">
+                    <h5>{{ direccion.calle_secundaria| default:"" }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Numero de Casa:</span>
+                <div class="col-sm-10">
+                    <h5>{{ direccion.numero| default:"" }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Referencia:</span>
+                <div class="col-sm-10">
+                    <h5>{{ direccion.referencia| default:"" }}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Telefono Fijo:</span>
+                <div class="col-sm-10">
+                    <h5>{% if direccion.validar_telefono %}
+                            {{ direccion.telefono| default:"" }}
+                        {% else %}
+                            <span class="text-danger">{{ direccion.telefono| default:"" }}</span>
+                        {% endif %}</h5>
+                </div>
+            </div>
+            <div class="form-group form-inline text-left">
+                <span class="col-sm-2">Telefono Celular:</span>
+                <div class="col-sm-10">
+                    <h5>{% if direccion.validar_celular %}
+                            {{ direccion.celular| default:"" }}
+                        {% else %}
+                             <span class="text-danger"> {{ direccion.celular| default:"" }}</span>
+                        {% endif %}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% include 'core/direccion/modal_editar_basico.html' with persona=persona %}
+{% endblock contenido %}

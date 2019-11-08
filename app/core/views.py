@@ -4,10 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from app.core.forms import RelacionForm, PersonaBuscarForm, DireccionForm, PersonaForm, PersonaFormClienteEditar
+from app.core.forms import RelacionForm, PersonaBuscarForm, DireccionForm, PersonaForm, PersonaFormClienteEditar, \
+    DireccionBasicoForm, PersonaBasicoForm
 from app.core.models import *
 from app.core.utils.enums import MensajesEnum
 
@@ -40,6 +41,61 @@ def direccion_crear(request, persona_id):
                        ('Dirección', None)])
 
     return render(request, 'core/direccion/editar.html', locals())
+
+@login_required
+def direccion_basico_guardar(request, persona_id):
+    """
+    Crea o actualiza un registro de direccion, y es invocado desde perfil y
+    modificación de datos del administrador
+    :param request:
+    :param persona_id:
+    :return:
+    """
+    id = request.POST.get('idDireccion')
+    next = request.POST.get('next_direccion')
+    not_reload_page = False
+
+    try:
+        direccion = get_object_or_404(Direccion, id=id)
+    except:
+        direccion = Direccion()
+
+    persona = Persona.objects.get(id=persona_id)
+    direccion_form = DireccionBasicoForm(request.POST, instance=direccion)
+
+    if direccion_form.is_valid():
+        direccion.persona = persona
+        direccion.save()
+        exito = True
+        messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
+
+    else:
+        exito = False
+        messages.success(request, MensajesEnum.DATOS_INCOMPLETOS.value)
+    return redirect(next)
+
+
+@login_required
+def direccion_basico_detalle(request, id):
+    """
+    Muestra el registro para editar una dirección y es invocado desde perfil y
+    modificación de datos del administrador
+    :param request:
+    :param id:
+    :return:
+    """
+    CHOICE_TIPO_DIRECCION = CatalogoItem.get_catalogos_items('TIPO_DIRECCION')
+    direccion = Direccion.objects.get(id=id)
+    persona = Persona.objects.get(id=direccion.persona.id)
+    direccion_form = DireccionBasicoForm(instance=direccion)
+
+    navegacion = ('Módulo pólizas',
+                  [('Gestión pólizas', reverse('poliza:index_poliza')),
+                  ('Personal', reverse('poliza:personal_lista')),
+                  (persona.primer_nombre, reverse('poliza:personal_informacion_detallada',kwargs={'id': persona.id,})),
+                  ('Direccion', None)])
+
+    return render(request, 'core/direccion/editar_basicos.html', locals())
 
 
 @login_required
@@ -345,6 +401,101 @@ def persona_listar_momentaneo(request):
     personas = paginator.get_page(page)
 
     return JsonResponse({'personas': list(personas), 'limite': personas.paginator.num_pages});
+
+
+@login_required
+def persona_basico_guardar(request):
+    """
+    Actualiza una nueva persona
+    :param request:
+    :return:
+    """
+    next = request.POST.get('next_persona')
+    id = request.POST.get('idPersona')
+    open_direction = False
+
+
+    open_direction = True
+
+    try:
+        persona = get_object_or_404(Persona, id=id)
+    except:
+        persona = Persona()
+
+    persona_form = PersonaBasicoForm(request.POST, instance=persona)
+
+    if persona_form.is_valid():
+        exito = True
+        persona_form.save()
+
+        message = MensajesEnum.ACCION_GUARDAR.value
+        if not open_direction:
+            messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
+
+    else:
+        exito = False
+        message = MensajesEnum.DATOS_INCOMPLETOS.value
+        if not open_direction:
+            messages.warning(request, persona_form.errors)
+
+    if open_direction:
+        return JsonResponse({'mensaje': message, 'success': exito, 'idPersona': persona.id})
+
+    return redirect(next)
+
+
+@login_required
+def persona_lista(request):
+    """
+    Lista las personas de forma paginada
+    es llamado al ingresar una nueva poliza
+    al seleccionar un nuevo administrador, fiscalizador
+    o contratista
+    """
+    search = request.GET.get('search', None)
+
+    if search:
+        p_search = search.split(" ")
+        qset = Q()
+        for i in p_search:
+            qset = qset & (Q(primer_apellido__icontains=i) |
+                           Q(segundo_apellido__icontains=i) |
+                           Q(primer_nombre__icontains=i) |
+                           Q(segundo_nombre__icontains=i) |
+                           Q(numero_documento__icontains=i))
+
+        personas_list = Persona.objects.filter(qset).values()
+
+    else:
+        personas_list = Persona.objects.all().values()
+
+    paginator = Paginator(personas_list, 10)
+
+    page = request.GET.get('page')
+    personas = paginator.get_page(page)
+
+    return JsonResponse({'personas': list(personas), 'limite': personas.paginator.num_pages})
+
+
+@login_required
+def persona_basico_registro(request, cedula):
+    """
+    Crea u obtiene una nueva persona,
+    Si no existe, la crea por registro civil
+    """
+    persona = Persona.get_persona_numero_documento(cedula)
+
+    persona_basica = {
+        'id': persona.id,
+        'numero_documento': persona.numero_documento,
+        'primer_nombre': persona.primer_nombre,
+        'segundo_nombre': persona.segundo_nombre,
+        'primer_apellido': persona.primer_apellido,
+        'segundo_apellido': persona.segundo_apellido,
+        'correo_electronico': persona.correo_electronico
+    }
+
+    return JsonResponse({'persona': persona_basica})
 
 
 @login_required

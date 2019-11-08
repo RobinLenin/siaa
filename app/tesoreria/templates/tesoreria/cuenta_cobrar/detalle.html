@@ -13,11 +13,9 @@ Cuentas por Cobrar
     <div class="card-head">
         <header>{{ 'tesoreria.CuentaCobrar'|verbose_name|capfirst }}</header>
         <div class="tools">
-            <button class="btn btn-info"
-                    data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
-                    {% if not perms.tesoreria.change_cuentacobrar %} disabled {% endif %}>
-                <i class="fa fa-edit"></i> Editar
-            </button>
+            <a class="btn btn-info" href="{% url 'tesoreria:cuenta_cobrar_guardar2' cuenta_cobrar.id %}">
+                <i class="fa fa-plus-circle"></i> Editar
+            </a>
             <a {% if perms.tesoreria.delete_cuentacobrar %}
                class="btn btn-danger"
                href="{% url 'tesoreria:cuenta_cobrar_eliminar' cuenta_cobrar.id %}"
@@ -137,7 +135,7 @@ Cuentas por Cobrar
 
     </div>
 </div>
-{% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
+
 {% include 'tesoreria/abono/modal_agregar.html' %}
 {% include 'tesoreria/comentario/modal_agregar.html' %}
 {% endblock contenido %}

@@ -17,17 +17,14 @@ Cuentas por Cobrar
 {% block contenido %}
 <div id='message'>
 </div>
-{% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
 <div class="card card-box">
     <div class="card-head">
         <header>{{ 'tesoreria.CuentaCobrar'|verbose_name_plural }}</header>
         <div class="tools">
             <div class="pull-right">
-                <button class="btn btn-circle btn-info btn-xs"
-                        data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
-                        {% if not perms.tesoreria.add_cuentacobrar %} disabled {% endif %}>
-                    <i class="fa fa-plus-circle"></i>Nuevo
-                </button>
+                <a class="btn btn-info" href="{% url 'tesoreria:cuenta_cobrar_guardar2'%}">
+                    <i class="fa fa-plus-circle"></i> Nuevo
+                </a>
             </div>
         </div>
     </div>
@@ -35,11 +32,21 @@ Cuentas por Cobrar
         <div class="row">
             <div class="table-scrollable">
                 <div id="usuarios_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                    <div class="container card-body">
+                        <button type="button" value="Exportar Csv" name="exportar_csv" id="exportar_csv" class='exportar btn btn-success'>
+                            <i class="fa fa-file-excel-o"></i> Exportar Csv
+                        </button>
+                        <button type="button" value="Exportar Pdf" name="exportar_pdf" id="exportar_pdf" class='exportar btn btn-danger'>
+                            <i class="fa fa-file-pdf-o"></i> Exportar Pdf
+                        </button>
+                    </div>
+
                     <form action="{% url 'tesoreria:cuenta_cobrar_listar' %}" method="get">
                         {% with total_items=paginator.count numero_items=numero_items filtro=filtro %}
                         {% include 'tabla_encabezado.html' %}
                         {% endwith %}
                     </form>
+
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
                             <table class="table table-hover">
@@ -104,44 +111,5 @@ Cuentas por Cobrar
 <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static 'js/tesoreria/cuentacobrar_lista.js' %}"></script>
-<script src="{% static 'js/core/persona_guardar.js' %}"></script>
-<script src="{% static 'js/tesoreria/cuentacobrar_opciones_select.js' %}"></script>
 {% endblock %}
 
-<!--  <div class="card card-box">
-   <div class="card-head">
-       <header>{{ 'tesoreria.CuentaCobrar'|verbose_name_plural|capfirst }}</header>
-       <div class="tools">
-           <div class="pull-right">
-               <button class="btn btn-circle btn-info btn-xs"
-                       data-toggle="modal" data-target="#modal-cuenta_cobrar-guardar"
-                       {% if not perms.tesoreria.add_cuentacobrar %} disabled {% endif %}>
-                   <i class="fa fa-plus-circle"></i>Nuevo
-               </button>
-           </div>
-       </div>
-   </div>
-   <div class="card-body ">
-       <div class="table-responsive">
-           <table class="table table-hover" id="cuenta_cobrar">
-               <thead>
-               <tr>
-                   <th>ID</th>
-                   <th>CI</th>
-                   <th>Cliente</th>
-                   <th>Monto</th>
-                   <th>Saldo</th>
-                   <th>Estado</th>
-
-               </tr>
-               </thead>
-               <tbody>
-
-               </tbody>
-           </table>
-       </div>
-   </div>
-
-</div>
-{% include 'tesoreria/cuenta_cobrar/modal_agregar.html' %}
--->

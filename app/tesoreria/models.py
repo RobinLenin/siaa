@@ -13,6 +13,12 @@ from app.core.models import Persona
 
 
 class CuentaCobrar(models.Model):
+    TIPO_TITULO = "TITULO CREDITO"
+    TIPO_OTRO = "OTROS"
+    CHOICE_DOCUMENTO = ((TIPO_TITULO, "Titulo de crédito"), (TIPO_OTRO, "Otro"),)
+
+    tipo_documento = models.CharField(max_length=30, choices=CHOICE_DOCUMENTO, default=TIPO_TITULO)
+
     estado = models.BooleanField(default=True)
     concepto = models.CharField(max_length=100)
     fecha_emision = models.DateField(verbose_name="Fecha de emision")

@@ -1,0 +1,76 @@
+
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Perfil de Usuario
+{% endblock %}
+
+{% block migas %}
+    {% include 'navegacion.html'  with navegacion=navegacion %}
+{% endblock %}
+
+{% block contenido %}
+
+    <div class="panel tab-border card-box">
+        <input type="hidden" id="id_personal" value="{{ persona.id }}"></input>
+        <header class="panel-heading panel-heading-gray custom-tab ">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active">
+                    <a href="#tab_informacion_personal"
+                       class="active"
+                       role="tab"
+                       data-toggle="tab">Información Personal</a>
+                </li>
+                <li><a href="#tab_direccion"
+                       role="tab"
+                       data-toggle="tab">Dirección y Teléfonos</a>
+                </li>
+                {% block barra %}
+                    
+                {% endblock %}
+            </ul>
+        </header>
+        <div class="panel-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_informacion_personal">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Datos personales
+                                        <button class="btn btn-info btn-circle btn-xs pull-right" data-toggle="modal" data-target="#modal-persona-editar">
+                                            <i class="fa fa-edit"></i> Editar
+                                        </button>
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {% include 'core/persona/fragmento_detalle_basicos.html' with persona=persona %}
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tab_direccion">
+                    {% include 'core/direccion/fragmento_lista_basicos.html' with persona=persona %}
+                </div>
+                {% block descripcion %}
+                    
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% include 'core/persona/modal_editar_basico.html' with persona=persona %}
+{% include 'core/direccion/modal_editar_basico.html' with persona=persona %}
+{% endblock contenido %}
+
+
+{% block javascript %}
+{% load staticfiles %}
+
+<script src="{% static 'js/js_cookie.js' %}"></script>
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables/plugins/bootstrap/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'js/poliza_lista.js' %}"></script>
+{% endblock %}

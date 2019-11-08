@@ -1,0 +1,59 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Direciones
+                <button class="btn btn-info btn-circle btn-xs pull-right" data-toggle="modal" data-target="#modal-direccion-editar">
+                    <i class="ffa fa-plus-circle"></i> Nuevo
+                </button>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Calle Principal</th>
+                        <th>Calle Secundaria</th>
+                        <th>Referencia</th>
+                        <th>Teléfono Fijo</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for direccion in persona.direccion_set.all %}
+                    <tr>
+                        <td>{{ direccion.calle_principal| default:"" }}</td>
+                        <td>{{ direccion.calle_secundaria| default:"" }}</td>
+                        <td>{{ direccion.referencia| default:"" }}</td>
+                        <td>
+                            {% if direccion.validar_telefono %}
+                                {{ direccion.telefono| default:"" }}
+                            {% else %}
+                                <span class="text-danger">{{ direccion.telefono| default:"" }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-outline-info"
+                                   title="Editar"
+                                   href="{% url 'core:direccion_basico_detalle' direccion.id %}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <!--
+                                <a class="btn btn-outline-danger"
+                                   title="Eliminar"
+                                   onclick="return confirm('¿Está seguro de eliminar el registro?')"
+                                   href="{% url 'core:direccion_eliminar' direccion.id %}?next={{request.path}}">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                                -->
+                            </div>
+                        <td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

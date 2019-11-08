@@ -1,0 +1,32 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <tbody>
+        <tr>
+            <th>{{ persona.tipo_documento|default:"" }}</th>
+            <td>{{ persona.numero_documento|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Primer nombre</th>
+            <td>{{ persona.primer_nombre|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Segundo nombre</th>
+            <td>{{ persona.segundo_nombre|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Primer apellido</th>
+            <td>{{ persona.primer_apellido|default:"" }}</td>
+        </tr>
+        <tr>
+            <th>Segundo apellido</th>
+            <td>{{ persona.segundo_apellido|default:"" }}</td>
+        </tr>
+        
+        <tr>
+            <th>Correo electrónico personal</th>
+            <td>{{ persona.correo_electronico|default:"" }}</td>
+        </tr>
+        
+        </tbody>
+    </table>
+</div>

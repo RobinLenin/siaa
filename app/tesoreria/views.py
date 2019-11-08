@@ -554,10 +554,42 @@ def cuenta_cobrar_buscar(request):
     return render(request, 'tesoreria/cuenta_cobrar/lista.html', locals())
 
 
+
+
+@login_required
+@permission_required('tesoreria.add_cuentacobrar', raise_exception=True)
+def cuenta_cobrar_guardar2(request, id=None):
+    """
+    Muestra el html para actualizar o agregar una cuenta por cobrar
+    :param request:
+    :param id:
+    :return:
+    """
+    navegacion_option = ''
+
+    if not id == None:
+        try:
+            cuenta_cobrar = get_object_or_404(CuentaCobrar, id=id)
+            navegacion_option = 'Actualizar CxC'
+        except:
+            return redirect('tesoreria:cuenta_cobrar_listar')
+
+    else:
+        navegacion_option = 'Nueva CxC'
+
+
+    navegacion = ('Módulo financiero',
+                  [('Tesorería', reverse('tesoreria:index_tesoreria')),
+                   ('Cuenta por Cobrar', reverse('tesoreria:cuenta_cobrar_listar')),
+                   (navegacion_option, None)])
+
+    return render(request, 'tesoreria/cuenta_cobrar/modal_agregar.html', locals())
+
+
 @login_required
 @permission_required('tesoreria.change_cuentacobrar', raise_exception=True, )
 @require_http_methods(['POST'])
-def cuenta_cobrar_guardar(request):
+def cuenta_cobrar_crear(request):
     next = request.POST.get('next')
     id = request.POST.get('id')
     fecha_emision = request.POST.get('fecha_emision')
@@ -581,15 +613,15 @@ def cuenta_cobrar_guardar(request):
     else:
         messages.warning(request, cuenta_cobrar_form.errors)
 
-    return redirect(next)
+    return redirect('tesoreria:cuenta_cobrar_listar')
+
 
 
 def calcular_saldo(monto, anio, mes, dia):
     fecha_actual = datetime.datetime.now()
     interes_total = 0.00
     tasa_interes = TasaInteres.objects.all()
-    diferencia_dias = calendar.monthrange(anio, mes)[
-                          1] - dia
+    diferencia_dias = calendar.monthrange(anio, mes)[1] - dia
     for tasa in tasa_interes:
 
         if int(tasa.anio) >= anio and int(tasa.mes) >= mes \
@@ -745,9 +777,10 @@ def tasa_interes_aplicar(request, id):
     cuentas_cobrar = CuentaCobrar.objects.filter(estado=True)
 
     for cuenta in cuentas_cobrar:
+
         if not InteresMensual.objects.filter(cuenta_cobrar=cuenta, fecha_inicio__year=anio,
                                              fecha_inicio__month=mes).exists():
-            mensaje = "Tasa aplicada correctamente"
+
 
             interes_mensual = InteresMensual()
             interes = (cuenta.saldo * tasa_interes.tasa) / 100
@@ -757,20 +790,24 @@ def tasa_interes_aplicar(request, id):
 
             interes_mensual.cuenta_cobrar = cuenta
             interes_mensual.tasa = tasa_interes
-            interes_mensual.fecha_inicio = datetime(int(tasa_interes.anio), int(tasa_interes.mes), 1).date()
-            interes_mensual.fecha_fin = datetime(int(tasa_interes.anio), int(tasa_interes.mes),
-                                                 calendar.monthrange(tasa_interes.anio, tasa_interes.mes)[1]).date()
+            interes_mensual.fecha_inicio = datetime.datetime(int(tasa_interes.anio), int(tasa_interes.mes), 1).date()
+            interes_mensual.fecha_fin = datetime.datetime(int(tasa_interes.anio), int(tasa_interes.mes), calendar.monthrange(tasa_interes.anio, tasa_interes.mes)[1]).date()
             interes_mensual.valor = Decimal(round(interes, 2))
             # saldo = cuenta.saldo + interes
             interes_cuenta = cuenta.interes + interes
             CuentaCobrar.objects.values('interes').filter(id=cuenta.id).update(interes=interes_cuenta)
-
+            mensaje = "Tasa aplicada correctamente"
             try:
                 interes_mensual.save()
+
+
             except NameError:
-                mensaje = 'INteres no se guardo'
+                mensaje = 'Interes no se guardo'
         else:
             mensaje = "Tasa ya aplicada"
+
+
+
 
     messages.success(request, mensaje)
 
@@ -865,7 +902,6 @@ def interes_mensual_eliminar(request, id):
     except Exception as e:
         messages.warning(request, str(e))
         return HttpResponseServerError(render(request, '500.html'))
-
 
 def cuenta_cobrar_get_saldo(request):
     cuenta_cobrar = get_object_or_404(CuentaCobrar, id=request.GET.get('cuenta_cobrar_id'))

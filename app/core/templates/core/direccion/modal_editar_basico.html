@@ -1,0 +1,29 @@
+<div class="modal fade" id="modal-direccion-editar">
+    <form 
+    action="{% url 'core:direccion_basico_guardar' persona.id %}" 
+    class="form-horizontal auto-validate" method="POST" role="form" id="formDireccion">
+        {% csrf_token %}
+        <input type="hidden" id="idPersona" value='{{persona.id}}'/>
+        <input type="hidden" id="idDireccion" name="idDireccion" value='{{direccion.id}}' />
+        <input type="hidden" id="next_direccion" name='next_direccion' value="{{ request.path }}"/>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id='nombrePersona' class="modal-title">{{ 'core.Direccion'|verbose_name|capfirst  }}</h4> 
+                </div>
+                <div class="modal-body">
+                        <table class="table">
+                                {{direccion_form}}
+                        </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>Cancelar
+                    </button>
+                    <button 
+                        type = "submit"
+                        class="btn btn-primary" id='btn_modal_direccion'><i class="fa fa-save"></i>Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

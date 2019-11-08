@@ -4,6 +4,7 @@ from app.tesoreria.models import CuentaCobrar, Comentario, Abono, TasaInteres, I
 
 class CuentaCobrarForm(forms.ModelForm):
     numero_titulo = forms.CharField(required=False)
+    tipo_documento = forms.CharField(required=False)
     titulo = forms.CharField(required=False)
     class Meta:
         model = CuentaCobrar
