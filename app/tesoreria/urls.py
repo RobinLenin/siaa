@@ -19,8 +19,8 @@ urlpatterns = [
     path('cuenta_cobrar/detalle/<int:id>', views.cuenta_cobrar_detalle, name='cuenta_cobrar_detalle'),
     path('cuenta_cobrar/eliminar/<int:id>', views.cuenta_cobrar_eliminar, name='cuenta_cobrar_eliminar'),
     path('cuenta_cobrar/crear', views.cuenta_cobrar_crear, name='cuenta_cobrar_crear'),
-    path('cuenta_cobrar/guardar2', views.cuenta_cobrar_guardar2, name='cuenta_cobrar_guardar2'),
-    path('cuenta_cobrar/guardar2/<int:id>', views.cuenta_cobrar_guardar2, name='cuenta_cobrar_guardar2'),
+    path('cuenta_cobrar/guardar2', views.cuenta_cobrar_guardar, name='cuenta_cobrar_guardar2'),
+    path('cuenta_cobrar/guardar2/<int:id>', views.cuenta_cobrar_guardar, name='cuenta_cobrar_guardar2'),
     path('cuenta_cobrar/listar', views.cuenta_cobrar_listar, name='cuenta_cobrar_listar'),
     path('cuenta_cobrar/lista-paginador', views.cuenta_cobrar_lista_paginador, name='cuenta_cobrar_lista_paginador'),
 
