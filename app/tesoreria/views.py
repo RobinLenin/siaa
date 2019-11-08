@@ -334,6 +334,7 @@ def cuenta_cobrar_listar(request):
         cuenta_cobrar = paginator.page(1)
     except EmptyPage:
         cuenta_cobrar = paginator.page(paginator.num_pages)
+
     return render(request, 'tesoreria/cuenta_cobrar/lista.html', locals())
 
 
@@ -393,6 +394,7 @@ def cuenta_cobrar_guardar(request, id=None):
     :param id:
     :return:
     """
+    CHOICE_DOCUMENTO = CuentaCobrar.CHOICE_DOCUMENTO
     navegacion_option = ''
 
     if not id == None:
