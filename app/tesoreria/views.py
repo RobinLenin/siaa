@@ -94,7 +94,7 @@ def abono_guardar(request):
         abono_form = AbonoForm(request.POST, instance=abono)
         if abono_form.is_valid() and monto <= (
                 cuenta_cobrar.saldo + cuenta_cobrar.interes) and not Abono.objects.filter(
-                fecha_pago__gt=abono.fecha_pago).exists():
+            fecha_pago__gt=abono.fecha_pago).exists():
             fecha_pago_abono = datetime.datetime.strptime(request.POST.get('fecha_pago'), '%Y-%m-%d')
             saldo_total = CuentaCobrarAppService.get_total_saldo(cuenta_cobrar, fecha_pago_abono)
 
@@ -137,11 +137,11 @@ def abono_eliminar(request, id):
     if ultimo_abono.id == abono.id:
         try:
             interes_mensual = InteresMensual.objects.get(cuenta_cobrar=cuenta_cobrar,
-                                                     fecha_fin__year=abono.fecha_pago.year,
-                                                     fecha_fin__month=abono.fecha_pago.month)
+                                                         fecha_fin__year=abono.fecha_pago.year,
+                                                         fecha_fin__month=abono.fecha_pago.month)
 
             intereses_mensuales = InteresMensual.objects.filter(cuenta_cobrar=cuenta_cobrar,
-                                                            fecha_fin__gt=abono.fecha_pago).order_by('fecha_fin')
+                                                                fecha_fin__gt=abono.fecha_pago).order_by('fecha_fin')
         except interes_mensual.DoesNotExist:
             interes_mensual = None
             intereses_mensuales = None
@@ -149,7 +149,7 @@ def abono_eliminar(request, id):
         if not interes_mensual == None:
             interes = (((Decimal(total) * Decimal(interes_mensual.tasa.tasa)) / 100))
             InteresMensual.objects.values('valor').filter(id=interes_mensual.id).update(valor=interes)
-            interes_cuenta=0
+            interes_cuenta = 0
 
             for interesmensual in intereses_mensuales:
 
@@ -162,7 +162,8 @@ def abono_eliminar(request, id):
             for interesmensual in intereses_mensuales:
                 interes_cuenta = interes_cuenta + interesmensual.valor
 
-            CuentaCobrar.objects.values('interes').filter(id=abono.cuenta_cobrar.id).update(saldo=total, interes=interes_cuenta)
+            CuentaCobrar.objects.values('interes').filter(id=abono.cuenta_cobrar.id).update(saldo=total,
+                                                                                            interes=interes_cuenta)
 
         if total > 0:
             CuentaCobrar.objects.values('estado').filter(id=abono.cuenta_cobrar_id).update(estado=True)
@@ -383,8 +384,6 @@ def cuenta_cobrar_buscar(request):
     return render(request, 'tesoreria/cuenta_cobrar/lista.html', locals())
 
 
-
-
 @login_required
 @permission_required('tesoreria.add_cuentacobrar', raise_exception=True)
 def cuenta_cobrar_guardar(request, id=None):
@@ -407,7 +406,6 @@ def cuenta_cobrar_guardar(request, id=None):
     else:
         navegacion_option = 'Nueva CxC'
 
-
     navegacion = ('Módulo financiero',
                   [('Tesorería', reverse('tesoreria:index_tesoreria')),
                    ('Cuenta por Cobrar', reverse('tesoreria:cuenta_cobrar_listar')),
@@ -423,7 +421,8 @@ def cuenta_cobrar_crear(request):
     id = request.POST.get('id')
     fecha_emision = request.POST.get('fecha_emision')
     date = parse_date(fecha_emision)
-    interes = CuentaCobrarAppService.calcular_saldo(Decimal(request.POST.get('monto')), int(date.year), int(date.month), int(date.day))
+    interes = CuentaCobrarAppService.calcular_saldo(Decimal(request.POST.get('monto')), int(date.year), int(date.month),
+                                                    int(date.day))
 
     request.POST._mutable = True
     request.POST['interes'] = Decimal(round(interes, 2))
@@ -538,7 +537,8 @@ def tasa_interes_guardar(request):
     next = request.POST.get('next')
     tasa_interes = TasaInteres()
     tasa_interes = TasaInteresForm(request.POST, instance=tasa_interes)
-    if tasa_interes.is_valid() and CuentaCobrarAppService.validar_tasa_interes(request.POST.get('anio'), request.POST.get('mes')):
+    if tasa_interes.is_valid() and CuentaCobrarAppService.validar_tasa_interes(request.POST.get('anio'),
+                                                                               request.POST.get('mes')):
         tasa_interes.save()
         messages.success(request, MensajesEnum.ACCION_GUARDAR.value)
     else:
@@ -575,14 +575,17 @@ def tasa_interes_aplicar(request, id):
         for cuenta in cuentas_cobrar:
 
             if not InteresMensual.objects.filter(cuenta_cobrar=cuenta, fecha_inicio__year=anio,
-                                             fecha_inicio__month=mes).exists():
+                                                 fecha_inicio__month=mes).exists():
                 interes_mensual = InteresMensual()
                 interes = (cuenta.saldo * tasa_interes.tasa) / 100
 
                 interes_mensual.cuenta_cobrar = cuenta
                 interes_mensual.tasa = tasa_interes
-                interes_mensual.fecha_inicio = datetime.datetime(int(tasa_interes.anio), int(tasa_interes.mes), 1).date()
-                interes_mensual.fecha_fin = datetime.datetime(int(tasa_interes.anio), int(tasa_interes.mes), calendar.monthrange(tasa_interes.anio, tasa_interes.mes)[1]).date()
+                interes_mensual.fecha_inicio = datetime.datetime(int(tasa_interes.anio), int(tasa_interes.mes),
+                                                                 1).date()
+                interes_mensual.fecha_fin = datetime.datetime(int(tasa_interes.anio), int(tasa_interes.mes),
+                                                              calendar.monthrange(tasa_interes.anio, tasa_interes.mes)[
+                                                                  1]).date()
                 interes_mensual.valor = Decimal(round(interes, 2))
                 interes_cuenta = cuenta.interes + interes
 
@@ -685,8 +688,9 @@ def interes_mensual_eliminar(request, id):
         messages.warning(request, str(e))
         return HttpResponseServerError(render(request, '500.html'))
 
+
 def cuenta_cobrar_get_saldo(request):
     cuenta_cobrar = get_object_or_404(CuentaCobrar, id=request.GET.get('cuenta_cobrar_id'))
     fecha = datetime.datetime.strptime(request.GET.get('fecha'), '%Y-%m-%d')
-    saldo = CuentaCobrarAppService.get_total_saldo(cuenta_cobrar,fecha)
-    return JsonResponse({'saldo':saldo})
+    saldo = CuentaCobrarAppService.get_total_saldo(cuenta_cobrar, fecha)
+    return JsonResponse({'saldo': saldo})

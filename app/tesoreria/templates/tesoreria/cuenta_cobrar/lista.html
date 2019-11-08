@@ -32,14 +32,6 @@ Cuentas por Cobrar
         <div class="row">
             <div class="table-scrollable">
                 <div id="usuarios_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
-                    <div class="container card-body">
-                        <button type="button" value="Exportar Csv" name="exportar_csv" id="exportar_csv" class='exportar btn btn-success'>
-                            <i class="fa fa-file-excel-o"></i> Exportar Csv
-                        </button>
-                        <button type="button" value="Exportar Pdf" name="exportar_pdf" id="exportar_pdf" class='exportar btn btn-danger'>
-                            <i class="fa fa-file-pdf-o"></i> Exportar Pdf
-                        </button>
-                    </div>
 
                     <form action="{% url 'tesoreria:cuenta_cobrar_listar' %}" method="get">
                         {% with total_items=paginator.count numero_items=numero_items filtro=filtro %}
@@ -52,12 +44,12 @@ Cuentas por Cobrar
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    
+
                                     <th>CI</th>
                                     <th>Cliente</th>
                                     <th>Monto</th>
                                     <th>Saldo</th>
-                                     <th>Interes</th>
+                                    <th>Interes</th>
                                     <th>Estado</th>
                                 </tr>
                                 </thead>
@@ -78,7 +70,7 @@ Cuentas por Cobrar
                                     <td>
                                         {{ cuentacobrar.saldo }}
                                     </td>
-                                     <td>
+                                    <td>
                                         {{ cuentacobrar.interes }}
                                     </td>
                                     <td>
